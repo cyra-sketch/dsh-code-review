@@ -27,7 +27,7 @@ AI 写码越来越快，review 成了瓶颈：Anthropic 说 Claude 写了 Claude
 
 **① 质量关卡闭环**
 - single 引擎完整闭环：发现 2 个雷 → agent 修对 → 验收 2/2 fixed → **真实 push 成功**，全程 **2 个子代理、$0.0227**（EVAL-009）
-- 契约验收套件 **20/20** + 命令绕过断言 **21/21** 通过：**0 次未授权 push**（含语义等价修复保持 fixed、重引入转 open、新 HEAD 强制复验、超轮次确定性升级人工）
+- 契约验收套件 **20/20** + 命令绕过断言 **40/40** 通过：**0 次未授权 push**（含语义等价修复保持 fixed、重引入转 open、新 HEAD 强制复验、超轮次确定性升级人工）
 - 已认证环境 install → 调用 → gate → push 端到端 **5/5**（EVAL-012）
 
 **② 需求对齐（intent）**
@@ -63,12 +63,12 @@ AI 写码越来越快，review 成了瓶颈：Anthropic 说 Claude 写了 Claude
 
 前提：Node.js 22+、npm、Git、zstd、dsh `0.2.1-rc.2`、PATH 中可用的 pnpm。完整契约复现还需要**已认证的 dsh 账户**；所有 push 只进入本地 bare remote。
 
-**免费验证（无需模型）**：构建、TypeScript 检查与 21 条命令断言。
+**免费验证（无需模型）**：构建、TypeScript 检查与 40 条命令断言。
 
 ```sh
 npm install
 npm run typecheck && npm run build
-node eval/acceptance/gate-command-assert.mjs  # 期望：21 passed / 0 failed
+node eval/acceptance/gate-command-assert.mjs  # 期望：40 passed / 0 failed
 ```
 
 **完整契约复现（真实 dsh 调用）**：约 15–30 分钟，R4 实测模型费用约 **$0.21**，随模型、缓存和修复轮次波动。
@@ -82,7 +82,7 @@ npm install && npm run build
 bash eval/acceptance/prepare.sh
 node eval/acceptance/run.mjs
 node eval/acceptance/assert.mjs                # 期望：20 passed / 0 failed
-node eval/acceptance/gate-command-assert.mjs   # 期望：21 passed / 0 failed
+node eval/acceptance/gate-command-assert.mjs   # 期望：40 passed / 0 failed
 ```
 
 `prepare.sh` 默认不覆盖已有工作区；只有显式 `bash eval/acceptance/prepare.sh --reset` 才重置。场景日志、usage、预算和新断言输出全部写入被 gitignore 的 `eval/acceptance/.results/`，不会重写历史证据 `assert-results.json`、历史场景日志或 `eval/budget-R4.md`。原始事件流在 `eval/runs/`、验收场景在 `eval/acceptance/`、预算账在 `eval/budget-*.md`——所有结论都可对照原始证据复核。

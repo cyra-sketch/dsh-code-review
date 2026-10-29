@@ -10,7 +10,7 @@ const resultsRoot = join(acceptance, '.results')
 const budgetPath = join(resultsRoot, 'budget-R4.md')
 const profile = process.env.DSH_ACCEPTANCE_PROFILE ?? 'dsh-code-review-acceptance'
 const dshHome = process.env.DSH_HOME ?? join(homedir(), '.dsh')
-const cap = 0.35
+const cap = 0.20
 let totalCost = 0
 let sequence = 0
 
@@ -146,11 +146,11 @@ function approveLatestHuman(scenario) {
 }
 
 mkdirSync(resultsRoot, { recursive: true })
-writeFileSync(budgetPath, `## Fresh clone 契约复现（本轮独立上限 $0.35）
+writeFileSync(budgetPath, `## Fresh clone 契约复现（本轮独立上限 $0.20）
 
 | 顺序 | 运行 | 非缓存输入 | 缓存读 | 输出 | 当次美元 | 本轮累计 | 本轮剩余 |
 |---|---|---:|---:|---:|---:|---:|---:|
-| 0 | 初始 | 0 | 0 | 0 | $0.000000000 | $0.000000000 | $0.350000000 |
+| 0 | 初始 | 0 | 0 | 0 | $0.000000000 | $0.000000000 | $0.200000000 |
 `)
 
 command('npm', ['run', 'build'])

@@ -3,17 +3,43 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { extractIntentClauses } from '../../lib/intent-clauses.js'
+import { findingSemanticKey } from '../../lib/jury.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
 const acceptance = join(root, 'eval', 'acceptance')
 const results = []
 
-function sqlFinding(episode) {
-  return episode?.findings.find(finding => /SQL.*(?:injection|注入)/i.test(finding.title))
+const semanticRecords = new Map()
+function records(name) {
+  if (!semanticRecords.has(name)) {
+    const path = join(acceptance, name, 'work', '.dsh', 'jury', 'findings.jsonl')
+    semanticRecords.set(name, existsSync(path)
+      ? readFileSync(path, 'utf8').trim().split('\n').filter(Boolean).map(line => JSON.parse(line))
+      : [])
+  }
+  return semanticRecords.get(name)
 }
 
-function centsFinding(episode) {
-  return episode?.findings.find(finding => /integer cents|非整数分|fractional cents/i.test(finding.title))
+function roleFinding(episode, name, role) {
+  const expected = role === 'sql'
+    ? findingSemanticKey({ file: 'src/checkout.ts', symbol: 'CheckoutService.checkout', category: 'security', line: 13, title: 'SQL injection' })
+    : findingSemanticKey({ file: 'src/checkout.ts', symbol: 'CheckoutService.checkout', category: 'correctness', line: 22, title: 'integer cents' })
+  const ids = new Set(records(name).filter(finding => findingSemanticKey(finding) === expected).map(finding => finding.id))
+  return episode?.findings.find(finding => ids.has(finding.id))
+}
+
+function sqlFinding(episode, name) {
+  return roleFinding(episode, name, 'sql')
+}
+
+function centsFinding(episode, name) {
+  return roleFinding(episode, name, 'cents')
+}
+
+function auditFailureFinding(episode, name) {
+  const ids = new Set(records(name).filter(finding => finding.file === 'src/checkout.ts' && finding.line === 50
+    && finding.category !== 'intent').map(finding => finding.id))
+  return episode?.findings.find(finding => ids.has(finding.id))
 }
 
 function check(name, condition, evidence) {
@@ -107,9 +133,9 @@ const reopen = episodes('reopen')
 const reopenDiscovery = reopen.find(episode => episode.round === 1)
 const reopenAccepted = reopen.find(episode => episode.round === 2 && episode.status === 'accepted')
 const reopenLatest = reopen.at(-1)
-const reopenSql = sqlFinding(reopenLatest)
+const reopenSql = sqlFinding(reopenLatest, 'reopen')
 const reopenSqlId = reopenSql?.id
-check('reintroduced SQL defect transitions fixed to open', sqlFinding(reopenAccepted)?.status === 'fixed'
+check('reintroduced SQL defect transitions fixed to open', sqlFinding(reopenAccepted, 'reopen')?.status === 'fixed'
   && reopenSql?.status === 'open', {
   accepted: reopenAccepted.findings.map(finding => ({ id: finding.id, status: finding.status })),
   reopened: reopenLatest.findings.map(finding => ({ id: finding.id, status: finding.status })),
@@ -146,10 +172,10 @@ check('maxRounds=1 rejected commit is absent from bare remote', humanOnly
   rejectedHead: humanOnly?.headSha,
   remote: remote('human', ['rev-parse', 'refs/heads/main']),
 })
-check('stable SQL and cents finding ids are used across fixtures', sqlFinding(highDiscovery)?.id === sqlFinding(reopenDiscovery)?.id
-  && sqlFinding(reopenDiscovery)?.id === sqlFinding(humanOnly)?.id
-  && centsFinding(highDiscovery)?.id === centsFinding(reopenDiscovery)?.id
-  && centsFinding(reopenDiscovery)?.id === centsFinding(humanOnly)?.id, {
+check('stable SQL and cents finding ids are used across fixtures', sqlFinding(highDiscovery, 'high')?.id === sqlFinding(reopenDiscovery, 'reopen')?.id
+  && sqlFinding(reopenDiscovery, 'reopen')?.id === sqlFinding(humanOnly, 'human')?.id
+  && centsFinding(highDiscovery, 'high')?.id === centsFinding(reopenDiscovery, 'reopen')?.id
+  && centsFinding(reopenDiscovery, 'reopen')?.id === centsFinding(humanOnly, 'human')?.id, {
   high: highIds,
   reopen: reopenDiscovery.findings.map(finding => finding.id),
   human: humanOnly?.findings.map(finding => finding.id),
@@ -168,8 +194,8 @@ const intentMissingAccepted = intentMissing.at(-1)
 const integerClause = intentMissingDiscovery.intentClauses?.find(clause => clause.id === 'ec0dff81de1a7e86')
 check('fractional cents are blocked by unmet intent clause', intentMissingDiscovery.status === 'active'
   && integerClause?.status === 'unmet', {
-  findings: intentMissingDiscovery.findings.map(finding => finding.title),
-  discoveryFindingPresent: intentMissingDiscovery.findings.some(finding => /非整数分|integer cents/i.test(finding.title)),
+  findings: intentMissingDiscovery.findings.map(finding => ({ id: finding.id, status: finding.status })),
+  discoveryFindingPresent: Boolean(centsFinding(intentMissingDiscovery, 'intent-missing')),
   integerClause,
 })
 const intentMissingSource = git('intent-missing', ['show', `${intentMissingAccepted.headSha}:src/checkout.ts`])
@@ -192,17 +218,17 @@ check('matching session intent accepts clean implementation without findings', i
   && remote('intent-clean', ['rev-parse', 'refs/heads/main']) === intentCleanOnly.headSha, intentCleanOnly)
 const intentNegative = episodes('intent-negative')
 const intentNegativeOnly = intentNegative.length === 1 ? intentNegative[0] : undefined
-const intentNegativeText = intentNegativeOnly?.findings.map(finding => `${finding.title}\n${finding.fix}`).join('\n') ?? ''
-check('negative intent does not invent requirement deviations', intentNegativeOnly
-  && !/unrequested|no audit record|missing operator|required (?:audit|operator)|audit\/compliance subsystem/i.test(intentNegativeText), {
-  findings: intentNegativeOnly?.findings.map(finding => finding.title),
+const intentNegativeText = records('intent-negative').map(finding => `${finding.category}\n${finding.title}\n${finding.detail}`).join('\n')
+check('negative intent does not invent requirement deviations', records('intent-negative').every(finding => finding.category !== 'intent')
+  && !/unrequested|未请求|偏离/i.test(intentNegativeText), {
+  findings: records('intent-negative').map(finding => ({ id: finding.id, category: finding.category, line: finding.line })),
 })
 check('negative intent retains evidence-based audit failure and blocks HEAD', intentNegativeOnly?.status === 'active'
-  && intentNegativeOnly.findings.some(finding => /(?:audit (?:insert|write).*successful charge|支付成功.*审计.*失败)/i.test(finding.title))
+  && auditFailureFinding(intentNegativeOnly, 'intent-negative')?.status === 'open'
   && remote('intent-negative', ['rev-parse', 'refs/heads/main']) === intentNegativeOnly.baseSha
   && !remoteHasCommit('intent-negative', intentNegativeOnly.headSha), {
   status: intentNegativeOnly?.status,
-  findings: intentNegativeOnly?.findings.map(finding => finding.title),
+  auditFinding: auditFailureFinding(intentNegativeOnly, 'intent-negative'),
   remote: remote('intent-negative', ['rev-parse', 'refs/heads/main']),
 })
 check('post-fix intent reviews never report pending workflow operations', [intentMissingDiscovery, intentCleanOnly, intentNegativeOnly]
