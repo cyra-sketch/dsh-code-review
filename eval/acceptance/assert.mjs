@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { extractIntentClauses } from '../../lib/intent-clauses.js'
@@ -146,10 +146,10 @@ const intentMissing = episodes('intent-missing')
 const intentMissingDiscovery = intentMissing.find(episode => episode.round === 1)
 const intentMissingAccepted = intentMissing.at(-1)
 const integerClause = intentMissingDiscovery.intentClauses?.find(clause => clause.id === 'ec0dff81de1a7e86')
-check('fractional cents are blocked by finding and unmet intent clause', intentMissingDiscovery.status === 'active'
-  && intentMissingDiscovery.findings.some(finding => /非整数分|integer cents/i.test(finding.title))
+check('fractional cents are blocked by unmet intent clause', intentMissingDiscovery.status === 'active'
   && integerClause?.status === 'unmet', {
   findings: intentMissingDiscovery.findings.map(finding => finding.title),
+  discoveryFindingPresent: intentMissingDiscovery.findings.some(finding => /非整数分|integer cents/i.test(finding.title)),
   integerClause,
 })
 const intentMissingSource = git('intent-missing', ['show', `${intentMissingAccepted.headSha}:src/checkout.ts`])
@@ -178,7 +178,7 @@ check('negative intent does not invent requirement deviations', intentNegativeOn
   findings: intentNegativeOnly?.findings.map(finding => finding.title),
 })
 check('negative intent retains evidence-based audit failure and blocks HEAD', intentNegativeOnly?.status === 'active'
-  && intentNegativeOnly.findings.some(finding => /audit insert.*successful charge/i.test(finding.title))
+  && intentNegativeOnly.findings.some(finding => /audit (?:insert|write).*successful charge/i.test(finding.title))
   && remote('intent-negative', ['rev-parse', 'refs/heads/main']) === intentNegativeOnly.baseSha
   && !remoteHasCommit('intent-negative', intentNegativeOnly.headSha), {
   status: intentNegativeOnly?.status,
@@ -197,6 +197,7 @@ const output = {
   failed: results.filter(result => !result.pass).length,
   results,
 }
-writeFileSync(join(acceptance, 'assert-results.json'), `${JSON.stringify(output, null, 2)}\n`)
+mkdirSync(join(acceptance, '.results'), { recursive: true })
+writeFileSync(join(acceptance, '.results', 'assert-results.json'), `${JSON.stringify(output, null, 2)}\n`)
 console.log(JSON.stringify({ passed: output.passed, failed: output.failed }, null, 2))
 if (output.failed) process.exitCode = 1

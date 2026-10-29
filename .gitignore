@@ -5,6 +5,7 @@ lib/
 eval/install/bin/
 eval/**/work*/
 eval/**/*.tgz
+eval/**/.results/
 
 # embedded fixture repos
 eval/acceptance/command-normal-work/

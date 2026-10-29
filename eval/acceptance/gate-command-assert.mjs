@@ -148,6 +148,7 @@ for (const { command, cwd } of normalCases) {
 }
 
 const output = { passed: results.filter(result => result.pass).length, failed: results.filter(result => !result.pass).length, results }
-writeFileSync(new URL('./gate-command-assert-results.json', import.meta.url), `${JSON.stringify(output, null, 2)}\n`)
+mkdirSync(new URL('./.results/', import.meta.url), { recursive: true })
+writeFileSync(new URL('./.results/gate-command-assert-results.json', import.meta.url), `${JSON.stringify(output, null, 2)}\n`)
 console.log(JSON.stringify({ passed: output.passed, failed: output.failed }, null, 2))
 if (output.failed) process.exitCode = 1

@@ -54,33 +54,45 @@
 - gate 只覆盖 bash/pwsh 工具回路里的 git 操作：直接操作远端 API、GUI、其他执行路径**不在防护边界内**
 - 干净 DSH_HOME 登录流程未测；外部真实用户采用未验证（安装验证为本机模拟）
 
-## 两分钟复现 Demo
+## 验证与复现
+
+前提：Node.js 22+、npm、Git、zstd、dsh `0.2.1-rc.2`、PATH 中可用的 pnpm。完整契约复现还需要**已认证的 dsh 账户**；所有 push 只进入本地 bare remote。
+
+**免费验证（无需模型）**：构建、TypeScript 检查与 21 条命令断言。
+
+```sh
+npm install
+npm run typecheck && npm run build
+node eval/acceptance/gate-command-assert.mjs  # 期望：21 passed / 0 failed
+```
+
+**完整契约复现（真实 dsh 调用）**：约 15–30 分钟，R4 实测模型费用约 **$0.21**，随模型、缓存和修复轮次波动。
 
 ```sh
 git clone https://github.com/cyra-sketch/dsh-code-review.git
 cd dsh-code-review
 npm install && npm run build
 
-# 契约验收套件：真实 dsh + 本地 bare remote，机器断言
+# 三步：物化 fixture → 安装到隔离 profile 并运行全部场景 → 机器断言
 bash eval/acceptance/prepare.sh
-# 按脚本内说明运行各场景后：
-node eval/acceptance/assert.mjs        # 期望：20 passed / 0 failed
-node eval/acceptance/gate-command-assert.mjs  # 期望：21 passed / 0 failed
+node eval/acceptance/run.mjs
+node eval/acceptance/assert.mjs                # 期望：20 passed / 0 failed
+node eval/acceptance/gate-command-assert.mjs   # 期望：21 passed / 0 failed
 ```
 
-原始事件流在 `eval/runs/`、验收场景在 `eval/acceptance/`、预算账在 `eval/budget-*.md`——所有结论都可对照原始证据复核。
+`prepare.sh` 默认不覆盖已有工作区；只有显式 `bash eval/acceptance/prepare.sh --reset` 才重置。新断言输出写入被 gitignore 的 `eval/acceptance/.results/`，不会重写历史证据 `assert-results.json`。原始事件流在 `eval/runs/`、验收场景在 `eval/acceptance/`、预算账在 `eval/budget-*.md`——所有结论都可对照原始证据复核。
 
 ## 安装
 
-要求 dsh `>=0.2.1-rc.2 <0.3.0`，且 PATH 中可用 `pnpm`（DSH 插件管理器的前置条件；首次安装实测会因缺少它失败）。本包是标准 dsh bundle，本地目录、tarball、npm 包和 GitHub spec 均走 `dsh plugin add`。
+要求 Node.js 22+、npm、Git、zstd、dsh `>=0.2.1-rc.2 <0.3.0`（示例固定 `0.2.1-rc.2`）、PATH 中可用的 `pnpm`，以及用于模型评审的**已认证 dsh 账户**。pnpm 是 DSH 插件管理器的前置条件，首次安装实测会因缺少它失败。本包是标准 dsh bundle，本地目录、tarball、npm 包和 GitHub spec 均走 `dsh plugin add`。
 
 ```sh
 # 建议为插件派生独立 profile；也可直接使用已有的交互式 profile
-npx @deepseek-ai/dsh --profile jury --from-default-profile headless
-npx @deepseek-ai/dsh plugin --profile jury add /absolute/path/to/dsh-code-review
+npx @deepseek-ai/dsh@0.2.1-rc.2 --profile jury --from-default-profile headless
+npx @deepseek-ai/dsh@0.2.1-rc.2 plugin --profile jury add /absolute/path/to/dsh-code-review
 
 # 校验组合结果
-npx @deepseek-ai/dsh --profile jury --dump-config
+npx @deepseek-ai/dsh@0.2.1-rc.2 --profile jury --dump-config
 ```
 
 从 GitHub 源码安装时，包内 `prepare` 会构建 TypeScript；pnpm 若要求 `allowBuilds`，只应对可信源码授权。本地 checkout 可先运行 `npm install && npm run build`。
@@ -102,7 +114,7 @@ R4 已在默认已认证 home 下新建独立 `jury-r4-e2e` profile，完成 tar
 在 headless 中通过等价工具调用：
 
 ```sh
-npx @deepseek-ai/dsh --profile jury --json \
+npx @deepseek-ai/dsh@0.2.1-rc.2 --profile jury --json \
   "调用 jury_run 一次，path 为 /absolute/path/to/change.diff，tier 为 auto；原样返回报告。"
 ```
 
