@@ -1,0 +1,1164 @@
+The returned content is the main text extracted from the page. If you use it in your answer, cite this page as a markdown link, e.g. [title](url).
+
+# Changelog — phxagents
+
+[Unreleased]
+Added
+Changed
+Fixed
+
+.gitattributes now pins eol=lf on its * text=auto rule. The plugin directory scanner
+refuses a repository whose line-ending rule leaves eol unset, so every commit since
+80926d7 failed to fetch
+
+[3.2.0] - 2026-10-16
+Adds the experimental rewrite plugin (Elixir Rewrite Architect 0.1.0) and fixes the hook
+scripts that still blocked v3.1.3 in the plugin directory.
+Added
+
+test_hook_scripts_run_only_paths_the_directory_can_follow
+(contributor tooling). Rejects inline programs, eval, source,
+bash/command invocations and $0/BASH_SOURCE paths in hook scripts.
+New rewrite plugin (Elixir Rewrite Architect, 0.1.0, experimental).
+Plans a rewrite of an app from any language into idiomatic Elixir. Five
+commands (/rewrite:start, analyze, architect, roadmap, verify),
+one reference skill (elixir-way, with stack packs for Rails, Django,
+Laravel/PHP, Node, Go and JVM/.NET plus a generic method), seven agents
+(six sonnet, elixir-way-architect on opus) and four stdlib scripts
+(inventory.py, ledger.py, fingerprint.py for the content identity of
+both trees, and evidence.py, which writes every verify record). Slices reach phx as an interview.md seed
+for /phx:plan; phx itself is unchanged. The dependency on
+elixir-phoenix lives in the marketplace entry, not plugin.json, so the
+plugin still loads beside --plugin-dir ./plugins/elixir-phoenix (phx@inline).
+Versions independently. See plugins/rewrite/README.md.
+The rewrite inventory grades the legacy app's oracles. inventory.py
+(inventory version 3) adds an oracles section: tests by framework with
+approximate case counts, black-box API suites (Hurl requests and asserts,
+Postman, Bruno, REST Client, Tavern, Dredd), E2E suites, benchmark and load
+harnesses, API contracts and coverage config (paths only). A deterministic
+grade (correctness strong | moderate | weak | none, performance
+harness | none) states the counts and the threshold each one crossed.
+--oracle DIR adds a suite outside the source, such as RealWorld's
+specs/api, with the same symlink, special-file and stat-fence safety and
+outside the source fingerprint; a directory inside the source is not
+scanned twice. --compare still accepts version 2 inventories. The
+contract-surveyor names a legacy witness per contract and confirms or
+downgrades the grade. Roadmap puts characterization tests first on a weak
+grade, names each slice's black-box files and command in a new seed
+## Oracle section, and writes a port-only load script when no harness
+exists. Verify requires a fresh passing run of those files, against the
+port only. It also re-runs every other command an acceptance
+criterion names, such as a release smoke, since a /phx:work log is a
+claim, and the parity auditor proposes implemented for each slice row
+whose code exists, so passing rows stop counting as unverified. A record
+missing its identity values is re-run before the audits, not after them.
+Verify writes its run list (commands.md) before running anything: the
+default commands, every command an acceptance criterion names exactly as
+named (a seed, --force, the full suite) and every ## Oracle command.
+The parity auditor checks the list against the criteria and the records,
+and a missing list is a finding: verify writes it before auditing, where
+two trial runs had skipped it. Each listed command keeps the arguments
+its criterion names, and a command is left out only when it cannot run:
+a trial verify had swapped a named seed for a random one and skipped
+whole-file diagnostics as already run by /phx:work. Black-box files run
+against the release, not a dev server, whose debug_errors page answered
+HTML where the release answers the JSON envelope. Building the release
+inline needs the phx gate from #151, which allows MIX_ENV=prod mix release. A load smoke that errors goes to /phx:investigate with the
+error from the server log, never to a bigger pool or a lighter load: the
+first release-based trial smoke failed 25% of requests, and the cause was
+the password hasher. The run list includes static checks a criterion names
+(rg, git diff), and the report keeps the parity auditor's states: a
+slice 04 trial verify had recorded three greps after the audit and
+reported them as passing. The release starts with
+RELEASE_DISTRIBUTION=none, so no epmd daemon outlives the run, and
+each Hurl command gets its own uid, where two runs in the same second
+had collided on registration. The parity auditor splits each criterion
+into one row per case it names: the slice 04 denominator had grown from
+22 to 32 over three runs as the cases surfaced one at a time. Splitting
+alone did not hold it: two slice 07 audits counted 52 and 68, one row per
+Hurl file where the other had one row in total. The auditor now gets the
+slice's previous parity.md as PREVIOUS, starts from its rows (never
+its states), and names every added, split, merged or dropped row with
+the old and new count. Verify
+writes each run's script from the skill, never from a copy of another
+slice's or an earlier run's: the fourth slice 04 verify reran its old
+script and the slice 05 verify copied slice 04's, so both started the
+release without RELEASE_DISTRIBUTION=none and the copy lacked the
+static checks its run list named. Catch-up runs before the audits go
+through the wrapper, where slice 05 ran those checks bare and left them
+with no record. The release start and stop are now a code block in the
+skill, since the next run wrote a fresh script that still followed the
+old one's start line and left epmd behind again. The elixir-way references now name
+:crypto.pbkdf2_hmac/5 (a dirty NIF) for Django PBKDF2 hashes instead of
+pbkdf2_elixir, whose Elixir loop runs all 1,000,000 rounds on the normal
+schedulers: with 42 hashes in flight a trivial task took up to 412 ms,
+against 33 µs through :crypto, so concurrent registrations starved the
+DB pool. The Django stack reference probes django-ninja's per-status
+response models: return 409, None under response={409: Any} renders
+JSON null, which a trial analysis had recorded as an empty body, and
+a status the route's response= omits raises ConfigError, a 500
+unless DEBUG: the legacy favorite route returns 409 without declaring
+it. A 422 for a missing or wrong-type field carries pydantic's own
+text, which three trial slices had replaced without recording it. It proposes Evidence pass for a REPLACE or MAP row whose Target passed
+fresh, where it had proposed not-run because an ADR changed the legacy
+behavior, which left those rows unverified. Verify keeps the PID of the port it starts and stops only that process,
+where a trial run had stopped every BEAM process on the machine with
+pkill -f beam, and it drops only a database it created itself.
+--no-run stops before the audits when the target has moved since
+its newest record, because they could only score it stale.
+Roadmap assigns each ledger row to the slice that builds all of its
+Target, so a foundation gate no longer fails on a row whose replacement
+a later slice writes. Each roadmap run refreshes every slice's
+Blocked by first, so --next no longer skips a slice whose blockers
+the user has since resolved. A black-box file's leading entries that an
+earlier slice can pass in full (register and login ahead of the user
+routes) gate that slice with Hurl --to-entry.
+Structural eval scores more than one plugin (contributor tooling).
+lab/eval/plugins.py maps a file to its plugin, so make eval and
+make eval-all score rewrite skills and agents alongside phx. A
+namespaced agent reference (phx:x, rewrite:x) resolves only in its own
+plugin, and an unknown --plugin name fails instead of scoring nothing.
+Verify records come from evidence.py, not from a script verify
+writes. About 11 of the 19 fixes from the django-ninja trial were
+mechanics that each verify session worked out again: the wrapper, record
+fields, identity captures, the release start line, kill by PID, and
+copying an earlier run's script. ev init starts a run and moves old
+records to superseded/. ev run SLICE NAME -- CMD captures target and
+source identity, runs the command without a shell, captures both again
+and writes the record: exit and expected exit, times, the four
+identities, app env names (secret-like values redacted), ExUnit counts and
+the log. {uid} gives each Hurl run its own value. ev port start|stop
+runs the release with RELEASE_DISTRIBUTION=none in its own process
+group and stops only that group. ev status checks commands.md against
+the records (missing, incomplete, stale, outdated, unexpected exit), and
+ev current gives the auditors CURRENT_IDENTITY. Each black-box file
+now gets its own record, where the trial's verify had bundled 13 Hurl
+files, curl and k6 into one. A check that must find nothing records
+--expect-exit 1, and the parity auditor compares each exit with its
+record's expected exit. Smoke-tested on the trial's prod release: the
+release execs into beam.smp under the same PID and leads its own
+group, and no epmd was left after stop. ev passes the shell's PATH
+as EV_PATH, because a mise shim on python3 rewrites PATH for its
+child from the directory's tool config. In the ASP.NET trial, the port's
+mix then reached an unpinned erl shim and failed, and verify blamed
+the script for stripping the environment. The skill's absence-check
+example now skips comment lines ('^\s*([^#\s].*)?Repo\.'). In slices
+00a and 00b, verify's first rg absence check matched a comment and had to
+be re-run. In ASP.NET slice 02, verify credited the Hurl files from an
+ExUnit wrapper on the test endpoint. The parity auditor now counts a
+black-box file only from its own record against the release started with
+ev port start. The load script runs with a checks threshold: k6 exits 0
+when checks fail, which both trials hit. The verify report quotes
+each row's obligation from parity.md instead of paraphrasing it (a trial
+report mislabeled TK-08), and verify never schedules a wakeup. That rule
+now sits where verify waits for its auditors: ASP.NET slice 04's round 2
+set a 20-minute fallback wakeup there, which re-entered the finished run.
+Verify names the PREVIOUS file exactly: this slice's parity.md, renamed to
+parity-previous.md. Told only to move "an earlier parity.md" aside,
+ASP.NET slice 03's first round ran mv ../02/parity.md /dev/null; the
+move failed and the file survived. CLAIMS now includes the plan's
+scratchpad.md, and the parity auditor reads the source for every
+behavior the work phase recorded as assumed, adding it as an omission
+when no case covers it. Slice 03's work logged three "ASSUMED parity, no
+witness" entries there that the auditor passed over. One was wrong: the
+port answered an empty limit= with 422, where the legacy binds it to
+int? and serves the default page. A behavior the user adds after a
+round now gets a new case ID in the seed. The trial operator's additions
+went into the plan only: slice 00b's auditor counted two as omissions,
+but slice 03's counted none of four. The preflight now also reads
+config/prod.exs, the release's compile-time config, and records the
+endpoint's ip: as read. In ASP.NET slice 04, preflight.md said "loopback
+only" while the release served the throwaway database on 0.0.0.0:8080,
+copying the legacy container's bind. Verify now writes the ledger's Impl
+and Evidence cells with ledger.py set --ids … --impl … --evidence …,
+which keeps every other byte and writes nothing on an unknown ID. Each
+verify had edited those cells with sed. In ASP.NET slice 03, macOS
+sed -i -E took -E as the backup suffix, and the slice commit carried
+a stale ledger.md-E into the port. The parity auditor now treats a
+behavior that the seed's Scope or Dead Ends gives to another slice as out
+of scope, naming that slice's case. Slice 06's first round counted the
+concurrent article-slug 409 as an omission. The seed had put it in slice
+03, where AC-4o already passes. On Linux, ev port stop refused to
+stop a release whose path was long. It matches the release root against
+ps -o command=, and procps cuts piped output at 80 columns. It now
+passes -ww.
+A slice seed's acceptance cases fix the verify denominator. Two
+auditors had counted 52 and 68 obligations from the same slice 07
+criteria, and slice 04 went 22 → 23 → 32 over three audits. The seed
+template now gives each case its own ID (AC-2a, AC-2b: a token shape,
+route, fixture or black-box file) citing the ledger IDs it witnesses.
+ledger.py obligations --slice interview.md lists the cases and fails on
+an item without an ID, a duplicate, a criterion listed both bare and
+lettered, or a mechanism or contract row that no case cites. The roadmap
+fixes the seed until it passes, and verify passes the list to the parity
+auditor as OBLIGATION_IDS. With a clean list the auditor scores those
+cases as given and counts anything else as a labelled omission. For an
+older seed it falls back to splitting criteria, seeded from PREVIOUS.
+On the trial seeds it lists 22 cases for slice 04, the first audit's
+count. For slice 07 it flags M-10, C-14 and C-24, which the tables witness
+but the cases cite only through decision IDs. ledger.py stats --slice
+now counts only the IDs the cases cite and the tables list. The ASP.NET
+trial's first 00a seed named other slices' rows in its prose, and the
+verify gate line read 5 of 12 rows instead of 5 of 5. That scoping exposed
+a gate rule that failed every slice owning no ledger rows. The trial's
+oracle-fixtures slice 01 selects 0 rows by design, so verify now exempts a
+slice whose roadmap.md row lists none.
+contract-surveyor records framework-rendered responses. The four
+django-ninja surprises were all answers the framework renders, not a
+handler: the 409 null body, a 500 for an undeclared status, pydantic's
+422 text, and the malformed-JSON 400. They surfaced in slices 05–07, and
+two of them reached back into slices 02a–04. The surveyor now records,
+from the pinned framework version's source, the status and body for: a
+body that does not parse, a missing or wrong-type field, a path parameter
+that does not convert, an unknown route or wrong method, an undeclared
+status or reshaped return value, and an unhandled exception. When that
+source is not on disk, the row is UNKNOWN with a question naming the
+function, never a body inferred from handler code. In the ASP.NET trial
+the pass found the 404, 405, 415 and binder answers at analysis time. It
+missed two classes, which the 00b seed raised instead: the exact
+Content-Type (the legacy 401 carries no charset) and an unsatisfiable
+Accept, which MVC ignores but Phoenix's plug :accepts answers with 406.
+The pass now records both. Slice 06 then found that every legacy error body is
+exactly application/json (the error middleware and validation filter set
+it), where the port's 403, 404, 409 and 422 carried a charset. The Hurl
+spec asserts no Content-Type, so nothing had caught it. The surveyor's
+wire pass now records the type for success and for each error class.
+Tests for the rewrite scripts (contributor tooling).
+scripts/tests/test_rewrite_inventory.py,
+scripts/tests/test_rewrite_fingerprint.py and
+scripts/tests/test_rewrite_ledger.py cover stack detection (PEP 621,
+Poetry and Pipfile manifests), coverage counts, the snapshot compare, the
+refusal to write inside the source, that git never runs a program the
+source checkout configures (fsmonitor, filters, hooks, signature checks),
+that a file written mid-read or a FIFO never yields a silent inventory, and
+the ledger check: only row IDs and aliases account for a mechanism, rows
+must match their header's width, an AR-NN departure needs a complete
+record (owner, scope listing the row, rationale, review, approval), each
+ledger table needs its own state columns, an ID-shaped token that breaks
+the M-/R-/C- + digits scheme (R-D4) fails the check instead of
+vanishing from every count, stats fails on a malformed
+ledger, and an empty or unreadable slice never falls back to the whole
+ledger. Fingerprinting fails closed when a tracked file is flagged
+assume-unchanged or skip-worktree, since git hides its edits.
+scripts/tests/test_rewrite_evidence.py runs evidence.py in throwaway
+repos: fresh and stale identity, the command's own exit status, redaction,
+{uid}, init moving old records aside, every status state, and a fake
+release that port stop ends while a neighbouring process survives.
+obligations has its own cases in the ledger tests. scripts/tests/test_rewrite_plugin.py
+checks the plugin's own rules: skill-dir paths resolve, namespaced
+references exist, every KB file an agent names exists, the ledger
+vocabulary matches ledger.py, and no stale vocabulary remains.
+Trigger eval covers the rewrite plugin (contributor tooling).
+trigger_scorer.py routes over the phx and rewrite skill pools together
+(phx keys stay bare, others are rewrite:verify), with
+triggers/rewrite-*.json fixtures and hard phx near-miss negatives. All six
+rewrite skills score 100% on the Haiku gate. The behavioral dimension reads
+rewrite-verify.json for rewrite:verify instead of phx's verify.json.
+make budget tracks the rewrite plugin (~1,144 always-on tokens).
+Rewrite eval evidence (contributor tooling). lab/rewrite_eval/ holds
+seven negative controls with a grading rubric, their blind-replay results,
+and the artifacts of three --auto end-to-end runs (Campfire, Node and
+Django RealWorld) plus a fresh-session /phx:plan handoff from a Django
+seed.
+scripts/tests/test_block_dangerous_ops.py (contributor tooling).
+Pytest cases for the Bash gate's pattern-kill, MIX_ENV=prod and script
+checks. It also runs hooks/tests/block-dangerous-ops_test.sh, which no CI
+job ran before, so make test now covers the shell suite too.
+
+Changed
+
+The rewrite README states what the trials showed. Its Limitations now record the
+django-ninja and ASP.NET Core trials, what stays untested, and that rewrite is Claude
+Code only: it relies on specialist subagents and a parity auditor in a fresh context, so
+the Codex, Pi, OpenCode, Amp and dsh ports do not include it.
+
+Directory listing metadata. plugin.json sets displayName
+(Elixir/Phoenix, so the plugin directory no longer lists it as "Phx") and
+supportUrl (GitHub issues). The plugin README now says which data leaves
+the machine: dependency names to hex.pm, PR reads and replies to GitHub
+through gh, and, only with --codex, the diff under review to OpenAI.
+
+Listing metadata for the ecto and lv compatibility plugins. Each
+gets a displayName (Elixir/Phoenix: Ecto, Elixir/Phoenix: LiveView),
+keywords, supportUrl, an icon matching the main plugin's, and a README
+saying it is installed with the Elixir/Phoenix plugin and only hands its
+commands off to /phx: skills.
+
+catchup is ready for the plugin directory. /catchup and /ketchup
+no longer pre-approve any tool (gh/git calls ask once like any other
+command). The plugin gets a
+displayName, supportUrl, an icon, and a README section listing what it
+reads (GitHub via gh, git fetch from origin, your own Linear/Calendar
+connectors, session-file timestamps) and that the brief stays in your
+project.
+
+make venv (contributor tooling). Creates .venv from
+requirements.txt. When it exists, make and the pre-commit hook put it
+first on PATH, so a python3 upgrade without pytest or PyYAML (Homebrew
+moved python3 to 3.15) no longer breaks make test or make ci.
+
+
+Fixed
+
+Oban cron reference uses the 2.24 form. oban/references/queue-config.md
+showed {Oban.Plugins.Cron, ...} under plugins:; Oban 2.24 moved cron to a
+top-level cron: key (Oban.Cron, per-entry timezone:). The old name is
+deprecated and still delegates, which the reference now says.
+--codex no longer dies when OpenAI retires the configured model.
+codex exec review exits 1 with The 'gpt-5.5' model is not supported when using Codex with a ChatGPT account once the model line in
+~/.codex/config.toml is rotated out for the account (observed
+2026-10-15; every gpt-5.x slug failed, codex-cli 0.162.1). The
+codex-reviewer agent and /phx:codex-loop now resolve the account's
+current default from codex debug models (local cache, instant) and retry
+once with -m plus -c review_model (a pinned review_model beats -m
+alone — codex's own review of the fix caught that), report the fallback
+and the config fix, and never hardcode a model name. codex-cli.md
+gotcha 10 records the error shape and the one-liner; gotcha 5 drops the
+dead gpt-5-codex-max example.
+The Bash gate now denies pattern kills of BEAM processes. A headless
+session stopped a dev server it had started with pkill -f phx.server,
+then pkill -f beam, and /phx:work ran pkill -f "mix phx.server". A
+pattern kill stops every Erlang VM on the machine, including the user's
+own servers, IEx shells and ElixirLS. In a project with mix.exs,
+pkill/killall naming beam, beam.smp, erl, erlang, epmd,
+elixir, iex, mix or phx.server (whole words, any case, any flags)
+is denied, as are kill $(pgrep …) and pgrep … | xargs kill for the same
+names. The message says to stop only the process you started, by the PID
+recorded from $!. kill PID, kill -0 PID and kill %1 still run.
+MIX_ENV=prod rule and deny message now agree. The gate denied every
+MIX_ENV=prod … mix … command while its message said a release build was
+expected. Build steps now run: mix release, mix compile,
+mix deps.compile, mix assets.deploy, mix phx.digest,
+mix deps.get --only prod, and mix do chains of only those. Every other
+mix task and iex -S mix stay denied, and the message lists both sides.
+A script no longer hides a denied step. A session ran
+MIX_ENV=prod mix release from scripts/release_smoke.sh, which the gate
+never read, so MIX_ENV=prod mix ecto.migrate there would have run too. When a command runs a local file
+(bash/sh/zsh/source/. FILE, ./FILE, DIR/FILE.sh), the gate
+greps it for the MIX_ENV=prod and pattern-kill denials and names the
+script and line. A missing or unreadable file is skipped (fail open).
+Known gaps (export MIX_ENV=prod, bash -c "…", quoted script paths) are
+listed in hooks/docs/safety-gates.md.
+The plugin directory still blocked v3.1.3 with "Command path can't be
+followed". The validator follows each hook script, not only the
+hooks.json command. It rejects inline programs and paths from variables
+other than ${CLAUDE_PLUGIN_ROOT}. deps-audit-gate.sh,
+check-scratchpad.sh and compact-rules.sh used awk and sed, now
+replaced by plain bash. A differential test against the old scripts gave
+identical output on bash 5.3 and on macOS's bash 3.2.
+Hook message text no longer uses ASCII quotes. v3.1.3 plus the fix above
+still failed at ., next to the Bash gate's deny messages. Those messages
+held apostrophes (user's) and '…'-quoted commands inside double-quoted
+strings, which a reader that loses track of double quotes misparses. Every
+hook script now uses ’/‘…’ in prose and NAME for placeholders, and
+test_hook_script_prose_has_no_ascii_apostrophes guards it.
+Hook scripts no longer run other programs by path. Still blocked at
+. after the fixes above. The Bash gate re-parsed itself with bash -n on
+its own path and looked up jq with command -v; deps-audit-gate.sh
+scanned mix.lock for bidi characters with an inline perl -ne program,
+which the validator names outright. The self-check is removed (CI's
+bash -n pass and conflict-marker check still keep a corrupt copy from
+shipping, but a copy corrupted on disk after install is no longer caught),
+jq --version replaces command -v jq, and the bidi scan is a
+grep byte pattern under LC_ALL=C that matched the perl version on every
+test input with BSD grep, GNU grep and ugrep.
+Hook scripts no longer use heredocs or strings that span lines. Still
+blocked at . after the fixes above. Read with heredoc bodies as code,
+deps-audit-gate.sh's BLOCKED (:new_only). Bidi … message is a subshell
+followed by a . command; read line by line, the Bash gate's multi-line
+deny messages give the same ). Do not retry. shape. Eleven scripts now
+print with printf '%s\n' and one quoted argument per line. A 43-case
+before/after run on bash 5.3 and macOS's bash 3.2 gave byte-identical
+output except the /phx:deps-vet hint, which now reads PKG VER instead
+of <pkg> <ver>. test_hook_scripts_keep_each_string_on_one_line guards it.
+Fewer credential review holds. The /phx:ash-framework code-interface
+example registered a user with password, in the same file as a
+hexdocs.pm link, and the directory read that as a credential sent to a
+remote host. It now uses [:email, :name], and the prose around it says
+"give actor:" rather than "pass actor:".
+No agent sets permissionMode any more. The plugin directory's
+security scan failed catchup as "Weakens permission or sandbox controls"
+over permissionMode: bypassPermissions on catchup-runner, and all 26
+phx agents carried the same line. Claude Code ignores permissionMode on
+plugin agents, so they already ran under your session's permission mode;
+nothing changes at runtime. The agent eval now fails an agent that sets it,
+and test_plugin_agents_do_not_set_permission_mode checks every plugin.
+No skill pre-approves tools any more. The directory reviewer rejected
+phx because "a hook or setting auto-approves its own tool calls". Hooks
+only ever deny, but allowed-tools on /phx:deps-audit,
+/phx:boundaries, /phx:assigns-audit, /phx:n1-check, /catchup and
+/ketchup approved tools without a prompt. They listed only Read,
+Grep and Glob, which never prompt inside the project, and
+/phx:deps-audit's WebFetch for hex.pm, which it does not use (it
+fetches through python3). test_plugin_skills_do_not_preapprove_tools
+guards it.
+Dev dependency advisories (contributor tooling). brace-expansion,
+js-yaml and markdown-it patch updates. An overrides entry lifts
+markdownlint-cli's js-yaml ~5.2.1 pin to ^5.4.1 (Dependabot #18,
+GHSA-r3ph-w7gj-g6xm).
+
+[3.1.3] - 2026-09-29
+Ready for the Anthropic plugin directory. Every hook command is a single script
+path, four skills no longer pre-approve Bash, the plugin has an icon and its own
+README, and Amp-only code no longer ships to Claude Code. The branch-freshness
+hook no longer runs git fetch with your credentials, and it only runs in
+Elixir projects.
+Added
+
+Plugin icon and README. .claude-plugin/icon.svg (the phxagents.dev
+mark) and plugins/elixir-phoenix/README.md, which lists what the plugin runs
+on your machine: hooks, network calls (the Tidewave probe on
+localhost:4000, hex.pm, your own gh and codex) and the files it writes.
+test_hook_scripts_parse (contributor tooling). Every hook script must
+pass bash -n and contain no merge-conflict markers.
+
+Changed
+
+The Bash safety gate's hook command is now one quoted script path. The
+plugin directory rejects hook commands with shell operators, and
+block-dangerous-ops.sh was the only one with || exit 0. That suffix had
+kept a corrupted script (bash exits 2 on a syntax error, and exit 2 blocks
+the call) from blocking every Bash command. The script now checks its own
+syntax first (bash -n "$0" || exit 0), and test_hook_scripts_parse checks
+every hook script in CI. test_hook_commands_are_one_literal_script replaces the
+quoting test and also rejects operators, arguments and missing scripts. The
+Codex target keeps || exit 0.
+Narrower allowed-tools. /lv:assigns, /phx:boundaries and
+/ecto:n1-check no longer pre-approve Bash, so their mix commands ask for
+permission like any other. /phx:deps-audit pre-approves WebFetch only for
+hex.pm and diff.hex.pm, not every domain, and no longer pre-approves Bash.
+The Amp-only watch-pr sources moved out of the Claude Code plugin.
+plugins/elixir-phoenix/amp/ (the phx-watch-pr.ts Amp plugin, which keeps
+a webhook credential under ~/.config/amp/, and its skill overlay) is now
+scripts/port_lib/amp_overlay/. Claude Code installs no longer receive it.
+The generated targets/amp output is byte-identical.
+
+Fixed
+
+check-branch-freshness no longer runs git fetch, and it only runs in
+Elixir projects. At every session start on a non-main branch, the hook
+fetched from your remotes with your SSH key or credential helper, in any git
+repository, Elixir or not. It now needs a mix.exs and compares against
+origin/main as of your last fetch.
+/release skill (contributor tooling): git describe matches v* tags
+only. After claude plugin tag it returned lv--vX.Y.Z as the last release.
+
+[3.1.2] - 2026-09-29
+Claude Code 2.1.284 and the 5.5 models. Hooks now work when the plugin's install
+path contains a space. Workflow rules are re-injected after compaction. Agents run
+on Sonnet 5.5 at medium effort, and the prompts are reworded for the new
+models. Six skills that rarely fired on Sonnet 5.5 have new descriptions.
+Added
+
+make eval-quality, an output-quality eval (contributor tooling). Six
+claude plugin eval cases run each workflow with and without the plugin
+(--ablation with-without) and grade the resulting code, plan or findings.
+The cases are money stored as a float, queries in mount on a 50k-row list,
+an idempotent Oban worker, a plan with checkbox tasks, an investigation that
+can reuse a prior solution doc, and a review with nine seeded defects. On
+Sonnet 5.5, five runs per arm, the plugin's clearest gains are writing code
+against a bad local convention (money field +0.20, LiveView list +0.20) and
+reusing .claude/solutions/ (+0.16). Review is a tie: Claude without the
+plugin found all nine defects in 5 of 8 runs. Paid and not part of make ci
+(about $2 per run of all six cases).
+
+Changed
+
+Aligned with the Claude 5.5 models (Opus 5.5 default since CC 2.1.280,
+Sonnet 5.5 since CC 2.1.284). /phx:audit pins its two general-purpose
+tracks to model: "sonnet": Opus is now the default model on every plan,
+including Pro and Team Standard, so an unpinned track ran on Opus for
+everyone. The eval tooling follows the new models — trigger_scorer's
+sonnet/opus aliases resolve to claude-sonnet-5-5/claude-opus-5-5,
+make eval-plugin pins Sonnet 5.5, with a new baseline of 164/269
+positive recall and 233/233 clean negatives (Sonnet 5: 176/269), and /session-scan knows the 1M context window of Sonnet 5+,
+Opus 4.8+ and Fable. Contributor docs record that effort: high is now a
+step above the Opus 5.5/Sonnet 5.5 default of medium, and that Haiku 4.5
+ignores effort.
+make validate now runs claude plugin validate --strict, so a
+validator warning fails the gate instead of printing "passed with
+warnings". A pytest guard checks hook quoting in GitHub CI, which has no
+claude binary.
+The five former Haiku agents run on Sonnet 5.5: context-supervisor,
+web-researcher, xref-analyzer, codex-reviewer and
+verification-runner. Haiku 4.5 is a generation behind, has a 200K window,
+ignores effort, and its retirement window opens on October 15, 2026;
+Sonnet 5.5 costs twice as much. Every agent now runs at effort: medium,
+the CC default for the 5.5 models — three of the four Opus agents drop
+from high, since Opus 5.5 at medium matches Opus 5 at high.
+Prompts reworded for the 5.5 models. Anthropic's prompting guide for
+this generation warns that emphatic CRITICAL/MUST/NEVER wording
+over-triggers. About 100 edits across skills, agents, hook messages and
+CLAUDE.md replace unexplained caps, duplicated prohibitions, session-ID
+history notes and narration suppressors with the instruction and its
+reason. Iron Laws, headings, and text the port builders anchor on are
+unchanged.
+/phx:full Iron Law 7 now says when to write text, instead of banning
+it. It was an older-model rule: a list of banned phrases and "if you catch
+yourself narrating, delete the text". Opus 5.5 follows such rules literally,
+which risks a silent autonomous run. The law now asks for a one-line status at
+each phase transition, a reason for each non-obvious decision, and a report of
+every error and blocker.
+Amp specialists follow the canonical agent models instead of Haiku 4.5.
+The security specialist runs on anthropic/claude-opus-5-5; the other
+reviewers and the four investigation tracks run on anthropic/claude-sonnet-5,
+because Amp does not offer Sonnet 5.5 to plugin agents. Amp accepts any model
+ID at load and fails each child run at inference, so the build now fails on a
+canonical model alias it has no Amp mapping for.
+ELIXIR_PHOENIX_AMP_SPECIALIST_MODEL accepts any provider/model ID Amp
+lists (it used to reject providers such as google-vertex).
+Six skill descriptions rewritten after they almost never fired on Sonnet 5.5:
+document, ecto-patterns, oban, perf, help and trace. Sonnet 5.5
+does Ecto, Oban and performance work itself unless the description asks it to
+load the skill first, so each now opens with the user's task and, where it
+helped, says to load the skill before acting. Measured on held-out prompts the
+rewrites never saw (3 runs each): perf 0/12 → 9/12, oban 3/12 → 7/12,
+ecto-patterns 0/12 → 6/12, document 5/12 → 9/12; help and trace gained
+on one or two prompts. No skill lost precision on negative prompts. quick
+kept its description; neither rewrite helped it.
+make eval-plugin has a held-out split, and the description tournament
+requires it (contributor tooling). Trigger files take should_trigger_test /
+should_not_trigger_test prompts, tagged split-val (TAG=split-train
+reproduces the old 502 cases). description_tournament.py refuses a skill with
+no held-out prompts unless --allow-unvalidated is passed, and its prompts no
+longer ask for keyword-stuffed descriptions. Half the zero-recall prompts named
+code the eval fixture doesn't have, so Claude asked a question instead of
+loading a skill; they now target the fixture's real files.
+/phx:triage no longer auto-approves Iron Law violations and
+BLOCKERs. It lists them first as recommended fixes and lets the user
+decide, as its own Iron Law 6 requires.
+/phx:investigate checks migration status (mix ecto.migrations)
+instead of running mix ecto.migrate during a diagnosis.
+Contributor tooling adopts the new claude plugin commands.
+make budget fails when a plugin's always-on token cost
+(claude plugin details) grows more than 5% past scripts/plugin_budget.json.
+make prompt-audit TARGET=... runs a report-only /doctor prompt-audit.
+make validate also covers the contributor .claude/ skills and agents.
+/docs-check fetches the plugin CLI, marketplace, dependency,
+measurement and plugin-eval reference pages.
+The plugin manifests declare "license": "MIT".
+Each release now also gets phx--vX.Y.Z, ecto--vX.Y.Z and lv--vX.Y.Z
+tags from claude plugin tag, so other plugins can depend on these with a
+version range.
+
+
+
+Fixed
+
+Every hook failed when the plugin was installed under a path with a
+space (for example /Users/John Doe/.claude/...). All 30 commands in
+hooks.json left ${CLAUDE_PLUGIN_ROOT} unquoted, so the shell split the
+path and the script never ran. On the always-on Bash gate, || exit 0 then
+turned that into an allow: the force-push and destructive-mix blocks were
+silently off. Commands are now quoted; claude plugin validate has flagged
+this since CC 2.1.281.
+/phx:work, /phx:full, /phx:plan, /phx:audit and /phx:review
+told Claude to call task tools that current models don't have. Since CC
+2.1.233 (narrowed further in 2.1.268), TaskCreate/TaskUpdate/TodoWrite
+exist only on older models unless CLAUDE_CODE_ENABLE_TODO_TOOLS=1 is set.
+Those steps are now conditional on the tool being present, and /phx:audit
+and /phx:review wait on agent completion notifications instead of task
+status. Plan checkboxes and progress.md were already the real state.
+/phx:watch-pr asked Monitor for a 60–120 minute watch and a
+persistent option that no longer exist. Since CC 2.1.271 a Monitor
+watch ends within 30 minutes. The watcher now runs in segments
+(WATCH_SEGMENT): before the deadline it emits a non-terminal rearm
+event, and a restart with WATCH_RESUME=1 restores the baseline, the
+already-reported reviews and comments, the check state and the codex flags
+from its delta file, so nothing is reported twice or missed.
+WATCH_MAX_DURATION still bounds the whole watch. Each segment polls at least
+once before it re-arms, and review and comment events now carry an id.
+Workflow rules were never re-injected after compaction. The PreCompact
+hook sent them as systemMessage and the PostCompact hook as exit 2 +
+stderr, and CC shows both to the user only. Both now run on SessionStart
+with the compact matcher, whose stdout reaches Claude, as
+compact-rules.sh and compact-verify.sh.
+The debugging-loop critic escalated a session's first mix failure.
+error-critic.sh kept its failure counts in a global /tmp directory and
+never cleared them. After a command had failed twice in any earlier session,
+every later failure of it went straight to the "debugging loop" analysis. The
+count is now per session and resets when the command succeeds (the script is
+also registered on PostToolUse for mix commands).
+The session-start scratchpad banner reported dead ends that didn't exist.
+It counted every bullet in the file, including the template's Handoff
+bullets. It now counts only the Dead Ends section.
+The Iron Laws injected into subagents skipped Law 18 (check changeset
+errors before UI debugging). All 26 are now injected.
+The Ecto failure hint told Claude to run mix ecto.reset, which the
+dangerous-ops hook blocks. It now tells Claude to ask the user.
+Stale facts in skills and agents:
+pr-review cited Iron Laws 6 + 9 (it has 8).
+The compound-docs schema limited iron_law_number to 1–13.
+/phx:deps-vet listed unvetted-dependency blocking as future work; the
+deps-audit-gate.sh hook already enforces it.
+The help catalog kept orphan bullets from the removed /phx:autoresearch.
+context-supervisor ignored caller-supplied globs such as /phx:deps-audit's
+triage/*.json.
+parallel-reviewer told verification-runner it had 10 turns (it has 15).
+The /phx:full references documented nonexistent --resume and
+--checkpoint-after flags, and a commit per task.
+"Fresh 200k context" claims predated 1M windows.
+The example plans used retired --detail values.
+
+
+The monthly "Regenerate hex_vet seed" workflow failed on every run since
+June (contributor CI). Its audit step is a placeholder and the
+compose_seed.py script it calls was never committed. The workflow is now
+manual-only until both exist.
+
+[3.1.1] - 2026-09-29
+Two fixes that reach every runtime — deps-audit no longer installs its test
+harness, and /phx:watch-pr now reports CI from commit-status integrations —
+plus six skill descriptions that route more reliably in real sessions.
+Added
+
+Real-session trigger eval with claude plugin eval (CC 2.1.269+) —
+make eval-plugin turns every lab/eval/triggers/*.json prompt into a
+plugin-eval case and runs it in an isolated Claude Code session with phx,
+ecto and lv loaded, against a scaffolded Phoenix app (plus plan, review and
+Ash fixture flavors for skills whose prompts reference those artifacts).
+lab/plugin_eval/analyze.py reports what the pass/fail table cannot: which
+skills actually fired, stray fires on other skills' prompts, plugin load and
+hook errors, and per-skill recall (MIN_RECALL= gates on it). First full
+baseline (502 cases, Sonnet 5): positive recall 176/269 (65%), negatives
+233/233 clean — while the Haiku description-only gate scored several of the
+weakest skills at 100%. 173 of 176 hits invoked the skill as the first
+tool call, so cases cap at 3 turns (~$0.09/run). Suite lives outside the
+plugin: phx's dependencies are unsatisfiable when claude plugin eval
+loads it alone, which silently disables the plugin while still scoring every
+run. Unit tests run in make test and CI.
+
+Changed
+
+Six skill descriptions rewritten to lead with the user's task, each
+validated by a real-session A/B (15 samples per skill per arm):
+security 8→14/15, investigate 7→11, ecto-patterns 3→6, review 1→4,
+perf 4→7, oban 11→13 (pooled 34/90 → 55/90, Fisher p=0.001). All six
+still clear the 75% Haiku gate. The same rewrite made elixir-idioms and
+phoenix-contexts worse, so those two were reverted. Generated targets
+re-synced.
+The dsh runtime smoke has now been executed against an installed dsh —
+it shipped in v3.1.0 written against the rc.2 wire contract read from source
+but never run, and docs/dsh.md carried a caveat saying so. Run against
+dsh 0.1.1-rc.2: session.create returns { agentPreset, sessionId } and
+skill.list returns all 51 generated skills as
+{ name, description, modelInvocable }, all model-invocable — the contract
+matches, no code change needed. The same session confirmed the one-level
+discovery rule empirically: the identical 51 skills installed one directory
+deeper are discovered zero times, which is the behaviour the builder's
+nested-SKILL.md rejection and the install guide's warning both rest on. The
+caveat is replaced with the observed results.
+
+Fixed
+
+/phx:watch-pr never reported CI on repos with commit-status checks, and
+reported cancelled runs as green (#144,
+reported by @aquental) — the watcher read every statusCheckRollup entry
+as a GitHub Actions CheckRun, but StatusContext entries (CodeRabbit,
+CircleCI and other commit-status integrations) carry only state. A passing
+one counted as pending forever, so the check event never fired and the
+watcher ran silently to its watchdog. CheckRuns concluding CANCELLED,
+TIMED_OUT, STARTUP_FAILURE, ACTION_REQUIRED or STALE counted as
+success. Entries are now classified by __typename; a regression test runs
+the real script against 19 rollups.
+trigger_scorer --model sonnet|opus evaluated retired models — the
+aliases still resolved to claude-sonnet-4-6 and claude-opus-4-7; they now
+resolve to claude-sonnet-5 and claude-opus-5.
+deps-audit shipped its test harness to every install — the Claude Code
+plugin and all five generated targets (Amp, Codex, dsh, OpenCode, Pi)
+installed 53 dev-only files: the smoke-test/ fixture suite, the recorded
+hex.pm cassettes in test-assets/, and priv/cassettes/capture.sh. They now
+live in the repo at lab/deps-audit/, and a test fails if a skill folder
+holds anything besides SKILL.md, references/, scripts/ and priv/.
+The Hex tarball loader was the one runtime piece in that suite: it moved to
+deps-audit/scripts/fetch_tarball.sh, and /phx:deps-vet now calls it
+through ${CLAUDE_SKILL_DIR} instead of a repo-relative path that did not
+exist inside a user's project.
+
+[3.1.0] - 2026-08-27
+A fifth runtime target (DeepSeek Harness), the first user-facing hook
+documentation, and a native Amp phx-watch-pr lifecycle.
+Added
+
+DeepSeek Harness (dsh) target (#139) — a fifth generated runtime target
+at targets/dsh/, projecting all 51 canonical skills with their complete
+resource subtrees. dsh's dsh-skill-filesystem provider scans
+.agents/skills and friends for single-level <name>/SKILL.md bundles, and
+its pre-step boundary injects the full body for a whitespace-bounded
+/phx-* token, so the plugin's command surface survives intact. dsh also
+reads CLAUDE.md natively, so /phx:init output needs no porting. Adds
+scripts/port_lib/dsh.py, scripts/build_dsh_skills.py, twelve tests in
+scripts/tests/test_dsh.py, make dsh-skills{,-sync,-validate} wired into
+generated-skills-sync and ci, an optional make dsh-runtime-smoke that
+verifies discovery over dsh's loopback /api RPC bridge (session.create then
+skill.list, no API key needed), a golden snapshot entry, docs/dsh.md, and
+a dsh column in docs/runtime-support.md. Two dsh-specific build gates:
+descriptions are capped at the 500-char catalogDescriptionMaxLength (dsh
+truncates silently past it) and nested SKILL.md files are rejected (dsh
+discovery is deliberately one level deep). Skills-only by design — dsh has no
+markdown agent registry, and its Claude Code hook bridge covers 7 of 30 events
+while dropping if: gating, so neither the 26 agents nor the 30 hooks ship.
+Tested against dsh 0.1.1-rc.2, a developer preview.
+
+Hook documentation — the 23 hooks across 10 lifecycle events had no
+user-facing docs; the reasoning lived only in script header comments and a
+terse contributor checklist. Adds HOOKS.md at the repo root (what fires
+when, a lifecycle diagram, the full hook table, escape hatches),
+plugins/elixir-phoenix/hooks/README.md (per-event output-channel table and
+the shared conventions: mix.exs gating, the fail-open contract, if
+conditions, blame-aware scanning), and six per-group deep dives under
+plugins/elixir-phoenix/hooks/docs/ — safety gates, code quality, failure
+recovery, context injection, session lifecycle, workflow state. Each records
+the incident or measurement the hook came from (issue #55 cross-project
+bleed, issue #61 --force-with-lease, issue #38 progress.md cross-writes,
+the ~0% CLAUDE.md routing finding). CLAUDE.md now requires these docs to be
+updated in the same commit as any hook change.
+
+Amp-native phx-watch-pr lifecycle — the deterministic Amp target now
+includes a focused Plugin API runtime that acquires an Orb keep-alive lease,
+persists watch state across reloads, filters deployment-like checks out of
+readiness, detects unresolved review threads and required CI failures, and
+serializes --fix events back into the same worker thread. Defaults are a
+60-second poll, 15-minute activity-based quiet period, and 2-hour hard
+active-watch cap; head pushes, required-check transitions, reviews, and
+comments restart quiet so delayed reviews cannot be hidden by an early green
+snapshot without waking inference for routine progress. Deployment-only
+transitions remain status-visible but silent. Every terminal path releases
+the lease, and the plugin never blindly reruns shared CI, merges, or deploys.
+An optional durable Amp webhook can reactivate a completed watch after the
+Orb pauses only when the event identifies the exact watched PR or head SHA;
+repository webhook configuration remains an explicit external administrator
+action.
+
+README links phxagents.dev above the fold — a docs badge, a one-line
+Docs block pointing at /install/, /compatibility/, /iron-laws/ and
+/catalog/, and a per-runtime install-guide link in each of the four
+"Using Amp/Codex/Pi/OpenCode?" callouts. The README had zero
+phxagents.dev mentions across 1,056 lines while being the project's
+higher-traffic discovery surface: over 08/02-08/15, Google sent 56 unique
+visitors to the repo versus 14 from the docs site, so everyone arriving from
+search read the whole README and never learned the docs site exists. The
+repo's About → Website field was already set.
+
+Deterministic Amp workflow plugin — the generated Amp target now includes
+40 workflow palette commands, five read-only domain specialists, bounded
+parallel review and investigation, a persistent classified edit lock, and a
+bounded phx-full verification gate. The standalone distribution promotes a
+validated stable branch for direct GitHub installation.
+
+
+Changed
+
+route-intent.sh timeout raised 10s → 30s — the UserPromptSubmit
+intent-routing hook had the tightest budget of any hook in the plugin despite
+sitting on the latency path of every prompt. It normally finishes in well
+under 100ms (it truncates the prompt to 4000 chars before scanning), but a
+timeout drops the routing hint silently, so the extra headroom costs nothing
+on the common path and avoids losing suggestions on a slow first run. The
+hook already exits 0 on every path — a UserPromptSubmit hook must never
+exit 2, which would erase the user's prompt.
+
+Release bodies now carry a docs-site footer — the release contributor
+skill gained an Iron Law and a printf step that appends
+<https://phxagents.dev> to the extracted CHANGELOG release notes. A release
+body is read at the moment someone decides whether to install, and releases
+are this project's one promotion lever with a measured effect: v3.0.1 drove
+unique cloners from 51 to 120 in a single day (2.4x), decaying to baseline
+over about four days.
+
+Amp installation profiles and scope names now match current Amp — docs
+distinguish hosted-native from paired-full behavior, use native skill: invoke for deterministic hosted skill loading, and separate machine-local
+--global installs from personal/workspace hosted repositories. The public
+standalone repository, generated target, gated stable branch, paired local
+install, and GitHub/curl fallback remain supported.
+
+deep-bug-investigator synthesizes on opus, its four tracks run on sonnet
+(thanks @BugsBunny338, #133) — the agent coordinates four parallel
+investigation tracks and then reconciles their often-conflicting evidence.
+Cross-track synthesis is where the stronger model earns its cost, and
+hard-to-reproduce bugs are where a weak synthesis is most expensive. The
+frontmatter bump alone would have been the wrong fix: the tracks spawn as
+bare general-purpose subagents, which default to model: inherit and so
+resolve to the spawning parent's model — opus on the orchestrator would
+have silently promoted the whole fan-out to five opus contexts. The tracks
+are now pinned to model: "sonnet" explicitly, keeping fan-out cost where it
+was: sonnet gathers evidence, opus synthesizes. effort: medium is
+unchanged; the eval allowlists opus for orchestrators, so no symmetry fix is
+owed.
+
+workflow-orchestrator pins its COMPOUNDING spawn to sonnet — same
+inheritance leak as above, found while reviewing #133. The orchestrator runs
+on opus and spawned an unpinned general-purpose subagent to write solution
+docs, so that mechanical phase was silently billed at opus. Named phx:*
+subagents were never affected — their own frontmatter wins — so
+parallel-reviewer and planning-orchestrator needed no change.
+
+The release contributor skill hoists upgrade warnings to the top of the
+release body — a new Iron Law and template: when a release needs anything
+beyond /plugin update, the body opens with a > [!WARNING] block carrying
+the exact commands, and states the blast radius in what the user loses rather
+than in mechanism. v3.0.0 documented its staged upgrade correctly but placed
+it at roughly line 145 of a long changelog dump, phrased as "a temporary
+missing-dependency state" — and users upgraded into a broken install anyway
+(#135). A correct instruction nobody reaches is indistinguishable from a
+missing one.
+
+CLAUDE.md model-tier rules describe the actual split — the guidance said
+"opus for primary workflow orchestrators, sonnet for secondary orchestrators
+(investigation, tracing)", which stopped matching the plugin once
+planning-orchestrator moved to sonnet and deep-bug-investigator moved to
+opus. The rule is now stated in terms of what earns opus (synthesis across
+parallel workers) and names the four agents on each side, plus the
+general-purpose pinning requirement that follows from it.
+
+
+Fixed
+
+Canonical skills told every runtime to run Claude Code's /mcp (#141) —
+tidewave-integration/SKILL.md (Iron Law 3) and examples/SKILL.md both used
+/mcp to check MCP availability, and shipped byte-identical to all five
+generated targets, where that command does not exist. Iron Law 3 now reads
+"Call Tidewave only when matching mcp__tidewave__* tools are present" — a
+check that works on every runtime — and the examples fence drops the probe
+for a # Requires connected mcp__tidewave__* tools note, switching from a bash
+fence to a text one since its contents are tool invocations rather than
+shell. The one remaining mention stays, already qualified with "in Claude
+Code". Found while reviewing #140; fixing it in one target would have broken
+the test asserting the two Agent Skills projections differ only by the
+runtime name.
+
+The phx-watch-pr harness test was one second from red — it ran with a
+60-second subprocess timeout and takes ~59 seconds of wall time for ~3 seconds
+of CPU: the harness drives a fake clock with real 80ms flushes, and advance()
+performs up to 21 of them across 23 calls. Observed locally at 58.9s, 60.4s,
+and 73.9s on consecutive runs, so it passes or fails on runner load alone —
+and it is a required check, meaning it would have started blocking unrelated
+PRs. Raised to 240s; the harness itself is unchanged, since shortening the
+flush would trade a timeout flake for a race.
+
+The phx-watch-pr install command could never have worked — README and
+docs/amp.md told users to run amp plugins add against a
+raw.githubusercontent.com URL. Amp 0.0.1787045288 rejects that with
+For now, only https://ampcode.com/@amp/plugins/*.ts ... URLs are allowed and
+writes nothing. The same docs/amp.md already said, 390 lines further down,
+that "Amp currently restricts amp plugins add ... to Amp-hosted plugins" —
+the file contradicted itself, and the install instruction was the wrong half.
+Both call sites now use the atomic curl + mv pattern already documented
+for elixir-phoenix.ts, pointing at the standalone repository's stable
+branch. The update section covers both plugins instead of only the workflow
+one.
+
+Upgrading from v2.x no longer lands users in a dead install (reported by
+@barquesurlocean, #135) — v3.0.0 renamed the plugin manifest to phx (which
+is what makes /phx:* correct; pre-v3 versions namespaced their commands as
+/elixir-phoenix:* while /phx:init wrote /phx:* into CLAUDE.md) and in
+the same commit introduced the ecto and lv compatibility plugins as
+manifest dependencies. Adding a dependency turns out to be a breaking
+change for already-installed users: claude plugin update does not
+install dependencies a new version newly declares, and a missing dependency
+is a hard load failure, so the obvious /plugin update leaves the plugin at
+✘ failed to load with all 36 /phx:* commands gone — taken down by the 3
+compatibility commands. Verified on Claude Code 2.1.234, so this is not the
+2.1.76–2.1.109 version band recorded during #130; it affects every v2 user on
+every Claude Code version. Nothing self-heals either, because auto-update is
+off by default for non-Anthropic marketplaces. The README's staged upgrade
+block was already correct but described the failure as "a missing-dependency
+state"; it now leads with a warning, states the blast radius in commands
+lost, declares the 2.1.110 version floor, adds a recovery path for anyone who
+already updated in the wrong order, and explains the /phx: vs
+/elixir-phoenix: prefix history. Note during recovery that
+claude plugin install elixir-phoenix@oliver-kriska resolves only one
+missing dependency per invocation.
+
+make validate covers every plugin manifest — the target validated
+plugins/elixir-phoenix and the marketplace only, so plugins/ecto,
+plugins/lv, and plugins/catchup could ship a schema violation that CI
+never saw. This is exactly how displayName reached users: it was present in
+all four Claude-facing manifests while the gate looked at one of them. All
+five manifests are validated now.
+
+Amp wrapper skill resolution follows supported local precedence — the
+generated plugin now checks machine-local skill roots before workspace roots
+and searches .agents/skills and .claude/skills through the parent
+directories exposed from workspaceRoot. Docs explicitly call out sources
+the Plugin API cannot resolve, including hosted repositories, built-ins,
+plugin caches, custom amp.skills.path, and nested invocation roots that are
+not exposed to plugins.
+
+displayName removed from all Claude Code manifests (reported by
+@ndrean, #130) — the field was introduced alongside the v3 plugin split and
+reported as an install blocker one day later. It is undocumented: it appears
+nowhere in the plugin manifest schema, whose metadata fields are version,
+description, author, homepage, repository, license, and keywords.
+It is also inert — claude plugin list renders the plugin name, never
+displayName — and Anthropic's own marketplace uses it in 3 of 285 entries,
+always in marketplace.json and never in a plugin.json, which is exactly
+where this repo had it. catchup had already been shipping without it. A
+clean install from GitHub could not be reproduced as broken on 2.1.227, so
+the original failure was likely specific to the Claude Code range current in
+late July; the field is gone regardless, since nothing depended on it. The
+Codex manifests (targets/codex/.codex-plugin/plugin.json,
+.agents/plugins/marketplace.json) keep theirs — different runtime,
+different schema, where it is nested under interface.
+
+
+[3.0.1] - 2026-08-10
+Maintenance release: closes a bypass in the destructive-command hook, retires
+injected CLAUDE.md prose that session analysis measured as inert, and brings the
+marketplace manifest under CI validation.
+Changed
+
+/phx:init writes a routing table instead of a seven-step procedure — the
+template injected into your CLAUDE.md carried an "EXECUTE BEFORE EVERY
+RESPONSE" block: classify the request, total a complexity score from an
+eight-row point table, route off the number, then consult a file-pattern
+auto-load table. Session analysis across 400 sessions measured that style of
+CLAUDE.md prose firing ~0% of the time, which is why plugin routing moved into
+the UserPromptSubmit hook and Iron Laws into the SubagentStart hook. The
+injected template had never been updated to match and still shipped the
+pre-measurement design. It is now a compact routing table plus the rules that
+carry real content — every routing decision is preserved, including that
+security work does not skip planning. Iron Laws, verification, and the
+stack-conditional sections are unchanged. Re-run /phx:init --update to pick
+it up.
+
+Marketplace manifest is now validated in CI — make validate ran only
+claude plugin validate plugins/elixir-phoenix, so the marketplace manifest
+and its ecto / lv / catchup entries were never checked. CC 2.1.221 added
+name warnings for entries that Claude Desktop's managed marketplace sync would
+reject; make ci now catches them.
+
+Trimmed dated prompt scaffolding from four agents — removed fixed word
+ceilings from the deep-bug-investigator and call-tracer subagent prompts
+(deep-bug-investigator already compresses every track through
+context-supervisor, so the cap was degrading input to its own compression
+layer), and dropped duplicated "you do not have Bash access" restatements in
+iron-law-judge and security-analyzer where the frontmatter tool list
+already enforces it.
+
+
+Fixed
+
+Closed a leading-whitespace and subshell bypass in the destructive-command
+hook — all three deny patterns anchored on ^ with no leading whitespace
+permitted, so a leading tab before mix ecto.drop, leading spaces before
+git push --force, and a subshell-wrapped (MIX_ENV=prod mix release) each
+executed while evading the block. The anchor
+is now ^[[:space:](]*. Claude Code fixed the same padding-hides-the-command
+class of hole in its own permission prompts in 2.1.223. The quoted-mention
+protection from issue #61 is preserved — echo "(git push --force)" still does
+not trigger — and the regression suite covers both directions.
+
+[3.0.0] - 2026-07-25
+Major release: keep Claude Code as the full canonical plugin while adding
+generated, runtime-native skills distributions for Amp, Codex, Pi, and
+OpenCode. Each target is explicit about supported workflows and deferred
+capabilities rather than claiming cross-runtime feature parity.
+Added
+
+LiveView client-boundary guidance — documents that phx-value-*, form,
+and hook payloads are user-controlled; clarifies that exposed IDs are not an
+authorization flaw by themselves and must be checked against server-side
+state in every event.
+
+Generated multi-runtime skills distributions — all 51 canonical skills,
+complete resource subtrees, non-Markdown bytes, and executable modes now ship
+as deterministic targets for Amp, Codex, Pi, and OpenCode. Target generators
+normalize names and invocation syntax, validate references and manifests,
+reject collisions and escaping resources, build through staging directories,
+preserve prior output on failure, and provide read-only drift checks. Claude
+Code remains the canonical source and retains its full native hooks, agents,
+MCP, permissions, and instructions.
+
+Canonical multi-runtime support matrix — documents native invocation,
+distribution, supported and deferred capabilities, generated-target
+acceptance requirements, and isolated Amp, Codex, Pi, and OpenCode smoke-test
+contracts.
+
+All-runtime generated skills sync command — contributors can run
+make generated-skills-sync to regenerate and validate Amp, Codex, Pi, and
+OpenCode in sequence, then validate the reviewed golden snapshots.
+Target-specific sync and validation commands remain the authoritative
+implementation and keep failures attributable.
+
+Codex native destructive-command safeguard — the generated Codex plugin
+now includes one trust-gated, synchronous PreToolUse hook that reuses the
+canonical audited blocker for destructive Ecto operations, unguarded force
+pushes, and accidental production Mix commands. The broad Claude hook set,
+async hooks, custom agents, and Tidewave MCP remain deferred.
+
+Optional runtime smoke harness — make amp-runtime-smoke,
+make codex-runtime-smoke, make pi-runtime-smoke, and
+make opencode-runtime-smoke validate locally
+generated targets, native installation or discovery, all 51 installed skills,
+retained resources and modes, and fresh-process removal in isolated temporary
+homes without requiring credentials or making model calls.
+
+Generated-target golden snapshots — CI now pins aggregate path, byte, and
+executable-mode digests for Amp, Codex, Pi, and OpenCode before shared
+generator refactoring. Target changes require an explicit reviewed snapshot
+update instead of silently redefining the baseline.
+
+Package-specific /phx:learn-from-fix routing — verified fixes and
+explicit user-taught rules can now be saved as native background skills with
+--library <package> --scope personal|project. The workflow reads locked
+versions, checks both scopes for shadowing, merges safely, and never writes to
+cached plugin files. General cross-project rules route to personal
+~/.claude/CLAUDE.md. Description-based activation remains model-selected.
+
+Amp target drift pre-commit guard — canonical changes under
+plugins/elixir-phoenix/skills/ now trigger make amp-skills-validate and
+require regenerated targets/amp/skills/ changes to be staged. CI retains
+the same drift check as the authoritative fallback. Contributors can run
+make amp-skills-sync to regenerate and verify the complete target in one
+command.
+
+
+Changed
+
+Optional release-service configuration — deployment guidance now gates
+optional S3, Redis, and similar credentials behind their feature switch so
+unrelated release commands such as bin/migrate can start without them.
+
+Portable Amp investigation and review workflows — generated Amp
+phx-investigate and phx-review now preserve evidence-first investigation,
+read-only review, optional native workers, and complete same-session sequential
+fallbacks without Claude task APIs, named agents, hooks, or MCP identifiers.
+
+Portable PR-review/full workflow overlays — generated Amp, Codex, Pi, and
+OpenCode phx-pr-review now use available GitHub connectors or authenticated
+gh, preserve read-only triage and explicit mutation approval, and never infer
+replies or resolution. Generated phx-full now preserves user phase gates,
+bounded retries/cycles, explicit verification, read-only review, and compound
+completion through portable skill invocation or sequential same-session
+execution. Canonical Claude output remains unchanged; other workflows are not
+claimed portable.
+
+Portable plan/work workflow overlays — generated Amp, Codex, Pi, and
+OpenCode phx-plan and phx-work skills now use scratchpad research checklists, plan
+checkboxes, and progress.md instead of Claude-only named agents, task APIs,
+question tools, hooks, or MCP identifiers. Optional native subagents and
+Tidewave retain complete same-session sequential fallbacks. Canonical Claude
+skills are unchanged; this does not claim parity for other generated workflows.
+
+Codex skill descriptions now preserve routing signal within a compact
+budget — generated descriptions are capped at 120 characters while retaining
+key capability and trigger cues. Route-sensitive skills keep explicit negative
+routing rules to avoid collisions. This reduces pressure on Codex's shared
+skills context without changing canonical Claude descriptions, explicit skill
+bodies, or other generated runtimes.
+
+Amp installation no longer requires cloning this repository — the primary
+project-local and global instructions now install all 51 generated skills
+directly from the GitHub targets/amp/skills tree. Update instructions also
+clarify that Amp copies skills and requires an explicit --overwrite install.
+
+
+Fixed
+
+Examples skill routing — clarify that requests for sample code, proper
+implementations, walkthroughs, and expected workflow output should load the
+examples skill alongside the relevant domain skill.
+
+Accurate Tidewave MCP setup boundary — update the maintained Phoenix
+dependency requirement and repository link, distinguish exposing Tidewave's
+HTTP server from registering it with a client, and document external
+registration for Claude Code, Codex, and OpenCode.
+
+Claude Code 2.1.217–2.1.220 nested-agent compatibility — flagship
+workflows account for the depth-1 default in 2.1.217–2.1.218 and the restored
+depth-3 default in 2.1.219+. Explicit lower-depth configurations keep
+orchestration in the main conversation while spawning leaf specialists
+directly, preserving the plan/work/verify/review contracts. Nested
+investigation tracks apply tracing directly to avoid a depth-4 chain.
+
+Claude Code 2.1.212 Agent invocation compatibility — removed the ignored,
+deprecated Task/Agent mode parameter from workflow instructions. Subagents
+inherit the parent session's permission mode.
+
+Fork-session continuity on Claude Code 2.1.214+ — resume, scratchpad, and
+branch-freshness SessionStart checks now also run for source fork.
+
+Claude Code 2.1.218 agent validation compatibility — declared agent names
+remain unqualified while concrete runtime invocations use the phx: plugin
+namespace. Regression coverage rejects colons in declared agent names and
+unrecognized agent tool names.
+
+Claude Code slash-command compatibility remains stable in v3 — the
+marketplace package keeps its elixir-phoenix install identity while the
+plugin namespace now explicitly registers /phx:*; auto-installed ecto
+and lv compatibility plugins preserve /ecto:* and /lv:*. The call
+tracing skill directory now matches /phx:trace, and regression coverage
+checks effective namespace-plus-frontmatter command names. Canonical
+frontmatter names contain only the final command segment because Claude Code
+2.1.216+ retains the plugin prefix when a skill declares name.
+
+v2 → v3 upgrade path preserves newly added compatibility dependencies —
+install the new ecto and lv compatibility plugins from the updated
+marketplace before updating elixir-phoenix. This avoids a temporary
+missing-dependency state on existing installations. Restart Claude Code
+before relying on the updated hooks and agents.
+
+Generated freeze is now honest about its safety boundary — Amp, Codex,
+Pi, and OpenCode receive an advisory current-session edit scope instead of a
+sentinel that falsely claimed enforcement by an uninstalled Claude hook.
+
+Generated nested resource links now resolve from their containing file —
+Amp, Codex, Pi, and OpenCode projections compute skill-relative paths from
+each Markdown resource directory instead of the skill root, fixing broken
+cross-skill and sibling links under nested references/ directories.
+
+Pre-release test and docs-site consistency — npm test now includes the
+scripts/tests/ port suite, matching make test and CI, and the docs-site
+rebuild workflow triggers on all five runtime guides instead of only
+docs/amp.md.
+
+Pi Git-package metadata now matches the generated distribution — the
+repository-root manifest used by the documented Pi installation reports the
+same pi-elixir-phoenix name, 3.0.0 version, and Pi-focused description as
+targets/pi/package.json.
+
+Amp generation now rejects source symlinks and preserves Markdown modes —
+generated resources can no longer dereference links outside the canonical
+skill tree, and transformed Markdown permissions no longer depend on the
+invoking process's umask.
+
+Runtime support and security claims now match operational boundaries —
+the flagship portability contract is scoped to adapted Codex, Pi, and
+OpenCode workflows; Codex documents and surfaces its Bash/jq hook
+prerequisites; and security documentation distinguishes absent telemetry or
+covert egress from visible, user-authorized external service calls.
+
+Codex dependency-vetting routing metadata stays complete — the generated
+phx-deps-vet description now preserves both its post-audit trigger and its
+distinction from dependency scanning instead of ending mid-clause.
+
+Reliable behavioral trigger gates and routing boundaries — deterministic
+structural evals no longer depend on ignored local result caches, while
+make eval-full runs a fresh Claude Haiku 4.5 gate requiring every skill to
+reach 75% accuracy. The judge now receives complete descriptions, validates
+the exact skill/fixture set, retries infrastructure failures, rejects malformed
+output, and writes results atomically. Generalized routing fixes brought all
+51 skills above the threshold in the final full run (95.74% aggregate).
+
+Generated-runtime install lifecycle guidance — Amp now documents native,
+target-scoped removal and exact-sync boundaries; Pi distinguishes configured
+Git refs from unpinned dependencies and includes both project and user clean
+reinstall flows; OpenCode uses its documented plural skills path and treats
+slash invocation as a tested 1.17.2 convenience rather than the portable API.
+
+Codex plugin skill references now use their required runtime namespace —
+explicit invocations and generated sibling references use
+$elixir-phoenix:phx-investigate rather than the non-resolving unqualified
+$phx-investigate form. README and Codex installation guidance now document
+the exact plugin-qualified syntax inserted by /skills.
+
+Portable command rewriting now requires complete invocation tokens — Amp,
+Codex, Pi, and OpenCode projections leave filesystem paths, URLs, uppercase
+names, underscored suffixes, and malformed namespace wildcards unchanged. Pi
+now emits native /skill:* syntax directly instead of passing through a
+path-like intermediate form.
+
+Learning destination and skill-loading documentation — project-keyed
+auto-memory is no longer described as applying to every Elixir project, and
+the intro now documents native paths: frontmatter as a file-path gate.

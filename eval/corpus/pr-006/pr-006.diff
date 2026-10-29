@@ -1,0 +1,68 @@
+--- a/src/audit.ts
++++ b/src/audit.ts
+@@ -0,0 +1,33 @@
++export interface FixedDiscountInput {
++  orderId: string;
++  operatorId: string;
++  operatorIp: string;
++  totalCents: number;
++  discountCents: number;
++}
++
++export interface FixedDiscountAudit {
++  orderId: string;
++  operatorId: string;
++  operatorIp: string;
++  chargedCents: number;
++  appliedDiscountCents: number;
++}
++
++export function createFixedDiscountAudit(input: FixedDiscountInput): FixedDiscountAudit {
++  if (!input.orderId || !input.operatorId || !input.operatorIp) throw new Error("missing audit identity");
++  if (!Number.isSafeInteger(input.totalCents) || input.totalCents < 0) {
++    throw new RangeError("totalCents must be a non-negative safe integer");
++  }
++  if (!Number.isSafeInteger(input.discountCents) || input.discountCents < 0) {
++    throw new RangeError("discountCents must be a non-negative safe integer");
++  }
++  const appliedDiscountCents = Math.min(input.totalCents, input.discountCents);
++  return {
++    orderId: input.orderId,
++    operatorId: input.operatorId,
++    operatorIp: input.operatorIp,
++    chargedCents: input.totalCents - appliedDiscountCents,
++    appliedDiscountCents,
++  };
++}
+--- a/src/audit.test.ts
++++ b/src/audit.test.ts
+@@ -0,0 +1,29 @@
++import { createFixedDiscountAudit } from "./audit";
++
++describe("createFixedDiscountAudit", () => {
++  it("records integer-cent amounts and operator IP", () => {
++    expect(createFixedDiscountAudit({
++      orderId: "order_1", operatorId: "user_1", operatorIp: "203.0.113.10",
++      totalCents: 1000, discountCents: 250,
++    })).toEqual({
++      orderId: "order_1", operatorId: "user_1", operatorIp: "203.0.113.10",
++      chargedCents: 750, appliedDiscountCents: 250,
++    });
++  });
++
++  it("caps the discount at the order total", () => {
++    const result = createFixedDiscountAudit({
++      orderId: "order_2", operatorId: "user_2", operatorIp: "203.0.113.11",
++      totalCents: 100, discountCents: 500,
++    });
++    expect(result.chargedCents).toBe(0);
++    expect(result.appliedDiscountCents).toBe(100);
++  });
++
++  it("rejects missing operator IP", () => {
++    expect(() => createFixedDiscountAudit({
++      orderId: "order_3", operatorId: "user_3", operatorIp: "",
++      totalCents: 100, discountCents: 0,
++    })).toThrow("missing audit identity");
++  });
++});

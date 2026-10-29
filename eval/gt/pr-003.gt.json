@@ -1,0 +1,56 @@
+{
+  "id": "pr-003",
+  "title": "checkout: cached percentage discount codes",
+  "bugs": [
+    {
+      "id": "C1",
+      "category": "correctness",
+      "title": "时区边界：注释承诺本地日历日全天有效，却拼接 T00:00:00Z，按 UTC 午夜过期，本地时区下边界错误",
+      "file": "src/discount.ts",
+      "expect_evidence": "Campaign dates include the whole local calendar day 与 T00:00:00Z 的组合"
+    },
+    {
+      "id": "C2",
+      "category": "correctness",
+      "title": "舍入口径错误：逐 item Math.round 后求和，而不是整单合计后打折取整；333x3 打九折得到 900 而非 899",
+      "file": "src/checkout.ts",
+      "expect_evidence": "applyDiscount 内逐 item Math.round"
+    },
+    {
+      "id": "C3",
+      "category": "correctness",
+      "title": "fire-and-forget：this.reserveDiscount(discount.id) 未 await，支付与次数预占并发，失败也无法传播",
+      "file": "src/checkout.ts",
+      "expect_evidence": "this.reserveDiscount(discount.id);"
+    },
+    {
+      "id": "C4",
+      "category": "correctness",
+      "title": "错误语义合并：lookup 对过期返回 null，checkout 对 null 不报错而静默按原价扣款，过期提示被绕过",
+      "file": "src/checkout.ts",
+      "expect_evidence": "lookup 过期 return null 与 checkout 仅在 if(discount) 内处理、随后继续 charge"
+    },
+    {
+      "id": "C5",
+      "category": "correctness",
+      "title": "缓存失效：lookup 以 code 缓存 DiscountCode，reserve 增加 usedCount 后不失效，后续读取旧计数并可能越过 maxUses；缓存键还未包含 userId",
+      "file": "src/discount.ts",
+      "expect_evidence": "cache.set(code, discount) 且 reserve 无 cache.delete/clear"
+    },
+    {
+      "id": "C6",
+      "category": "test-integrity",
+      "title": "断言错字段：响应只有 chargedCents，却断言 res.total toBeUndefined，永远通过且不验证金额",
+      "file": "src/checkout.test.ts",
+      "expect_evidence": "expect(res.total).toBeUndefined()"
+    },
+    {
+      "id": "C7",
+      "category": "security",
+      "title": "owner 逻辑反转：ownerId !== userId 时返回折扣，真正 owner 反而 null；测试使用 campaign_owner 与 user_1 不匹配数据并期待成功，恰好掩盖越权",
+      "file": "src/discount.ts",
+      "expect_evidence": "if (discount.ownerId === userId) return null，非 owner 继续到 cache.set 并返回 discount"
+    }
+  ],
+  "notes": "语料包含 7 个需要跨 hunk 或领域推理的真实缺陷；语义命中即算召回。"
+}

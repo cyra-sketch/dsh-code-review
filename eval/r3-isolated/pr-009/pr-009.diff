@@ -1,0 +1,138 @@
+From 530a83a3dcd3da5ed54381bfb617b458706883c4 Mon Sep 17 00:00:00 2001
+From: Pierre Bertet <hello@pierre.world>
+Date: Tue, 29 Nov 2022 20:16:39 +0000
+Subject: [PATCH] Add compare()
+
+---
+ README.md         | 25 +++++++++++++++++++++++++
+ src/api.ts        |  2 ++
+ src/operations.ts |  5 +++++
+ test/all.test.ts  | 28 +++++++++++++++++++++++++++-
+ 4 files changed, 59 insertions(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index dfe3bfb..0a885f6 100644
+--- a/README.md
++++ b/README.md
+@@ -358,6 +358,31 @@ let value2 = [10000000n, 4];
+ dnum.lessThan(value1, value2); // true
+ ```
+ 
++### `compare(value1, value2)`
++
++Returns `1` if `value1 > value2`, `-1` if `value1 < value2`, `0` if `value1 == value2`. It makes it easy to combine `Dnum` values with sorting functions such as [`Array#sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
++
++| Name     | Description  | Type           |
++| -------- | ------------ | -------------- |
++| `value1` | First value  | `Numberish`    |
++| `value2` | Second value | `Numberish`    |
++| returns  | Result value | `1 \| -1 \| 0` |
++
++#### Example
++
++```ts
++let sorted = [
++  1,
++  8n,
++  [700n, 2],
++  3.1,
++  2n,
++  5,
++].sort(compare);
++
++console.log(sorted); // [1, 2n, 3.1, 5, [700n, 2], 8n];
++```
++
+ ### `toNumber(value, options)`
+ 
+ Converts the `Dnum` data structure into a `Number`. [This will result in a loss of precision](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number#number_encoding) depending on how large the number is.
+diff --git a/src/api.ts b/src/api.ts
+index 7021b7b..53bdf09 100644
+--- a/src/api.ts
++++ b/src/api.ts
+@@ -16,6 +16,7 @@ import {
+   abs,
+   add,
+   ceil,
++  compare,
+   divide,
+   equal,
+   floor,
+@@ -33,6 +34,7 @@ export {
+   abs,
+   add,
+   ceil,
++  compare,
+   divide,
+   divide as div,
+   equal,
+diff --git a/src/operations.ts b/src/operations.ts
+index b4bbc7e..afc5175 100644
+--- a/src/operations.ts
++++ b/src/operations.ts
+@@ -74,6 +74,11 @@ export function remainder(
+   );
+ }
+ 
++export function compare(num1: Numberish, num2: Numberish): 1 | -1 | 0 {
++  const [num1_, num2_] = normalizePairAndDecimals(num1, num2);
++  return num1_ > num2_ ? 1 : num1_ < num2_ ? -1 : 0;
++}
++
+ export function equal(num1: Numberish, num2: Numberish): boolean {
+   const [num1_, num2_] = normalizePairAndDecimals(num1, num2);
+   return num1_[0] === num2_[0];
+diff --git a/test/all.test.ts b/test/all.test.ts
+index 1baf224..13b0675 100644
+--- a/test/all.test.ts
++++ b/test/all.test.ts
+@@ -3,6 +3,7 @@ import {
+   abs,
+   add,
+   ceil,
++  compare,
+   divide,
+   equal,
+   equalizeDecimals,
+@@ -13,8 +14,8 @@ import {
+   greaterThan,
+   isDnum,
+   lessThan,
+-  remainder,
+   multiply,
++  remainder,
+   round,
+   setDecimals,
+   subtract,
+@@ -283,6 +284,31 @@ describe("divideAndRound()", () => {
+   });
+ });
+ 
++describe("compare()", () => {
++  it("works", () => {
++    expect(compare(1n, -1n)).toBe(1);
++    expect(compare(-1n, 1n)).toBe(-1);
++    expect(compare(1n, 1n)).toBe(0);
++    expect(
++      [
++        1,
++        8n,
++        [70000n, 4] as const,
++        3.1,
++        2n,
++        5,
++      ].sort(compare),
++    ).toEqual([
++      1,
++      2n,
++      3.1,
++      5,
++      [70000n, 4],
++      8n,
++    ]);
++  });
++});
++
+ describe("round()", () => {
+   it("works", () => {
+     expect(round([1000n, 2])).toEqual([1000n, 2]);

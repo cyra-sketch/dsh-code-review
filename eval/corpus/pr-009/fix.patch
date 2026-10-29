@@ -1,0 +1,68 @@
+From 6f5b048d49f7f88dcc8f46b3045d725d78689254 Mon Sep 17 00:00:00 2001
+From: Pierre Bertet <hi@bpier.re>
+Date: Mon, 1 May 2023 18:02:02 +0100
+Subject: [PATCH] compare() bug fix + cmp() alias
+
+Fixes a bug where compare() could return incorrect values.
+
+Also add the cmp() alias.
+---
+ README.md         | 2 ++
+ src/api.ts        | 1 +
+ src/operations.ts | 2 +-
+ test/all.test.ts  | 4 ++++
+ 4 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index f9743d0..f74a9e9 100644
+--- a/README.md
++++ b/README.md
+@@ -387,6 +387,8 @@ Returns `1` if `value1 > value2`, `-1` if `value1 < value2`, `0` if `value1 == v
+ | `value2` | Second value | `Numberish`    |
+ | returns  | Result value | `1 \| -1 \| 0` |
+ 
++Alias: `cmp()`
++
+ #### Example
+ 
+ ```ts
+diff --git a/src/api.ts b/src/api.ts
+index 53bdf09..e6f879b 100644
+--- a/src/api.ts
++++ b/src/api.ts
+@@ -35,6 +35,7 @@ export {
+   add,
+   ceil,
+   compare,
++  compare as cmp,
+   divide,
+   divide as div,
+   equal,
+diff --git a/src/operations.ts b/src/operations.ts
+index afc5175..276603c 100644
+--- a/src/operations.ts
++++ b/src/operations.ts
+@@ -76,7 +76,7 @@ export function remainder(
+ 
+ export function compare(num1: Numberish, num2: Numberish): 1 | -1 | 0 {
+   const [num1_, num2_] = normalizePairAndDecimals(num1, num2);
+-  return num1_ > num2_ ? 1 : num1_ < num2_ ? -1 : 0;
++  return num1_[0] > num2_[0] ? 1 : num1_[0] < num2_[0] ? -1 : 0;
+ }
+ 
+ export function equal(num1: Numberish, num2: Numberish): boolean {
+diff --git a/test/all.test.ts b/test/all.test.ts
+index a9bc04b..f9033a2 100644
+--- a/test/all.test.ts
++++ b/test/all.test.ts
+@@ -286,6 +286,10 @@ describe("divideAndRound()", () => {
+ 
+ describe("compare()", () => {
+   it("works", () => {
++    expect(compare(
++      [16000000000000n, 18], // 0.000016
++      [1300000000000000n, 18], // 0.0013
++    )).toBe(-1);
+     expect(compare(1n, -1n)).toBe(1);
+     expect(compare(-1n, 1n)).toBe(-1);
+     expect(compare(1n, 1n)).toBe(0);

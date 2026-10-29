@@ -1,0 +1,2 @@
+dsh: pnpm was not found; install pnpm and make it available on PATH.
+dsh: plugin command failed; diagnostics: /Users/cyra/Documents/Codex/Projects/dsh-jury/eval/install/case-1/dsh-home/profiles/jury/.plugin-manager/logs/operation-ermchr/pnpm.log

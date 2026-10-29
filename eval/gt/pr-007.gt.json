@@ -1,0 +1,63 @@
+{
+  "id": "pr-007",
+  "diff": "eval/corpus/pr-007/pr-007.diff",
+  "bugs": [
+    {
+      "id": "B1",
+      "category": "correctness",
+      "title": "First retry delay is doubled by an off-by-one exponent",
+      "file": "src/webhooks/retry-policy.ts",
+      "line": 27,
+      "expectedEvidence": "`nextDelayMs` computes `baseDelayMs * 2 ** attempt`, while its documented `attempt` is the one-based number of the attempt that just failed. For the first failure (attempt 1) the function returns 2000ms with the default 1000ms base instead of the documented 1000ms first-retry delay. Evidence: line 27 and the `attempt` contract at lines 21-24; the exponent should be `attempt - 1` or the caller should pass a zero-based retry index."
+    },
+    {
+      "id": "B2",
+      "category": "reliability",
+      "title": "Non-retryable 4xx responses are retried because isRetryable is never consulted",
+      "file": "src/webhooks/delivery.ts",
+      "line": 63,
+      "expectedEvidence": "`retry-policy.ts:14-18` exports `isRetryable`, which returns false for deterministic 4xx responses, and the test at `delivery.test.ts:65-68` relies on that behavior. The dispatcher never imports or calls the helper: after any non-2xx outcome it falls straight through to the `attemptsMade > maxAttempts` check at `delivery.ts:61-66` and then schedules a retry. A 404 or 422 therefore consumes the whole retry budget instead of being dead-lettered immediately."
+    },
+    {
+      "id": "B3",
+      "category": "idempotency",
+      "title": "Idempotency key changes on every delivery attempt",
+      "file": "src/webhooks/delivery.ts",
+      "line": 50,
+      "expectedEvidence": "The outbound header is built as `idempotency-key: ${job.id}:${job.attempts + 1}`. Because `attempts` increments between claims, the key changes from `job_7:1` to `job_7:2` on a retry, so the receiver cannot deduplicate the same logical event across attempts. The key must be stable for the job (for example `job.id`) even though the HTTP attempt number changes."
+    },
+    {
+      "id": "B4",
+      "category": "concurrency",
+      "title": "Lease is shorter than the HTTP timeout and is not renewed mid-request",
+      "file": "src/webhooks/delivery.ts",
+      "line": 18,
+      "expectedEvidence": "`DELIVERY_LIMITS` grants a 5000ms claim lease but allows the outbound request to run for 15000ms (`httpTimeoutMs`). `pulse` renews the lease once before the call (`delivery.ts:42-51`) and has no heartbeat or fencing while the promise is pending. After 5s another worker can claim the same job and deliver it concurrently, producing duplicate side effects. The lease must outlive the HTTP timeout or be renewed while the request is in flight."
+    },
+    {
+      "id": "B5",
+      "category": "correctness",
+      "title": "Attempt budget is off by one, allowing maxAttempts + 1 deliveries",
+      "file": "src/webhooks/delivery.ts",
+      "line": 63,
+      "expectedEvidence": "`attemptsMade` is `job.attempts + 1` and the dead-letter guard is `attemptsMade > policy.maxAttempts`. When `attemptsMade === maxAttempts` the guard is false, so the job is scheduled for one more delivery. With `maxAttempts: 2`, attempts 1 and 2 both retry and a third request is sent. The guard should be `>=` (and the claim path should also reject jobs whose prior attempts already reached the budget)."
+    },
+    {
+      "id": "B6",
+      "category": "reliability",
+      "title": "Jitter is added after the cap and can exceed maxDelayMs",
+      "file": "src/webhooks/retry-policy.ts",
+      "line": 28,
+      "expectedEvidence": "`nextDelayMs` clamps the exponential delay with `Math.min(exponential, policy.maxDelayMs)` at line 28, then adds jitter at lines 29-30 without re-clamping. `maxDelayMs` is documented as a hard ceiling, but with `maxDelayMs: 1000`, `jitterRatio: 0.5` and `random() = 0.99`, the result is 1490ms. The final value must be clamped after jitter (or jitter must be bounded inside the remaining headroom)."
+    }
+  ],
+  "testMasking": [
+    "B1 is masked by delivery.test.ts:58-62: the test only checks `second === first * 2`, so the doubled first delay still passes.",
+    "B2 is masked by delivery.test.ts:65-68: the test exercises the standalone `isRetryable` helper but never sends a 404/422 through the dispatcher.",
+    "B3 is masked by delivery.test.ts:39-46: it asserts only that the key `toContain(\"job_7\")`, so `job_7:3` passes.",
+    "B4 is masked by the instant HTTP mocks in delivery.test.ts:31-36; the test only counts one `renewLease` call and never advances past the lease.",
+    "B5 is masked by delivery.test.ts:48-52: it starts at `attempts: 5` and asserts only that dead-lettering happened, never the boundary at the configured budget or the number of HTTP calls.",
+    "B6 is masked by delivery.test.ts:60: `random` is fixed at 0.5, which yields zero jitter, so the cap-after-jitter defect is never exercised."
+  ],
+  "notes": "Reviewers see only pr-007.diff. Match semantically on the described defect and evidence; exact line numbers need not match. The six bugs are implemented in the after files, and all five after-tests pass with the bugs present."
+}

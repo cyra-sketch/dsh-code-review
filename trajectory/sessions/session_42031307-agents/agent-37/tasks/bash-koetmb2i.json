@@ -1,0 +1,1 @@
+{"taskId":"bash-koetmb2i","description":"Bash: npx --yes @deepseek-ai/dsh --help","status":"completed","detached":true,"startedAt":1793173786221,"endedAt":1793173970384,"timeoutMs":600000,"kind":"process","command":"npx --yes @deepseek-ai/dsh --help","pid":75628,"exitCode":0,"parentToolCallId":"tool_VKmTdLSiWAJjExsAygGcwA3K"}

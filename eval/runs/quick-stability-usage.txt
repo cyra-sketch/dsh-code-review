@@ -1,0 +1,10 @@
+quick-1 parent {"inputTokens":4103,"outputTokens":1059,"cacheReadTokens":14336,"cacheWriteTokens":0,"totalTokens":19498}
+quick-1 children 3 {"inputTokens":14153,"outputTokens":22305,"cacheReadTokens":17920,"cacheWriteTokens":0,"totalTokens":54378}
+quick-1 total {"inputTokens":18256,"outputTokens":23364,"cacheReadTokens":32256,"cacheWriteTokens":0,"totalTokens":73876}
+quick-2 parent {"inputTokens":1414,"outputTokens":1180,"cacheReadTokens":17152,"cacheWriteTokens":0,"totalTokens":19746}
+quick-2 children 3 {"inputTokens":5836,"outputTokens":47927,"cacheReadTokens":26368,"cacheWriteTokens":0,"totalTokens":80131}
+quick-2 total {"inputTokens":7250,"outputTokens":49107,"cacheReadTokens":43520,"cacheWriteTokens":0,"totalTokens":99877}
+quick-3 parent {"inputTokens":4045,"outputTokens":1090,"cacheReadTokens":14336,"cacheWriteTokens":0,"totalTokens":19471}
+quick-3 children 3 {"inputTokens":14101,"outputTokens":20017,"cacheReadTokens":17920,"cacheWriteTokens":0,"totalTokens":52038}
+quick-3 total {"inputTokens":18146,"outputTokens":21107,"cacheReadTokens":32256,"cacheWriteTokens":0,"totalTokens":71509}
+gateReductionPct 95.87

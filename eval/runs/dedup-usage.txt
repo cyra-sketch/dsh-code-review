@@ -1,0 +1,8 @@
+standard-dedup parent {"inputTokens":5858,"outputTokens":2813,"cacheReadTokens":14336,"cacheWriteTokens":0,"totalTokens":23007}
+standard-dedup children 5 {"inputTokens":80739,"outputTokens":84058,"cacheReadTokens":443520,"cacheWriteTokens":0,"totalTokens":608317}
+standard-dedup total {"inputTokens":86597,"outputTokens":86871,"cacheReadTokens":457856,"cacheWriteTokens":0,"totalTokens":631324}
+intent-dedup parent {"inputTokens":1197,"outputTokens":1174,"cacheReadTokens":17408,"cacheWriteTokens":0,"totalTokens":19779}
+intent-dedup children 5 {"inputTokens":25787,"outputTokens":21076,"cacheReadTokens":150144,"cacheWriteTokens":0,"totalTokens":197007}
+intent-dedup total {"inputTokens":26984,"outputTokens":22250,"cacheReadTokens":167552,"cacheWriteTokens":0,"totalTokens":216786}
+quickMeanRecall 5.67
+quickMeanTokens 81754

@@ -1,0 +1,69 @@
+import { execFileSync } from 'node:child_process'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const root = dirname(fileURLToPath(import.meta.url))
+const work = join(root, 'work-final')
+const results = []
+const check = (name, pass, evidence) => results.push({ name, pass: Boolean(pass), evidence })
+const events = name => readFileSync(join(root, name), 'utf8').split('\n').flatMap(line => {
+  try { return [JSON.parse(line)] } catch { return [] }
+})
+const git = args => execFileSync('git', ['-C', work, ...args], { encoding: 'utf8' }).trim()
+const remote = args => execFileSync('git', [`--git-dir=${join(work, 'origin.git')}`, ...args], { encoding: 'utf8' }).trim()
+
+const config = readFileSync(join(root, 'composed-config.yml'), 'utf8')
+check('installed tarball composes dsh-jury into independent authenticated profile', config.includes('# == dsh-jury') && config.includes('name: dsh-jury'), {
+  profile: 'jury-r4-e2e',
+  artifact: 'dsh-jury-0.1.0.tgz',
+})
+
+const juryEvents = events('jury-call.jsonl')
+const juryCalls = juryEvents.filter(event => event.type === 'tool_call' && event.tool === 'jury_run')
+const juryResults = juryEvents.filter(event => event.type === 'tool_result' && event.callId === juryCalls[0]?.callId)
+check('headless performs one real jury_run without recursion or pseudo clauses', juryCalls.length === 1
+  && juryResults[0]?.status === 'completed'
+  && juryResults[0].result.includes('评审档位：single')
+  && juryResults[0].result.includes('报告边界')
+  && !juryResults[0].result.includes('subagent depth')
+  && !juryResults[0].result.includes('intent 条款：'), {
+  calls: juryCalls.length,
+  result: juryResults[0]?.result,
+})
+
+const gateEvents = events('gate-push.jsonl')
+const bashCalls = gateEvents.filter(event => event.type === 'tool_call' && event.tool === 'bash')
+const commitCall = bashCalls.find(event => /(?:^|&&|\s)git commit(?:\s|$)/.test(event.input.command))
+const pushCall = bashCalls.find(event => /(?:^|&&|\s)git push(?:\s|$)/.test(event.input.command))
+check('commit and push are separate ordered tool calls', commitCall && pushCall
+  && commitCall.callId !== pushCall.callId
+  && bashCalls.indexOf(commitCall) < bashCalls.indexOf(pushCall)
+  && !/git commit[\s\S]*git push/.test(commitCall.input.command), {
+  commit: commitCall?.input.command,
+  push: pushCall?.input.command,
+})
+
+const episodes = readFileSync(join(work, '.dsh', 'jury', 'gate-episodes.jsonl'), 'utf8').trim().split('\n').map(JSON.parse)
+const episode = episodes.at(-1)
+const head = git(['rev-parse', 'HEAD'])
+const remoteHead = remote(['rev-parse', 'refs/heads/main'])
+check('block gate accepts exact pushed HEAD and bare remote matches', episodes.length === 1
+  && episode.status === 'accepted'
+  && episode.round === 1
+  && episode.subagentCalls === 0
+  && episode.headSha === head
+  && remoteHead === head, {
+  episodeHead: episode.headSha,
+  localHead: head,
+  remoteHead,
+  status: episode.status,
+})
+check('pushed commit contains only src/cart.ts', git(['show', '--name-only', '--format=', 'HEAD']) === 'src/cart.ts', {
+  files: git(['show', '--name-only', '--format=', 'HEAD']),
+})
+
+const output = { passed: results.filter(result => result.pass).length, failed: results.filter(result => !result.pass).length, results }
+writeFileSync(join(root, 'assert-results.json'), `${JSON.stringify(output, null, 2)}\n`)
+console.log(JSON.stringify({ passed: output.passed, failed: output.failed }, null, 2))
+if (output.failed) process.exitCode = 1

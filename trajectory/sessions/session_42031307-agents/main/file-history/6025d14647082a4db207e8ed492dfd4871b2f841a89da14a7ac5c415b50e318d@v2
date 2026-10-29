@@ -1,0 +1,206 @@
+# dsh-jury：给 DeepSeek Harness 的多模型评审团插件（笔试方案）
+
+> 状态：provisional（笔试设计案，未登记正式项目根目录）
+> 日期：2026-10-28 ｜ 题目：为 DeepSeek Harness（dsh）设计一个插件
+
+---
+
+## 0. 一句话方案
+
+把 Anthropic 两周前公开的工程化评审工作流（finder/voter 分离、投票降噪、收敛控制、风险分级）做成 dsh 的**本地 pre-push 多模型评审团**：AI 写的代码在落地前，由一组异质 reviewer 并行二审、独立 voter 逐条复核投票、按风险分级决定是否必须人介入——回答"AI 写码越快、review 越是瓶颈"这个时代问题。
+
+**为什么是我、为什么是现在、为什么是 dsh**：Anthropic 在 2026-10-15 刚公开内部体系（时效）；dsh 生态 40+ 个 review 插件重复造轮子但全部停留在"加个 /review 命令"，无一实现可信度工程（空白）；多模型评审团只有在 token 足够便宜时才经济成立——这是 DeepSeek 生态的结构位（独占性）。
+
+---
+
+## 1. 问题定义
+
+AI 把"写代码"变便宜了一个数量级，代码评审成了软件交付的新瓶颈。三段互相印证的证据：
+
+1. **Anthropic《Solving code review at Anthropic》**（2026-10-15，官方工程博客）：Claude 写了 Claude Code 约 90% 的代码；monorepo 日落地变更从 5 月 ~2,500 涨到 9 月 30,000+。他们用七层工程化体系把实质评审覆盖率从 16% 拉到 54%，同时 revert 率下降 40%、finding 误报率 <1%。
+2. **Manus《AI Native 组织实践》**：人均月 AI 开销超 1 万美元、每日代码提交量"非常夸张"；自建的代码审核机器人被内部评价为"**公司最划算的一笔支出**"，投入使用后半年未发生因合入问题代码导致的线上故障。
+3. **dsh 社区**：用户主体是用 agent 大量生成代码的个人开发者；生态内 **40+ 个 `dsh-review*` 插件**（最高仅 13★）在重复造同一个轮子——需求真实且普遍，但没有一个实现打到点子上。
+
+核心命题（Anthropic 原文精神）：正确的问题不再是 *"did a human read the code?"*，而是 *"what could go wrong with this change, and which check—automated or human—is the right one to catch it?"*。人类逐行阅读从目的降级为手段之一；人的注意力是被量化管理的稀缺资源。
+
+---
+
+## 2. 需求证据链（分层验证）
+
+| 层级 | 证据 | 强度 |
+|---|---|---|
+| 闭源/官方验证 | Anthropic 内部体系（覆盖率 16%→54%、revert -40%）；Codex /review + Security Cloud（2026-09 DevDay 全量铺开）；CodeRabbit/Greptile/cubic 商业品类成立；GitHub Copilot review 累计 60M+ 次 | 强 |
+| dsh 生态需求 | 40+ 个 review 类插件（最高 13★）重复造轮子；官方亲自做了实验性 webhook-github overlay（证明官方判断场景成立）；DSH-action（51★）做完整 GitHub 集成 | 中强 |
+| 用户结构适配 | dsh 用户以个人开发者为主（生态第一插件是免费模型渠道 46k★），多数无 PR 流程——需求的真实形态是**本地提交前二审**，不是 PR webhook | 关键约束 |
+
+第三层是本案与 40 个轮子的分水岭：官方 overlay 与 DSH-action 的低采用，恰恰因为它们做 PR 形态（部署门槛高 + 场景错位）。**个人开发者的 review 场景是"AI 写完、落地之前，让另几个 AI 先审一遍"。**
+
+---
+
+## 3. 三个核心洞察（方案地基）
+
+**① 评审团 > 评审器。** Addy Osmani（现 Claude Code 团队）2026-06 博客的实证：四个评审工具并行跑 146 个真实 PR，617 个被标记位置中 **93.4% 只有一个工具抓到，没有一处被四个工具共同抓到**。任何单一评审器都有结构性盲区，正确动作是组"构造不同的评审团"而非挑"最好的评审器"。
+
+**② 可信度是工程问题，不是 prompt 问题。** Anthropic 体系里最值钱的不是"用了 AI 审"，而是围绕可信度的一整套工程：finder/voter 分离 + 投票降噪；**3 轮收敛上限**（他们有过一个 PR 一夜 50+ 轮人机互卷的事故；git blame 显示 59% 被 flag 的代码首轮就存在——评审器在每轮多挖旧 bug 而非找新 bug）；事故/revert 自动进 eval 集、评审器每天跑分；按风险分级决定人工批准人数，agent 的批准永远不算人的批准。
+
+**③ 多模型评审团只有在 token 足够便宜时才成立——这是 DeepSeek 生态的结构位。** 异质评审意味着每个变更跑 3-4 个 finder + voter，前沿模型下成本是单审约 5 倍；DeepSeek 的价格（谷时半价）使"评审团"成本低于别家"单审"。dsh 原生多模型能力（`list_subagent_models`、自定义 OpenAI 兼容端点）让"DeepSeek 写、异构模型审"的交叉评审成为一行配置。**这个方案长在别家 harness 上都不经济，唯独在 dsh 上自然成立。**
+
+---
+
+## 4. 先例与竞品：为什么 40 个轮子都没赢
+
+| 实现 | 形态 | 缺什么 |
+|---|---|---|
+| 官方 webhook-github overlay（实验性） | PR ready → 单 agent 只读评审会话 | 无多 finder、无投票、无分级、不回写 PR；需自建隧道，部署门槛高 |
+| DSH-action（51★） | GitHub Action → dsh worker 回写评论 | 评审本身是单轮，无可信度工程 |
+| brooks-lint（1,547★） | 六本软工经典合成的审查 skill 包 | 知识包无机制：无投票、无分级、无收敛 |
+| 40+ `dsh-review*`（最高 13★） | 各种 /review 命令 | 全部停在"加命令"；luomeii 版有 4 名只读评审员（1★）但无 voter；Viger1 版（0★）几乎是 finder/voter 翻版但无人问津 |
+| adverse（Addy 本人开源，62★） | 单模型 3 persona + 交叉质询 + 确定性合成 | 作者自承单模型 persona 有 anchoring bias；通用 CLI 包装，非 dsh 原生 |
+| CodeRabbit/Greptile/cubic（SaaS） | 托管 PR 评审 | 按席收费、数据出域；且 93.4% 数据说明"买一家不如组团" |
+
+结论：需求被反复独立验证（40+ 次），但**完整闭环（风险分级 → 多 finder 并行 → voter 降噪 → 收敛控制 → finding 必须清零）没有任何人串起来**。每个环节都有 0–13★ 的孤立碎片，这正是机会的形状。
+
+---
+
+## 5. 方案设计
+
+### 5.1 产品形态
+
+本地 pre-push 评审团。用户（或 agent）写完代码后执行 `/jury`，或 git push 前自动触发：插件对当前 diff 组一个评审团，输出分级报告；高风险变更强制人确认才能 push。PR 回写是 P2 增强，不是主形态。
+
+### 5.2 核心机制
+
+**P0（评审团本体，纯 skill + subagent 编排，约一周）**
+
+- **Finder 团**：4 个并行子代理（dsh `subagent` 工具，各自 fresh context），persona = 正确性 / 安全 / 设计 / 测试完整性（diff 大量改写断言时优先报警——agent 把测试改成匹配坏行为是已知失败模式）。每个 finder 可指定不同模型。
+- **Voter 复核**：独立子代理逐条复核 finding，要求 `file:line` 证据与可复现推理；票数不足丢弃；style/nit 类默认丢弃（过滤器思路来自 Anthropic 的 A/B 测试实践）。
+- **确定性合成**：合并去重**不用 LLM**（避免锚定偏差），输出 consensus / disputed / solo 三档；报告以计数开头，无发现时明确说"无需修改"。
+- **收敛控制**：最多 3 轮；重审只看新 diff（diff-only）；已发 finding 不重复报；同一 bug 类别要求修全部实例。
+
+**P1（工程闭环，约一周）**
+
+- **风险分级**：分类器读 diff 定 tier（低/中/高）→ 决定评审深度（Quick/Standard/Deep）；高风险路径（鉴权、支付、CI 配置、系统提示）强制人确认——用 `tools/*` pre-execute 瀑布钩子拦截 `git commit/push` 实现 gate。
+- **REVIEW.md 约定**：仓库根文件，code owner 写"这个目录失败长什么样"、nit 上限、跳过路径、要求 file:line 证据；每次评审自动加载（经 `agent/pre-step` 注入）。
+- **Finding 台账**：JSONL 持久化；每条 finding 必须被修复或带理由关闭，后续 commit 修复后自动清零；关闭理由回流为本地知识。
+
+**P2（增强，可选）**
+
+- **PR 回写**：增强官方 webhook overlay，补上行级评论回写 + finding 未清零则 block 的 gate（与官方是增强关系，不是对抗）。
+- **Eval 回归**：误判/revert 案例自动进本地 eval 集；改 prompt/模型后重跑门禁。
+- **夜间深扫**：`schedule_*` 在谷时跑全库 Deep 档评审。**定价规则必须远端拉取、可热更新，绝不硬编码**（2026-08-23 峰谷规则变更曾一次性打死 6/9 个计费插件）。
+
+### 5.3 DeepSeek 特化（别家抄不走的部分）
+
+- **交叉模型评审**：DeepSeek 写的代码默认换异构模型审（配置一行）；同模型时退化为 4 persona（仍有效——视角异质本身就贡献大部分覆盖率）。
+- **成本结构**：finder 用便宜模型（deepseek-flash 级），voter 用强模型；评审团总成本低于别家单审；甚至可挂免费模型渠道做零成本二审。
+- **谷时深审**：Deep 档默认排进夜间谷时（当前规则：夜间与周末全天半价）。
+
+### 5.4 dsh 插件机制映射
+
+| 扩展面 | 用途 |
+|---|---|
+| tool | `jury_run / jury_status / jury_confirm`（defineTool DSL） |
+| event | `tools/*` pre-execute 瀑布钩子拦截 git push（高风险 gate）；`agent/pre-step` 注入 REVIEW.md |
+| service | `jury-ledger`：finding 台账 + 本地 eval 集 |
+| llm | 子代理多模型路由（`list_subagent_models`），异构交叉评审 |
+| skills | 评审方法论封装为标准 SKILL.md（agentskills.io 开放标准，可反哺生态） |
+| 分发 | npm 包 + GitHub `dsh-plugin` topic；开发参照社区 dsh-plugin-dev-skill |
+
+---
+
+## 6. Eval 方案（可信度是被度量出来的，这是本方案与"写个 review prompt"的本质区别）
+
+- **召回**：planted-bug 集——自有仓库 20 个真实 commit 注入已知 bug，对比单 agent `/review` 基线；目标召回 ≥ 基线 +30%。
+- **误报**：known-clean PR 集上跑评审团，误报率 ≤5% 才准入库；每条 finding 必须带 file:line 证据否则不计分。
+- **收敛**：人机互卷轮数分布，P95 ≤ 3（Anthropic 50 轮事故为戒）。
+- **成本**：每变更净 token 成本（区分缓存命中/未命中），报告净成本而非输入字符。
+- **持续校准**：上线后把"人判误报/有意为之"的处置记录回流 eval 集，评审器每天在事故集上跑分。
+
+---
+
+## 7. 风险与答辩预案
+
+**Q1：和 40+ 已有轮子的区别？** 他们是"加命令"，本方案是可信度工程：投票降噪、收敛控制、风险分级、eval 回归，每一件都有 Anthropic 内部事故数据背书（§4 逐个列了缺口）。
+
+**Q2：官方收编风险？** 官方 overlay 是实验品且场景是 PR 单审；可信度工程是持续运营而非功能开关。若官方下场，本方案的 REVIEW.md 约定与 eval 集可迁移为其配置层——风险可退。
+
+**Q3：个人开发者真的需要评审？** dsh 用户大量代码由 agent 生成；"同一模型换 harness 质量差 3 倍"的社区认知说明用户不信任裸输出；已有个人开发者案例（Kun Chen 个人 40 PR/天 + 自建 "No Mistakes" 评审 gate）。个人开发者的终态也是自动化评审 gate，只是形态是 pre-push 而非 PR。
+
+**Q4：单模型 persona 的锚定偏差？** 诚实承认（adverse 作者自承过）。缓解：默认推荐异构模型交叉（dsh 多模型是天然优势）；合并用确定性合成而非 LLM。
+
+**Q5：误报不可能为零？** 对。所以评审器定位是 sensor 不是 verdict（Addy 的总纲）：默认过滤参数保守、nit 默认丢弃、finding 一键关闭且理由回流 eval；guardrail 指标是 revert/事故率而非零误报。
+
+**Q6：为什么不是 token 优化 / 脱敏 / 协作 / batch / compact？** 每个方向都做过专项调研，死因见附录 A。
+
+**Q7：dsh 是 developer preview，插件 API 不稳定？** 是。P0 只用 subagent + skills 两个最稳定的面；事件钩子集中在 P1；跟随宿主版本做兼容矩阵（dsh-dcp 已换 5 次兼容版本，这是生态常态）。
+
+---
+
+## 附录 A：被评估后放弃的方向（需求判断过程）
+
+| 方向 | 死因（均有专项调研） |
+|---|---|
+| Session 多人协作 | local-first 用户结构下人人协作无需求：3 个先例插件 0–21★、官方讨论区全部 0 票；有协作刚需的组织天然选云托管 harness（协作需求与部署形态是同一个选择） |
+| 错峰批处理队列 | 个人开发者没有 provider 级批量负载；native `schedule_*`/`goals`/会话内消息队列已吸收队列语义；唯一直接需求帖 #7571 仅 1 票 0 评论 |
+| token 请求拦截/精简 | 红海：sieve（105★）等 4+ 实现全部采用率低；dsh 缓存命中率 99.3%，重发本就便宜——dcp 实测输入降 93% 费用反升 6.7%；官方四个开关随时收编 |
+| 敏感信息脱敏 | 生态内 4–6 个实现全灭（最高 23★ 且已冻结）；企业走网关 DLP 或私有化，不会在 harness 插件层采购合规；Codex 0.147 已官方内置，收编是时间问题 |
+| /compact 替换 Provider | 需求最硬（官方讨论区第一高频抱怨），但压缩质量本质是模型调优问题，笔试方案内无法论证"能做得比官方好"；作为需求侧的次优备选保留 |
+| 视频输入 | 白空间最干净（官方明示未做、零插件），但需求频次未验证，依赖外挂视觉模型链路 |
+| 仓库守夜人巡检 | 与 Dependabot/CodeQL 等免费既有工具边界模糊，差异化论证不硬 |
+| 技能自蒸馏（学徒） | 故事强（官方 Self-Evolving 口号），但 Hermes 已做 in-loop 技能自学习且已有 dsh 移植（distill，11★）；差异化只剩"跨会话频率挖掘+回放验证"，需求未验证 |
+
+## 附录 B：关键事实与来源
+
+- Anthropic《Solving code review at Anthropic》，2026-10-15，claude.dev 官方工程博客（Addy Osmani、Morgan Westlee Lunt、Qing Wang）；中文全文译本见 Tony Bai 博客
+- Addy Osmani《Agentic Code Review》，2026-06，addyosmani.com（93.4% 异质性实证；sensor not verdict 总纲）
+- Manus《AI Native 组织实践》，微信公众号文章（代码审核机器人"最划算的一笔支出"）
+- dsh 官方仓库与文档：deepseek-ai/deepseek-harness（插件五扩展面、waterfall 事件、webhook-github overlay 文档）
+- dsh 官方 Discussions：#8934（token 消耗实测）、#4758（官方根因清单）、#7571（错峰请求）、#5505（多文件夹 26 票）等
+- dsh 插件生态：GitHub `dsh-plugin` topic 实测（40+ review 类插件星数逐一经 API 核验，2026-10-27）
+- Codex /review 与 Security Cloud（OpenAI DevDay 2026-09 报道）；CodeRabbit/Greptile 独立基准数据
+- DeepSeek 峰谷定价：api-docs.deepseek.com/quick_start/pricing（2026-10 抓取；夜间与周末全天谷时半价）
+
+---
+
+## 附录 C：实现与实证（2026-10-28，方案经六轮真实实验修订）
+
+插件已在真实 dsh 0.2.1-rc.2 环境实现并跑通（项目根 `src/`，typecheck/build/pack 全绿）。**最终形态与初稿有本质差异，由实验数据驱动**：
+
+### C.1 最终架构（实验后的形态）
+
+**确定性风险门控（默认零成本）→ 按需启动的评审团 → 发现/验收分离的 gate 状态机 + intent 意图评审**：
+
+1. **风险门控**：零模型成本打分（路径/规模/行为/敏感语义四类信号），低危不启动（输出"未启动评审（低风险）"），高危才启动评审团——解决"所有 PR 都跑评审团成本不可持续"的问题（实测低危 PR 省 94.5%）
+2. **评审团分档**：quick（2 finder）/ standard（4 finder + 批量 voter）/ deep（双 voter），prompt 采用共享前缀 + persona 尾缀的缓存友好结构
+3. **Gate 状态机（核心机制）**：发现只发生一次并**冻结 finding 集**（含修复建议，按 base SHA 持久化 episode）；后续轮次**纯验收**（单轻量代理逐条验收 fixed/open，禁止新增 finding）；maxRounds 硬上限后**确定性输出"请人工裁决"**；每 episode 子代理调用数与 maxTokens 双重熔断
+4. **Intent 意图评审**：调用方 agent 把会话中的需求摘要作为 `intent` 传入，finder 增加需求对齐检查层
+
+### C.2 六轮实验的关键数据
+
+| 实验 | 结果 | 教训 |
+|---|---|---|
+| EVAL-001 机制验证（通用 harness） | 埋雷 8 雷：单审 5/8 vs 评审团 8/8；6/8 的雷仅单一 persona 发现 | 异质性真实存在，机制成立 |
+| EVAL-002 真实插件端到端 | 真实 dsh 跑出 8/8、误报 0、证据 100% | 插件可实现原生 spawn 子代理编排 |
+| EVAL-003 有/无插件 A/B | **有插件 8/8 vs 无插件 baseline 8/8，成本 13.86×** | 简单 PR 上插件无增量，**不能默认全量启用** |
+| EVAL-004 高级雷 + 成本优化 | 高级雷（7 个跨 hunk/时区/缓存失效级）：baseline 6/7 vs 评审团 7/7；quick 档成本降至 baseline 1.22×（pr-001） | **增量随题目难度出现**；quick 便宜但召回波动（3 次复测 4/8、6/8、7/8） |
+| EVAL-005 gate + intent 决定性实验 | **intent：baseline 与无 intent 均漏掉需求遗漏（审计缺 IP），带 intent 全部抓到，阴性对照无幻觉**；gate 拦截-修复有效但不收敛（24 子代理、680 万 token、未闭环） | 意图评审是 harness 独占增量；gate 需要收敛机制 |
+| EVAL-006 发现/验收分离 | **gate 首次完整闭环：第 1 轮发现冻结 → agent 修雷 → 第 2 轮纯验收全 fixed → push 成功**；成本 680 万 → **28.1 万 token（-95.9%）**，子代理 24 → 4；确定性人工升级路径验证通过 | "修复中不改测试"（TDD 不变量）是收敛的正解 |
+
+### C.3 修订后的"为什么是插件"（不再是最初的四条泛论）
+
+实证后，插件形态的价值精确落在**只有 harness 内部才能做到的两件事**：
+
+1. **执行回路内的强制关卡**：`tools/*` 瀑布钩子拦截 agent 的 `git push`，把 finding 作为工具结果反馈回 agent，形成"写码→评审→修复→验收→放行"的完整闭环（EVAL-006 已实证闭环成功）。外部工具无法介入 agent 的执行回路。
+2. **会话意图上下文**：调用方 agent 把需求原话作为 intent 注入评审，查出"代码无 bug 但偏离需求"的缺陷（EVAL-005 实证：diff-only 原理上无法发现）。
+
+**可移植为 skill 的部分**（persona 方法论、prompt、finding schema、风险信号、去重/分档、报告格式）与**必须住在 harness 的部分**（gate 钩子、intent 注入、子代理编排、episode 台账）已在代码层面分离——dsh 的"万物皆插件"下，插件是分发与组装形态，价值归属按扩展面切分。
+
+### C.4 诚实边界
+
+- quick 档召回仍有波动（pr-001 三次复测 4/8、6/8、7/8），标准档成本仍高——**quick 只适合低风险轻审，不能当主力**
+- 语料为合成埋雷（pr-001/003/005）+ 干净对照（pr-002/004/006），真实大型历史 PR 未测；跨模型异质增量未测
+- 去重已按 file+symbol+category+行号规范化，但跨 category 的语义重复仍可能存在
+- gate 的 report 模式、episode 崩溃恢复、dismissed 处置流程未实跑
+- 全部实验单轮/少轮次，未做 A/A 噪声带与统计显著性检验
+
+（运行证据：`eval/runs/`；各轮报告：`eval/EVAL-001.md` ~ `EVAL-006-convergence.md`）

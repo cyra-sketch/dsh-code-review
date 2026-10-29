@@ -1,0 +1,6 @@
+convergence parent {"inputTokens":10539,"outputTokens":3635,"cacheReadTokens":216064,"cacheWriteTokens":0,"totalTokens":230238}
+convergence children 4 {"inputTokens":24354,"outputTokens":10522,"cacheReadTokens":15872,"cacheWriteTokens":0,"totalTokens":50748}
+convergence total {"inputTokens":34893,"outputTokens":14157,"cacheReadTokens":231936,"cacheWriteTokens":0,"totalTokens":280986}
+human parent {"inputTokens":7053,"outputTokens":2641,"cacheReadTokens":87040,"cacheWriteTokens":0,"totalTokens":96734}
+human children 3 {"inputTokens":8031,"outputTokens":15071,"cacheReadTokens":21760,"cacheWriteTokens":0,"totalTokens":44862}
+human total {"inputTokens":15084,"outputTokens":17712,"cacheReadTokens":108800,"cacheWriteTokens":0,"totalTokens":141596}

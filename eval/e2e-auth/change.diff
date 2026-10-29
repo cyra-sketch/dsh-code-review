@@ -1,0 +1,10 @@
+diff --git a/src/cart.ts b/src/cart.ts
+index 1a8f1bb..067fa91 100644
+--- a/src/cart.ts
++++ b/src/cart.ts
+@@ -17,3 +17,5 @@ export function applyFixedDiscount(totalCents: number, discountCents: number): D
+     appliedDiscountCents,
+   };
+ }
++
++// R4 low-risk formatting update

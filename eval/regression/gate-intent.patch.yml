@@ -1,0 +1,4 @@
+- id: jury
+  config:
+    gateMode: block
+    gateIntent: 'fixed-amount 减免功能：金额必须使用整数分；减免不得超过订单总额；审计记录必须包含操作者 IP（合规要求）'

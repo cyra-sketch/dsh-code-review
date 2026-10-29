@@ -1,0 +1,30 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      dsh-jury:
+        specifier: file:/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/install/dsh-jury-0.1.0.tgz
+        version: file:../../../../dsh-jury-0.1.0.tgz
+
+packages:
+
+  dsh-jury@file:../../../../dsh-jury-0.1.0.tgz:
+    resolution: {integrity: sha512-Qzr4PTJPvLIfzE/GcY4R/TDEJM5Q1Ed0GcsqrHJQjiKBAuHoJlmCgi2XXKPl1grpWxHkn3jH1LF6e8QlOFv5dA==, tarball: file:../../../../dsh-jury-0.1.0.tgz}
+    version: 0.1.0
+    peerDependencies:
+      '@deepseek-ai/cordis': '>=4.0.5 <5.0.0'
+      '@deepseek-ai/dsh-agent': '>=0.2.1-rc.2 <0.3.0'
+      '@deepseek-ai/dsh-commands': '>=0.2.1-rc.2 <0.3.0'
+      '@deepseek-ai/dsh-llm': '>=0.2.1-rc.2 <0.3.0'
+      '@deepseek-ai/dsh-subagent': '>=0.2.1-rc.2 <0.3.0'
+      '@deepseek-ai/dsh-tools': '>=0.2.1-rc.2 <0.3.0'
+
+snapshots:
+
+  dsh-jury@file:../../../../dsh-jury-0.1.0.tgz: {}

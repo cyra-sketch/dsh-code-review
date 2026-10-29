@@ -1,0 +1,7 @@
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm error code ENOTEMPTY
+npm error syscall rmdir
+npm error path /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/pako/dist
+npm error errno -66
+npm error ENOTEMPTY: directory not empty, rmdir '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/pako/dist'
+npm error A complete log of this run can be found in: /Users/cyra/.npm/_logs/2026-10-28T07_47_46_418Z-debug-0.log

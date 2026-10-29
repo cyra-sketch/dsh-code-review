@@ -1,0 +1,988 @@
+The returned content is the main text extracted from the page. If you use it in your answer, cite this page as a markdown link, e.g. [title](url).
+
+\[
+ {
+ "sha": "11128fab8a0557536a53d5677766a4aa7c27712c",
+ "node\_id": "C\_kwDOHXYQrNoAKDExMTI4ZmFiOGEwNTU3NTM2YTUzZDU2Nzc3NjZhNGFhN2MyNzcxMmM",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hi@bpier.re",
+ "date": "2024-09-27T12:03:01Z"
+ },
+ "committer": {
+ "name": "GitHub",
+ "email": "noreply@github.com",
+ "date": "2024-09-27T12:03:01Z"
+ },
+ "message": "Add greaterThanOrEqual() and lessThanOrEqual() (#16)\\n\\nRespective aliases:\\r\\n\\r\\ngte() => greaterThanOrEqual()\\r\\nlte() => lessThanOrEqual()",
+ "tree": {
+ "sha": "3f974c425ae90e86df184d96a0dbfbdd607aeac5",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/3f974c425ae90e86df184d96a0dbfbdd607aeac5"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/11128fab8a0557536a53d5677766a4aa7c27712c",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\nwsFcBAABCAAQBQJm9p71CRC1aQ7uu5UhlAAA5XAQAK0K05m21pXkJ3dW5q9vavBB\\nYAoJryPhv8k0ZjAJYmffUuO7Tob5t39c4eRDtLhenKLRhqUrBWEt+vP5IBitwF/l\\ndSuMCTR+S6H0TkQ6fJB2ITbpUsY4kKvM4CfmBrmyUilvk8KN6eua4+EQnUHyIr0X\\nXyupcV+GQwg/dmaL8z5s0GHTVr84OcQ98r0oiFSshZ7E87uOQ0CsaWRExmZfBNEn\\nzVGTEKu/HXJKYwv1G4c7J0QUw9FkR0DE6UtJV8LGIrPZqJN/ozYlarHRQku3GtrS\\nJW9HxdQRyow4mWbDcbeA5vIqngYU41Mfg6B0+Sp4RY7km8oi/F07Jkl1AV/zofKv\\nUpvxqAiw60BbYxgRMqfix1fwKw0TIVn4mPyFISjZwXX2OSexLknI1Pj/cTld6b5j\\nr6c5lcBuEyGL0j80XCA1//jM58uKGGwurwqxRuQfKDGtLs3tqrmCsOWEISZZDnY0\\n6vI6Qw/8F5dqLRGCmPh93M0xED8x3CqpXN+jTZkcPjR4XSFx1TgnNKM6W3GHiKfe\\ncbWNKUt5RPmOKdpgpz0D09u0rOsKFMCCDHhaDiCmWLC1+wY2edBfDnhy584aOT6G\\nUo5GS07lDaALSkjUBWKmRqHIViALpU1rdpAIZHFjkieikLwLZ5luORkJn1sJX8pC\\nftQjYqj5pWdqkQB4G7si\\n=hW2t\\n-----END PGP SIGNATURE-----\\n",
+ "payload": "tree 3f974c425ae90e86df184d96a0dbfbdd607aeac5\\nparent e19dfac58a028adb5f616c7d4874059b01d1b869\\nauthor Pierre Bertet  1727438581 +0100\\ncommitter GitHub  1727438581 +0100\\n\\nAdd greaterThanOrEqual() and lessThanOrEqual() (#16)\\n\\nRespective aliases:\\r\\n\\r\\ngte() => greaterThanOrEqual()\\r\\nlte() => lessThanOrEqual()",
+ "verified\_at": "2024-11-08T15:59:28Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/11128fab8a0557536a53d5677766a4aa7c27712c",
+ "html\_url": "https://github.com/bpierre/dnum/commit/11128fab8a0557536a53d5677766a4aa7c27712c",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/11128fab8a0557536a53d5677766a4aa7c27712c/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "web-flow",
+ "id": 19864447,
+ "node\_id": "MDQ6VXNlcjE5ODY0NDQ3",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/web-flow",
+ "html\_url": "https://github.com/web-flow",
+ "followers\_url": "https://api.github.com/users/web-flow/followers",
+ "following\_url": "https://api.github.com/users/web-flow/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/web-flow/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/web-flow/subscriptions",
+ "organizations\_url": "https://api.github.com/users/web-flow/orgs",
+ "repos\_url": "https://api.github.com/users/web-flow/repos",
+ "events\_url": "https://api.github.com/users/web-flow/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/web-flow/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "e19dfac58a028adb5f616c7d4874059b01d1b869",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/e19dfac58a028adb5f616c7d4874059b01d1b869",
+ "html\_url": "https://github.com/bpierre/dnum/commit/e19dfac58a028adb5f616c7d4874059b01d1b869"
+ }
+ \]
+ },
+ {
+ "sha": "1f07c9d2d20114e1731e6465e99d15909b3dccfb",
+ "node\_id": "C\_kwDOHXYQrNoAKDFmMDdjOWQyZDIwMTE0ZTE3MzFlNjQ2NWU5OWQxNTkwOWIzZGNjZmI",
+ "commit": {
+ "author": {
+ "name": "Gidon Katten",
+ "email": "55109236+gidonkatten@users.noreply.github.com",
+ "date": "2024-06-04T19:49:06Z"
+ },
+ "committer": {
+ "name": "GitHub",
+ "email": "noreply@github.com",
+ "date": "2024-06-04T19:49:06Z"
+ },
+ "message": "Ability to round up/down in multiply and divide operations (#13)\\n\\nThe default behaviour for the multiply and divide operations was to ROUND\_HALF.\\r\\nAdded the possibility to specify whether to ROUND\_UP or ROUND\_DOWN. Rounding\\r\\ndown is especially important as that is the typical behaviour in smart contract\\r\\nopcodes (EVM and non-EVM alike).\\r\\n\\r\\nAlso fixed a bug in the divideAndRound function (which is called by many\\r\\noperations) when the divisor is negative. E.g. divideAndRound(-15n, 2n)) and\\r\\ndivideAndRound(15n, -2n) yielded different results.\\r\\n\\r\\nUpdated docs with latest changes.",
+ "tree": {
+ "sha": "188fabf4422a1bed79b23570d6fd21a12a0b561b",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/188fabf4422a1bed79b23570d6fd21a12a0b561b"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/1f07c9d2d20114e1731e6465e99d15909b3dccfb",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\nwsFcBAABCAAQBQJmX2+yCRC1aQ7uu5UhlAAAi6oQAJi5iAG8a8VQbDx1F414fTY4\\neWsRvQSS3HOsvIIKhsuiSoak2XoUkN1ySWwEtpsNpXhPFdOfvvCDtY/hC19CGAmC\\na+vbB0A0LLDs2JaW+uTYYgdKJUPQ5j6l15DFxz/UBxLSJ6cdqbvbsiO5RcM9KMEt\\nXag88970L2QkNp01kcgLYHG+RR6E0tmvRiHwoNFhuplhOIx/tGriih5oz22TRK2b\\nUF92IaVr5wrDFFSy/hMD8UP6vMMK8mo60w4jCLPrjoacW/aNJyWMnLRmVFGLfjdX\\ncFDF5YH5Z5Id8mbGRZqE3K0lhm5EhGqh8jG21ldIUzSdd2JMuYJM964GqCZmUYzo\\nk/hPLO4FPYqRiiueBHVnqrfozSt/LaGLffCv67EecUDYMX6zrJnVp0kADKzARCLs\\n3Kg5zM5Yh/SignYB92ZbQCkvvurP27vUYjj33OV89jBmqC278wY1IhSZgkZpRNzQ\\nRs6EutsaqOXCK5QC+K/jVEoQeRVMOs1nwZs5hoG/FfyXpYlDAXT67vOPpfUE7lwN\\njRFK+yWxQDoxDqxNwFQ+yS71UTrXemLpup+8LWBNK2XijYGMyoBtvlyPERffcqx9\\nI1YOuAYp/0akRE9Ub/5vmvnvRl9PzvQsUob0hcKBh+O3wanzplm5V9zlDmQg+I4o\\n7yw4yJ6CTtqQKfpDu8er\\n=N/Gu\\n-----END PGP SIGNATURE-----\\n",
+ "payload": "tree 188fabf4422a1bed79b23570d6fd21a12a0b561b\\nparent 9b693cc650f9a1dae7e3e1cc6daa6ac9c5f308ea\\nauthor Gidon Katten <55109236+gidonkatten@users.noreply.github.com> 1717530546 +0100\\ncommitter GitHub  1717530546 +0100\\n\\nAbility to round up/down in multiply and divide operations (#13)\\n\\nThe default behaviour for the multiply and divide operations was to ROUND\_HALF.\\r\\nAdded the possibility to specify whether to ROUND\_UP or ROUND\_DOWN. Rounding\\r\\ndown is especially important as that is the typical behaviour in smart contract\\r\\nopcodes (EVM and non-EVM alike).\\r\\n\\r\\nAlso fixed a bug in the divideAndRound function (which is called by many\\r\\noperations) when the divisor is negative. E.g. divideAndRound(-15n, 2n)) and\\r\\ndivideAndRound(15n, -2n) yielded different results.\\r\\n\\r\\nUpdated docs with latest changes.",
+ "verified\_at": "2024-11-08T15:59:28Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/1f07c9d2d20114e1731e6465e99d15909b3dccfb",
+ "html\_url": "https://github.com/bpierre/dnum/commit/1f07c9d2d20114e1731e6465e99d15909b3dccfb",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/1f07c9d2d20114e1731e6465e99d15909b3dccfb/comments",
+ "author": {
+ "login": "gidonkatten",
+ "id": 55109236,
+ "node\_id": "MDQ6VXNlcjU1MTA5MjM2",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/55109236?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/gidonkatten",
+ "html\_url": "https://github.com/gidonkatten",
+ "followers\_url": "https://api.github.com/users/gidonkatten/followers",
+ "following\_url": "https://api.github.com/users/gidonkatten/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/gidonkatten/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/gidonkatten/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/gidonkatten/subscriptions",
+ "organizations\_url": "https://api.github.com/users/gidonkatten/orgs",
+ "repos\_url": "https://api.github.com/users/gidonkatten/repos",
+ "events\_url": "https://api.github.com/users/gidonkatten/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/gidonkatten/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "web-flow",
+ "id": 19864447,
+ "node\_id": "MDQ6VXNlcjE5ODY0NDQ3",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/web-flow",
+ "html\_url": "https://github.com/web-flow",
+ "followers\_url": "https://api.github.com/users/web-flow/followers",
+ "following\_url": "https://api.github.com/users/web-flow/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/web-flow/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/web-flow/subscriptions",
+ "organizations\_url": "https://api.github.com/users/web-flow/orgs",
+ "repos\_url": "https://api.github.com/users/web-flow/repos",
+ "events\_url": "https://api.github.com/users/web-flow/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/web-flow/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "9b693cc650f9a1dae7e3e1cc6daa6ac9c5f308ea",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/9b693cc650f9a1dae7e3e1cc6daa6ac9c5f308ea",
+ "html\_url": "https://github.com/bpierre/dnum/commit/9b693cc650f9a1dae7e3e1cc6daa6ac9c5f308ea"
+ }
+ \]
+ },
+ {
+ "sha": "6aaef11262382959a6b4b16f063f0b364b18fe23",
+ "node\_id": "C\_kwDOHXYQrNoAKDZhYWVmMTEyNjIzODI5NTlhNmI0YjE2ZjA2M2YwYjM2NGIxOGZlMjM",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hi@bpier.re",
+ "date": "2024-01-28T15:44:02Z"
+ },
+ "committer": {
+ "name": "Pierre Bertet",
+ "email": "hi@bpier.re",
+ "date": "2024-01-28T15:45:44Z"
+ },
+ "message": "Export Numberish (fixes #9)",
+ "tree": {
+ "sha": "0923b344cae24ca064559971cceacb33236ff4ce",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/0923b344cae24ca064559971cceacb33236ff4ce"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/6aaef11262382959a6b4b16f063f0b364b18fe23",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\niQIzBAABCAAdFiEEKMb6ZcXVJDVFjGCyLBBX/uJgN+QFAmW2dqgACgkQLBBX/uJg\\nN+RY+xAAm3oCbO1lv6Kl/+TXV/4dbAYDfKe1wbwUaRrSk4wZMRtv0IeI4vxhsJbq\\nTNQ/hGpKxLHg7JphTgRLr/it8CQNuXE+4dILNVSe7fxmReE5cJc1v+rebfP5EWcu\\n0UrL/Qtx/DIGDEd3/ZXlZ1F+ZyDVSrb2NhugMaKsZSHlvKLjnJzDEaPLGqjQqLKI\\nu2MaoqJPGtsIfB1zdRjX23ju/jUKm4/GBXa4YlKEhdoQVevHM3nwriTDsEEhVquL\\nsRhp0AtsjXlnPO4Mig9/y/LvST75tGJ4VY+Oe+neayvWu2uFEtCuwAJZBQJpPzM6\\nYNM5wrFiEXE1wPBwmGEv3nNPGj5+Jr1JH/k0xDSNMNSG9/wtux4l54nNOoXv4edN\\nXNne8TZexmSIW705oCSTQPZpCJ+bGiWLHbMkFecTjZmf1qZrd0OcAGn4RJQ4co5Y\\nRXN7rQ5P0rgqER+c2VXpdlklwNrq+NTjZz3xatJ+IVB2pi0X7ReaOiyRhgG2JNjL\\nBjNfETsrMDhqARqor9U23ML9keyFRNjKnAka1URC9/emC8Li4KCPZ4lV5QF/q5ZC\\nSyUoeyFJoKztwcSpsUjMGJ6c+DoDf9KRGP9M6B3j/HUNZOtym8REhUqidIPZOOLL\\nql8TPwGg8l0lddRoxH/jPaRWQ3mOKJ2/JQwrcj8dY01/Evc45Xc=\\n=wZrj\\n-----END PGP SIGNATURE-----",
+ "payload": "tree 0923b344cae24ca064559971cceacb33236ff4ce\\nparent 4c4e5f324058cdefaf0d6b7775fdde9b9e58280e\\nauthor Pierre Bertet  1706456642 +0000\\ncommitter Pierre Bertet  1706456744 +0000\\n\\nExport Numberish (fixes #9)\\n",
+ "verified\_at": "2024-11-08T15:59:28Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/6aaef11262382959a6b4b16f063f0b364b18fe23",
+ "html\_url": "https://github.com/bpierre/dnum/commit/6aaef11262382959a6b4b16f063f0b364b18fe23",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/6aaef11262382959a6b4b16f063f0b364b18fe23/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "4c4e5f324058cdefaf0d6b7775fdde9b9e58280e",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/4c4e5f324058cdefaf0d6b7775fdde9b9e58280e",
+ "html\_url": "https://github.com/bpierre/dnum/commit/4c4e5f324058cdefaf0d6b7775fdde9b9e58280e"
+ }
+ \]
+ },
+ {
+ "sha": "89b2477ddca666c698cd2efceca3f2c077d3a89d",
+ "node\_id": "C\_kwDOHXYQrNoAKDg5YjI0NzdkZGNhNjY2YzY5OGNkMmVmY2VjYTNmMmMwNzdkM2E4OWQ",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hi@bpier.re",
+ "date": "2023-09-25T18:11:26Z"
+ },
+ "committer": {
+ "name": "GitHub",
+ "email": "noreply@github.com",
+ "date": "2023-09-25T18:11:26Z"
+ },
+ "message": "Add toString() (#5)",
+ "tree": {
+ "sha": "54317a87a3aa820cf968345e066c23c2f4c3f17d",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/54317a87a3aa820cf968345e066c23c2f4c3f17d"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/89b2477ddca666c698cd2efceca3f2c077d3a89d",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\nwsBcBAABCAAQBQJlEc1OCRBK7hj4Ov3rIwAAdxsIAHjAKCxBlH3mZ+YpBNnLkxx0\\nN32p4Dz++uoTIkYbmruAZKjsRVf1GpX2JFb4IrrJYhQVOwPuL9YRZxKGpFSF3tVI\\nx8kV/z4PZPf9dnfi8egXA5POC4SM1cO9vcS9iZPm35kOM5uTgqP2ayMHiFz8aZmX\\nOCjRVY/IdOMziuqptdaPG/tts2rubwWlFaPCfR72hO+Y6amtGLYrH/7yYLYhSr2x\\npSsh08POtoA3o8Q+NJpe2sTBPsfSrtNiVwyLU47ByGdbzT1T1I5A2jUThknLZXXF\\neCeYKtowyimVmUjlgyrrUxiQWc/AIXHXYqxb7bbeyNkuP5gBdqOP4lVxCmtylQo=\\n=5pvN\\n-----END PGP SIGNATURE-----\\n",
+ "payload": "tree 54317a87a3aa820cf968345e066c23c2f4c3f17d\\nparent 0edde1be4bc3bedc403297f29415e4f993eb9d40\\nauthor Pierre Bertet  1695665486 +0100\\ncommitter GitHub  1695665486 +0100\\n\\nAdd toString() (#5)\\n\\n",
+ "verified\_at": "2024-01-16T19:59:59Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/89b2477ddca666c698cd2efceca3f2c077d3a89d",
+ "html\_url": "https://github.com/bpierre/dnum/commit/89b2477ddca666c698cd2efceca3f2c077d3a89d",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/89b2477ddca666c698cd2efceca3f2c077d3a89d/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "web-flow",
+ "id": 19864447,
+ "node\_id": "MDQ6VXNlcjE5ODY0NDQ3",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/web-flow",
+ "html\_url": "https://github.com/web-flow",
+ "followers\_url": "https://api.github.com/users/web-flow/followers",
+ "following\_url": "https://api.github.com/users/web-flow/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/web-flow/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/web-flow/subscriptions",
+ "organizations\_url": "https://api.github.com/users/web-flow/orgs",
+ "repos\_url": "https://api.github.com/users/web-flow/repos",
+ "events\_url": "https://api.github.com/users/web-flow/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/web-flow/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "0edde1be4bc3bedc403297f29415e4f993eb9d40",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/0edde1be4bc3bedc403297f29415e4f993eb9d40",
+ "html\_url": "https://github.com/bpierre/dnum/commit/0edde1be4bc3bedc403297f29415e4f993eb9d40"
+ }
+ \]
+ },
+ {
+ "sha": "6f5b048d49f7f88dcc8f46b3045d725d78689254",
+ "node\_id": "C\_kwDOHXYQrNoAKDZmNWIwNDhkNDlmN2Y4OGRjYzhmNDZiMzA0NWQ3MjVkNzg2ODkyNTQ",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hi@bpier.re",
+ "date": "2023-05-01T17:02:02Z"
+ },
+ "committer": {
+ "name": "Pierre Bertet",
+ "email": "hi@bpier.re",
+ "date": "2023-05-01T17:04:05Z"
+ },
+ "message": "compare() bug fix + cmp() alias\\n\\nFixes a bug where compare() could return incorrect values.\\n\\nAlso add the cmp() alias.",
+ "tree": {
+ "sha": "44414725eb32ce9631ae061972a94e85ed9e6a31",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/44414725eb32ce9631ae061972a94e85ed9e6a31"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/6f5b048d49f7f88dcc8f46b3045d725d78689254",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\niQIzBAABCAAdFiEEKMb6ZcXVJDVFjGCyLBBX/uJgN+QFAmRP8QUACgkQLBBX/uJg\\nN+TuHA//aASJ+5r7ntjFjuO7BQ1ZBBQFWDQTvlOtmwhzC36oiZXyLluMa/BZRdHL\\n+S4Fy6xS4h+gRDRqUo52CHPypgjz2CDJh2I+5HNnCkT9Ux1imWX4rmwig4TYl814\\ns0qepj7bAOYUx8/w9HiXPzTdxaJnW6o3thBoIpkv0BdIixf46emyKOEUad6hpfSd\\nR5XMJqgwywRaNE82nfblLPRytqESFCuNavBGE1owRB4KRiCkX+VX2ayZtm2kFzl5\\nUir9IkLRZW8J5VcfZwLkcEm6hdiJ6kQ2X3gAo1LwY4poZDVEKjf+On170ilL7UbU\\nwvEmmOkoz5TQD4TF0bvhhVj5hkPyw6/aQr5T5TaBwCEqxl9XspWzZWZaRtVCIdZ5\\ngiAP0w39D3WXNYRCcxfwTZrV0GAgFuhWCZs2mOn3k2WNec0EMQWjb67RqRYU8SNN\\n/MztplrTFxFhA81RHFyOJZG67d9JNzZx1W2rJLNExc2pw45jCAN0aC0f5WIU6ZZO\\n0HPj6+UEMrbULheaAp+f9SnZq20GcEMhn8zPV9N3wfXElrmhNCIWtzTFZ+TU2d9K\\nhy18Uo8Ce1qsqYX28GqMSDPDWiblCrOHNLBgLd8C5ctBkz1BxWmRnZIJSIiXy5rC\\nQioEfv6A5Cs2ERmVCD5PN8Jknm1OOHa9/CU50zgHLNWUxPtmREw=\\n=iwjN\\n-----END PGP SIGNATURE-----",
+ "payload": "tree 44414725eb32ce9631ae061972a94e85ed9e6a31\\nparent 1ef9330b335e0990b5983666291f3aad5d137ca9\\nauthor Pierre Bertet  1682960522 +0100\\ncommitter Pierre Bertet  1682960645 +0100\\n\\ncompare() bug fix + cmp() alias\\n\\nFixes a bug where compare() could return incorrect values.\\n\\nAlso add the cmp() alias.\\n",
+ "verified\_at": "2024-11-08T15:59:28Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/6f5b048d49f7f88dcc8f46b3045d725d78689254",
+ "html\_url": "https://github.com/bpierre/dnum/commit/6f5b048d49f7f88dcc8f46b3045d725d78689254",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/6f5b048d49f7f88dcc8f46b3045d725d78689254/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "1ef9330b335e0990b5983666291f3aad5d137ca9",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/1ef9330b335e0990b5983666291f3aad5d137ca9",
+ "html\_url": "https://github.com/bpierre/dnum/commit/1ef9330b335e0990b5983666291f3aad5d137ca9"
+ }
+ \]
+ },
+ {
+ "sha": "530a83a3dcd3da5ed54381bfb617b458706883c4",
+ "node\_id": "C\_kwDOHXYQrNoAKDUzMGE4M2EzZGNkM2RhNWVkNTQzODFiZmI2MTdiNDU4NzA2ODgzYzQ",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-11-29T20:16:39Z"
+ },
+ "committer": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-11-29T20:16:39Z"
+ },
+ "message": "Add compare()",
+ "tree": {
+ "sha": "b93e420d025ddadb0a134896f452266c654a32f0",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/b93e420d025ddadb0a134896f452266c654a32f0"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/530a83a3dcd3da5ed54381bfb617b458706883c4",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\niQIzBAABCAAdFiEEKMb6ZcXVJDVFjGCyLBBX/uJgN+QFAmOGaKcACgkQLBBX/uJg\\nN+QcWhAAoSRPcpKOz7wOKcCX+LoP3oa6QZvxu+SdNFa7pa4Stwo4/Nk+WJeQL2Rv\\njM9Hrk4UzQqRguMTcb2tex1z4MQec/MSksLquwe3aJAbIERlNWLcCSVla06nSykS\\n/Hux2P5WE6971ZAwlEuLcrYnoFFumQZxV+b8qdf7RvGy1agGWJ1oZxFY3COYHvk7\\nevqkVQ51pR7He9yXKvHGhUbD3l8IMBfOC/dbpCBwkwY6AkQLCTiqaAXxJN6glahp\\no+9o13RfGjL1SFhhGfh2rdJCpEDLZNvCwdom+7ZQeR/bsYVPyY9E2BEHHlBhUJxe\\nv1vdzKBvqtPv9Zvc85ivlEMGJsJl9o8dnh6UaMdd1BYhEFrZMyofKR+vvKGrjBhP\\ns8bRUe4sjfog8AkAM1gNmz387RgZ0uOTv8ELIO3Xz4zYQYVzAhi5TXtrVJii2PCJ\\nW7dek3ZRpa7xwHxaDLi7CPAB1J0bTijI4Q/1X/ya2UcHMeD4iEqRt9f+5pBsgX7n\\na61GJUNl5GZTzP85Vp+O8q75Q6LUWqhKcsCSnHww205/mtg0RzeTKyjdxWfzQvxP\\nebSmfkkvZqfMe+CsdOmS+SreWcV+3buw7A9lXGLpk6F/Kx/RMrYCE6o8yxBdGKau\\nclCMhhdXE81fLCZiwpFwg+ECxkN6b6GlZtFNX/rAvjz5geIWbeY=\\n=4HMu\\n-----END PGP SIGNATURE-----",
+ "payload": "tree b93e420d025ddadb0a134896f452266c654a32f0\\nparent b10d37c925a6d7b69d436490a74915e8d54c48cf\\nauthor Pierre Bertet  1669752999 +0000\\ncommitter Pierre Bertet  1669752999 +0000\\n\\nAdd compare()\\n",
+ "verified\_at": "2024-11-08T15:59:28Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/530a83a3dcd3da5ed54381bfb617b458706883c4",
+ "html\_url": "https://github.com/bpierre/dnum/commit/530a83a3dcd3da5ed54381bfb617b458706883c4",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/530a83a3dcd3da5ed54381bfb617b458706883c4/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "b10d37c925a6d7b69d436490a74915e8d54c48cf",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/b10d37c925a6d7b69d436490a74915e8d54c48cf",
+ "html\_url": "https://github.com/bpierre/dnum/commit/b10d37c925a6d7b69d436490a74915e8d54c48cf"
+ }
+ \]
+ },
+ {
+ "sha": "b10d37c925a6d7b69d436490a74915e8d54c48cf",
+ "node\_id": "C\_kwDOHXYQrNoAKGIxMGQzN2M5MjVhNmQ3YjY5ZDQzNjQ5MGE3NDkxNWU4ZDU0YzQ4Y2Y",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-11-29T20:03:12Z"
+ },
+ "committer": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-11-29T20:03:12Z"
+ },
+ "message": "Add remainder()",
+ "tree": {
+ "sha": "8e78b9b780009106103917a3782113af9f0ed5dd",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/8e78b9b780009106103917a3782113af9f0ed5dd"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/b10d37c925a6d7b69d436490a74915e8d54c48cf",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\niQIzBAABCAAdFiEEKMb6ZcXVJDVFjGCyLBBX/uJgN+QFAmOGZYAACgkQLBBX/uJg\\nN+QZEg//VNLZkjDgLmhpPik55/1zM/kTYlsgP2PQCTQDfTlfQWV55JMRukKBzmHL\\nUPmGlnsVP/WQVByPujANadwuaY1iWH2eSakiRuhF6vFad6RXO6RmIS/gD+DjBh0F\\nHWBU+7bdSDoFcRu/a329wJC/PoMLRKemxzsZG1k5JaqQAR5eh7vR5D1/aaKfDY1E\\n1Y9g6yS3h7E2oEuIds7PGHObe/x9n/5Et+qczM5m+hF7MmY4Y46cwbsJuMONmTv6\\n+dNRgFkkaI4pM6d/4/c6XeCzHr2d7zt9Zcn4wKyioM85eRSm1qnA9PSqjmHdDlVw\\nsvD0QRjJBde+Iwk4hAZqfDnRvcbB9wYhmYfXVYnWvfrqNOvn99L9iS1TkgTr4e97\\nXxOwnb1QTFoVilbccuQ/sjczzj0FPdn3T/5tmQ0Zthe7VC887FWbZf0geadQSyiK\\nh365P5391xgvEfd4kr2vyIQzCGememd8nCIMkOsUxbkft8s5ZJB5JdDUb8/3PPJA\\nUp4n4mNCJy9qxXNYB4MlNb4GmyTeNKWbApzMutWBbnAiBgHRC1+pi4RUWYjEmkU7\\nfx2bSKuFd8KaCK1A+GcyeS/bhcYQJ8FyP5XntTfDOpW/w6WZBWRSDxw7s4cP5jtX\\n6Gy4ecKETJt1DNO07Gb/8ePlT+VKrkYqoxQGFYSS/ldzl7MxOIE=\\n=ihcL\\n-----END PGP SIGNATURE-----",
+ "payload": "tree 8e78b9b780009106103917a3782113af9f0ed5dd\\nparent b0acbe794af3dd4d576107847ba44c97af6cab91\\nauthor Pierre Bertet  1669752192 +0000\\ncommitter Pierre Bertet  1669752192 +0000\\n\\nAdd remainder()\\n",
+ "verified\_at": "2024-11-08T15:59:28Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/b10d37c925a6d7b69d436490a74915e8d54c48cf",
+ "html\_url": "https://github.com/bpierre/dnum/commit/b10d37c925a6d7b69d436490a74915e8d54c48cf",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/b10d37c925a6d7b69d436490a74915e8d54c48cf/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "b0acbe794af3dd4d576107847ba44c97af6cab91",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/b0acbe794af3dd4d576107847ba44c97af6cab91",
+ "html\_url": "https://github.com/bpierre/dnum/commit/b0acbe794af3dd4d576107847ba44c97af6cab91"
+ }
+ \]
+ },
+ {
+ "sha": "75afb1fd14611f419a0983a214a7ad2a83f8b423",
+ "node\_id": "C\_kwDOHXYQrNoAKDc1YWZiMWZkMTQ2MTFmNDE5YTA5ODNhMjE0YTdhZDJhODNmOGI0MjM",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-11-20T14:53:46Z"
+ },
+ "committer": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-11-20T14:53:46Z"
+ },
+ "message": "Add round() / ceil() / floor()",
+ "tree": {
+ "sha": "629ec38d1d2288568480289e46edcb0509faaf76",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/629ec38d1d2288568480289e46edcb0509faaf76"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/75afb1fd14611f419a0983a214a7ad2a83f8b423",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\niQIzBAABCAAdFiEEKMb6ZcXVJDVFjGCyLBBX/uJgN+QFAmN6P3oACgkQLBBX/uJg\\nN+QDyw/+Kh0uPE24SH0jL/iqaH/9EBUqiPn2K9ATJLjuGXZ59adr6OXx33pJ/yVO\\nzpNztNZpgU+fdNe7wccc7cLEgmvN+9BWawYpOFD76UAyA1+BCcWy/W0pscVxSioH\\n0+oJMLWBFAuXbzgYc5vVx/vHKv9+khAFRtMFpnFH/9CJilFc39wXkoSF8xmshgKu\\nxzed4+dPKno7XvRU+Y4IOIb/3V6Vi0W6a82I7TnHyPBM6SDHDDe1YYb4I9blppyf\\nPKDG3C+VRH/NEmm9PIDRsu9hlBC6slaj0QZjUaiqIMUryF3dsbZtlIbCmLG+1Kz1\\naCF/9HJP5XWO+//PLdJBTVoTkGasHPxP/nshky8wdsZYC1zAgxnSgT5p4SBCRIyn\\nuLd/2bnZVG2iWuppbFDttADsne+5sFbw4TezQOi4hnt+QUVk2CzxNUY5TLLgx/3X\\nPxbe0w4Th5Jmflsi4I6iZQcWj+eLnv3Et/W18fBMYL59tSJwP9vx6ooC5dk7Lze2\\n/6CeazQKMwzOMzQKFvKVGzoW9VKLyxNSxeNGY/8XvBS5x6M5jGd3jKcDsKxHb9b6\\nElCbf+6SC9Ob9K92DklJS+9vQm2c22f8YNs7XXJ/uaXavodvLmJK5yM847+YwoSM\\ndbag95AbL+vBWOWMeDhUz4ZDJnGwYDqiDBCN1lDza3qKleQaNbI=\\n=nMar\\n-----END PGP SIGNATURE-----",
+ "payload": "tree 629ec38d1d2288568480289e46edcb0509faaf76\\nparent b8de7c80c1bb4736172f1d8bb2ec5892aadf38bf\\nauthor Pierre Bertet  1668956026 +0000\\ncommitter Pierre Bertet  1668956026 +0000\\n\\nAdd round() / ceil() / floor()\\n",
+ "verified\_at": "2024-11-08T15:59:28Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/75afb1fd14611f419a0983a214a7ad2a83f8b423",
+ "html\_url": "https://github.com/bpierre/dnum/commit/75afb1fd14611f419a0983a214a7ad2a83f8b423",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/75afb1fd14611f419a0983a214a7ad2a83f8b423/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "b8de7c80c1bb4736172f1d8bb2ec5892aadf38bf",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/b8de7c80c1bb4736172f1d8bb2ec5892aadf38bf",
+ "html\_url": "https://github.com/bpierre/dnum/commit/b8de7c80c1bb4736172f1d8bb2ec5892aadf38bf"
+ }
+ \]
+ },
+ {
+ "sha": "1bcfb35c95a06d1d18107c431d1881bc7ea95384",
+ "node\_id": "C\_kwDOHXYQrNoAKDFiY2ZiMzVjOTVhMDZkMWQxODEwN2M0MzFkMTg4MWJjN2VhOTUzODQ",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-11-14T19:37:03Z"
+ },
+ "committer": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-11-14T19:37:03Z"
+ },
+ "message": "Add new operations\\n\\nThis commit adds the following functions:\\n\\n- abs(): equivalent to Math.abs().\\n- greaterThan(): equivalent to the > operator.\\n- lessThan(): equivalent to the < operator.\\n- equal(): equivalent to the == operator.\\n- equalizeDecimals(): equalize the decimals of the passed Dnum values.",
+ "tree": {
+ "sha": "482789765a2afc362f9bcae662deeeffe09dd429",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/482789765a2afc362f9bcae662deeeffe09dd429"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/1bcfb35c95a06d1d18107c431d1881bc7ea95384",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\niQIzBAABCAAdFiEEKMb6ZcXVJDVFjGCyLBBX/uJgN+QFAmNymbMACgkQLBBX/uJg\\nN+RYURAAlHLBT2JU58IJ8ZmXLDVmyr2AL8mb20sXFlHNkB6YeYWCvdOFLsvlo59u\\neNi64SNVTtwyd+Paa/Fek0Kiha1iXht5Wvf4qrzWvF7cLnoDgXV5B1/aqT2uH94U\\nwm9rebxxn78QglWiLfe1jrU8KKycAt+Xz3x4w3zn5qqyUPQb8x3lkvuvf7vC9dhU\\nPT6cglBbKygb13GjQPxNZsWPcNJ0r6QEci5jrGGAj9jZJOhTcReLvEfr/PijzpP9\\npgevclmRvSvHqvjYl29jRkRk1We7Z2fpSl5v1R0HZSIbQ7ZnU58qE1iCgttf0kS5\\nb6t4mhzJj012tYf/aL2xpOqVrhX9XZZir8MpyZrUno/NTIgH6wnskoRq662rxpqq\\np0eBZun7uA7TxBtGxah4RYwutVvJIl9YB2oPmlKk+iMSOnhbdHk+kOPzIxa1oYZX\\nZrvXkkvmLb90Y4BSTz2EaQsMfymzPGewVAlVmxqWu8ZyNow40p8ioVmVh2LDgCTS\\nWhOIYT6qOn1k/jDDL1Q/sgpWpNjHfmtW8uRaSA/9HQu+y2v4JFYy5PYHd9qrCGrp\\nT823AfY1LrMDTIgaDF08tuBQ3FNpS0PtvxNppaRiw54wrEPZJ67qVPNRpNCLnQt+\\n0hWLLhpq0c/bAzkuBd7UqAy39/AuikBIAW6LFdXwZSacjK8nYT0=\\n=CetW\\n-----END PGP SIGNATURE-----",
+ "payload": "tree 482789765a2afc362f9bcae662deeeffe09dd429\\nparent e5aed90812b17a4968eedc2d50b6afb20a799e7a\\nauthor Pierre Bertet  1668454623 +0000\\ncommitter Pierre Bertet  1668454623 +0000\\n\\nAdd new operations\\n\\nThis commit adds the following functions:\\n\\n- abs(): equivalent to Math.abs().\\n- greaterThan(): equivalent to the > operator.\\n- lessThan(): equivalent to the < operator.\\n- equal(): equivalent to the == operator.\\n- equalizeDecimals(): equalize the decimals of the passed Dnum values.\\n",
+ "verified\_at": "2024-11-08T15:59:28Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/1bcfb35c95a06d1d18107c431d1881bc7ea95384",
+ "html\_url": "https://github.com/bpierre/dnum/commit/1bcfb35c95a06d1d18107c431d1881bc7ea95384",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/1bcfb35c95a06d1d18107c431d1881bc7ea95384/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "e5aed90812b17a4968eedc2d50b6afb20a799e7a",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/e5aed90812b17a4968eedc2d50b6afb20a799e7a",
+ "html\_url": "https://github.com/bpierre/dnum/commit/e5aed90812b17a4968eedc2d50b6afb20a799e7a"
+ }
+ \]
+ },
+ {
+ "sha": "44634287d485353a4352714fa991736242345a21",
+ "node\_id": "C\_kwDOHXYQrNoAKDQ0NjM0Mjg3ZDQ4NTM1M2E0MzUyNzE0ZmE5OTE3MzYyNDIzNDVhMjE",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-10-27T15:19:15Z"
+ },
+ "committer": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-10-27T15:19:15Z"
+ },
+ "message": "Add toNumber()",
+ "tree": {
+ "sha": "69dcde97be45fea692a924896768d633c5c238b6",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/69dcde97be45fea692a924896768d633c5c238b6"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/44634287d485353a4352714fa991736242345a21",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\niQIzBAABCAAdFiEEKMb6ZcXVJDVFjGCyLBBX/uJgN+QFAmNaoXMACgkQLBBX/uJg\\nN+SsNA//WqjWN5QfBCYUGoHKGpNzVCpm99HNW85UfoW6WnCf4pFWIdeY8WRe35aG\\nnlqq4DF0mU0Aibr5iso2xDqsRelgJfE4r5Su26VIVBu39VH8s38X43aUiGK/qEg1\\n8PDjry6XAsNDFboi2FB1yKhFNbokFRk7/veuQrJ8I38zsH9ZexZOJbjV5h1SQwLr\\nm7hbcBOXoyNThxAVsvn/dOLwDhbeoWha7s6NKhbebnhKxn/VFH/AyiaSYGuPQz7/\\nbSoe3sFvLEliCnSjXCDhGuob7IQdEmwFbckLrgaFMHSeWz1uTmuLL/Ap8hb2gpAJ\\nsr85F3lJUrByvZTbeJY9eUzvXfYVMxXoEDDT5Z4CL3eYaAIoRC/DjqeKcYIz88rZ\\nQF5Qk9LqbXsLPTbNM4YigEvyS/3zCjkIgcN11WdDhcJKkGghN2nDozbqIs2c4DQv\\nYwjcm6qkhdohppGmZxWiXOfKJpwpA8zXUw60xToDKnXDAPOYpdYuzWbq7LlrrD9d\\n+/EMx1en13dTUkOC1K2Lvi0xQEUWxS2Yz5uDH3zUZhMqd9me6c4kQJeKNLNuJFBM\\nK5JDzpd5jDAVZsU6jfKy0y4xpZ6Yimbu8svLeNgji7WT3Y390yRQNDpsVuvgwXiN\\nRxABM5oi7ImNubOOEdt+W3C4C0MxB0krQHuQc6C0Bh4jeZXWxqI=\\n=nJln\\n-----END PGP SIGNATURE-----",
+ "payload": "tree 69dcde97be45fea692a924896768d633c5c238b6\\nparent f3d1321c16ece05af83f623aa35e8facbe04583c\\nauthor Pierre Bertet  1666883955 +0100\\ncommitter Pierre Bertet  1666883955 +0100\\n\\nAdd toNumber()\\n",
+ "verified\_at": "2024-11-08T15:59:28Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/44634287d485353a4352714fa991736242345a21",
+ "html\_url": "https://github.com/bpierre/dnum/commit/44634287d485353a4352714fa991736242345a21",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/44634287d485353a4352714fa991736242345a21/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "f3d1321c16ece05af83f623aa35e8facbe04583c",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/f3d1321c16ece05af83f623aa35e8facbe04583c",
+ "html\_url": "https://github.com/bpierre/dnum/commit/f3d1321c16ece05af83f623aa35e8facbe04583c"
+ }
+ \]
+ },
+ {
+ "sha": "7b0aa1eed15d2fab774aafc0aec3c1cce3719634",
+ "node\_id": "C\_kwDOHXYQrNoAKDdiMGFhMWVlZDE1ZDJmYWI3NzRhYWZjMGFlYzNjMWNjZTM3MTk2MzQ",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-05-23T13:36:52Z"
+ },
+ "committer": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-05-23T13:36:52Z"
+ },
+ "message": "Move library target to es2020 to increase compatibility",
+ "tree": {
+ "sha": "b9305d54c540e5748140e2af7931e0112404c47e",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/b9305d54c540e5748140e2af7931e0112404c47e"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/7b0aa1eed15d2fab774aafc0aec3c1cce3719634",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\niQIzBAABCAAdFiEEKMb6ZcXVJDVFjGCyLBBX/uJgN+QFAmKLjfQACgkQLBBX/uJg\\nN+QqKQ/8CFTTyUf1uc4guKmwYVtnBjX8D/PxW7/JclebSCs6/BdP5TY21SCdUrqv\\nkwkEF02/I60agcaWAxqO4mabK2CRLMOkFsNsU+15kNgd7AeqTszlHLvpyNvko0zS\\nYKyYTV4VlYIRnja80eOzKU6fDYqSLHcJpspYzFEHS1UtvazlsoaqKLKjoG/Rg+3W\\nqWC5LpnjQQAI5qrxUexT5BOJS+XFdOm3aZ78pK2aWw4vGMDCbIN28IYAL+9WAvzY\\n3DxnYqs2ZkPGB+mWxowfOEZr85lgFLVb9NG+7tvpI4bnV+65vjCkgMaUi2Nx1HSR\\ncY6/cEG3k04QbRzzaGPBCB5+gkYiu1kP14kxo5ZmNjFqED40HLvcLnxDr8EMno/7\\nYL73i6rwSZd7gExEhxU50Oq29WjGTajVtZSjpCMRfVQmzso40Zb5rgcnIvFJ1ZYl\\nZqTYygkoAQl3Q0/ueO9xDYOMFmt/yW6csiWdPrAm6nWtwNVJA49MmKNkpdk+fQDw\\nLbRtVv7Pp8od1N4jB1feMotGu1ZC7zbXE8MSmLfB+ptCkW0iAqDbhuFZsapl6y1/\\nYIhymY+VBBS02Yifjhej3Fx2X8mHZO5JEX7sOMxR9CPLMaqHqNwUnLYn/nwv39vE\\n1pu6YukS7kzskXeE/iApfD1Bqh+/pMQOQW8Tb3bZbPZr8bMsQgg=\\n=SOd1\\n-----END PGP SIGNATURE-----",
+ "payload": "tree b9305d54c540e5748140e2af7931e0112404c47e\\nparent c0ab33a05027c7afe19312a9183851bdf8e6aac3\\nauthor Pierre Bertet  1653313012 +0100\\ncommitter Pierre Bertet  1653313012 +0100\\n\\nMove library target to es2020 to increase compatibility\\n",
+ "verified\_at": "2024-12-12T18:48:15Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/7b0aa1eed15d2fab774aafc0aec3c1cce3719634",
+ "html\_url": "https://github.com/bpierre/dnum/commit/7b0aa1eed15d2fab774aafc0aec3c1cce3719634",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/7b0aa1eed15d2fab774aafc0aec3c1cce3719634/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "c0ab33a05027c7afe19312a9183851bdf8e6aac3",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/c0ab33a05027c7afe19312a9183851bdf8e6aac3",
+ "html\_url": "https://github.com/bpierre/dnum/commit/c0ab33a05027c7afe19312a9183851bdf8e6aac3"
+ }
+ \]
+ },
+ {
+ "sha": "2381aaabc1fac39a66fe382725429707a10759d2",
+ "node\_id": "C\_kwDOHXYQrNoAKDIzODFhYWFiYzFmYWMzOWE2NmZlMzgyNzI1NDI5NzA3YTEwNzU5ZDI",
+ "commit": {
+ "author": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-05-21T03:31:25Z"
+ },
+ "committer": {
+ "name": "Pierre Bertet",
+ "email": "hello@pierre.world",
+ "date": "2022-05-21T03:31:25Z"
+ },
+ "message": "Fix types",
+ "tree": {
+ "sha": "2a8af70bbb5ce0723fbe2dc417b4daa48de4ee34",
+ "url": "https://api.github.com/repos/bpierre/dnum/git/trees/2a8af70bbb5ce0723fbe2dc417b4daa48de4ee34"
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/git/commits/2381aaabc1fac39a66fe382725429707a10759d2",
+ "comment\_count": 0,
+ "verification": {
+ "verified": true,
+ "reason": "valid",
+ "signature": "-----BEGIN PGP SIGNATURE-----\\n\\niQIzBAABCAAdFiEEKMb6ZcXVJDVFjGCyLBBX/uJgN+QFAmKIXQ0ACgkQLBBX/uJg\\nN+TU8A//QBjBJ7xBLYxaaa3W+JcCQOPI2DfhRViqW+yuL8nbvUTzJ2JVF03NfjwW\\nuNo7Zrin2i/F+gKeKXt4d9gCNNReoKi6JRlV80Zk5DiEyNXqyD3Aio58oNGFQWv1\\n62/F6oLrymaez62JHiuoFfKXn3G8Uc5WzidQ1FSaHbAMv2h+ZU/FHxEs+LIoYJhu\\nzMHiikXejYn4OZrVt+MIfdXGLSEGlar4FZeKI8fq3bsm8RtfLHRB2B/vtAF8j8Uu\\nM0fhNOyCevkKsORLfjYyW4/0/kX1ZD26aZu+QbCcaiTemdnAGm4GVscgb3ouoKB6\\nhNCxTsnwWUoWsm3JqJv6knVAE/l4bOCsX7ca9EJFVqAbIRCwzg+6Ex5Ct9P7ZNF4\\nGktq+gpOAKptNLNv6u1TWvBvROR8x2ct39rSQa8mXTqbyNhIOHi12DnKE5NjGZd8\\ntxhB0sQzZIiZZ2ucc5OEdSIrI2ykPLmNn+D6aQ1kwlh5oOiIJXUA77hpbHZQDBKQ\\n//maFQogkqzswESMFlzooDwJOHnFTGOZqbjFyEzwA3odH+V58/52i+vbu6Qmlkeb\\ns8xApJ4JbmW2pK7zg8u2SBoSZp3uVScGv5wK7RBt9TZzrG0eqL5E/SkM5TN7ph9v\\nC0fhSlpYTGo8fX2IRMcB+oUBpmzl64SxC9GQipLY4smWMq9IMY4=\\n=d5eM\\n-----END PGP SIGNATURE-----",
+ "payload": "tree 2a8af70bbb5ce0723fbe2dc417b4daa48de4ee34\\nparent cfa57c59ee8b8c548e64a2f3cbacb6afb5f57c04\\nauthor Pierre Bertet  1653103885 +0100\\ncommitter Pierre Bertet  1653103885 +0100\\n\\nFix types\\n",
+ "verified\_at": "2024-12-12T18:48:15Z"
+ }
+ },
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/2381aaabc1fac39a66fe382725429707a10759d2",
+ "html\_url": "https://github.com/bpierre/dnum/commit/2381aaabc1fac39a66fe382725429707a10759d2",
+ "comments\_url": "https://api.github.com/repos/bpierre/dnum/commits/2381aaabc1fac39a66fe382725429707a10759d2/comments",
+ "author": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "committer": {
+ "login": "bpierre",
+ "id": 36158,
+ "node\_id": "MDQ6VXNlcjM2MTU4",
+ "avatar\_url": "https://avatars.githubusercontent.com/u/36158?v=4",
+ "gravatar\_id": "",
+ "url": "https://api.github.com/users/bpierre",
+ "html\_url": "https://github.com/bpierre",
+ "followers\_url": "https://api.github.com/users/bpierre/followers",
+ "following\_url": "https://api.github.com/users/bpierre/following{/other\_user}",
+ "gists\_url": "https://api.github.com/users/bpierre/gists{/gist\_id}",
+ "starred\_url": "https://api.github.com/users/bpierre/starred{/owner}{/repo}",
+ "subscriptions\_url": "https://api.github.com/users/bpierre/subscriptions",
+ "organizations\_url": "https://api.github.com/users/bpierre/orgs",
+ "repos\_url": "https://api.github.com/users/bpierre/repos",
+ "events\_url": "https://api.github.com/users/bpierre/events{/privacy}",
+ "received\_events\_url": "https://api.github.com/users/bpierre/received\_events",
+ "type": "User",
+ "user\_view\_type": "public",
+ "site\_admin": false
+ },
+ "parents": \[
+ {
+ "sha": "cfa57c59ee8b8c548e64a2f3cbacb6afb5f57c04",
+ "url": "https://api.github.com/repos/bpierre/dnum/commits/cfa57c59ee8b8c548e64a2f3cbacb6afb5f57c04",
+ "html\_url": "https://github.com/bpierre/dnum/commit/cfa57c59ee8b8c548e64a2f3cbacb6afb5f57c04"
+ }
+ \]
+ }
+\]

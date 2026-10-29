@@ -1,0 +1,1 @@
+{"taskId":"bash-v453zvw6","description":"R2 gate+intent 合流回归","status":"completed","detached":true,"startedAt":1793208403398,"endedAt":1793208543610,"timeoutMs":900000,"kind":"process","command":"bash eval/regression/run-intent.sh","pid":7737,"exitCode":0,"parentToolCallId":"tool_kFMYKoKSvZmc6FmqckmNCzBC"}

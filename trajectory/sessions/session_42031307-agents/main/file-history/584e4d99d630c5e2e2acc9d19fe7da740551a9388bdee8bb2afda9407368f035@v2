@@ -1,0 +1,2 @@
+#!/bin/sh
+exec env npm_config_cache=/Users/cyra/Documents/Codex/Projects/dsh-jury/.npm-cache npx --yes pnpm "$@"

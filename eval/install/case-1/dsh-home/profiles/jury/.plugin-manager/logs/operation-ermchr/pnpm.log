@@ -1,0 +1,2 @@
+Command failed with ENOENT: pnpm add /Users/cyra/Documents/Codex/Projects/dsh-jury/eval/install/dsh-jury-0.1.0.tgz
+spawn pnpm ENOENT

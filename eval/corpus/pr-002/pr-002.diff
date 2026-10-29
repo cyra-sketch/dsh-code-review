@@ -1,0 +1,139 @@
+--- a/src/checkout.ts
++++ b/src/checkout.ts
+@@ -1,15 +1,71 @@
+ interface PaymentGateway { charge(amountCents: number, token: string): Promise<{ ok: boolean; txId?: string; error?: string }> }
+ interface Db { query(sql: string, params?: unknown[]): Promise<any[]> }
+ interface CartItem { sku: string; priceCents: number; qty: number }
++interface DiscountCode {
++  id: number;
++  code: string;
++  fixedAmountOff: number;
++  expiresAt: string;
++  maxUses: number;
++  usedCount: number;
++  ownerId: string;
++}
+ 
+ export class CheckoutService {
+   constructor(private db: Db, private payments: PaymentGateway) {}
+ 
+-  async checkout(items: CartItem[], paymentToken: string, userId: string) {
++  async checkout(items: CartItem[], paymentToken: string, userId: string, discountCode?: string) {
+     if (!items.length) throw new Error("empty cart");
+-    const total = items.reduce((sum, item) => sum + item.priceCents * item.qty, 0);
+-    const result = await this.payments.charge(total, paymentToken);
++    let total = items.reduce((sum, item) => sum + item.priceCents * item.qty, 0);
++    if (!discountCode) return this.charge(total, paymentToken);
++
++    const code = await this.lookupCode(discountCode, userId);
++    if (!code) throw new Error("invalid discount code");
++    if (!await this.reserveCode(code.id)) throw new Error("discount code exhausted");
++    total = Math.max(0, total - code.fixedAmountOff);
++
++    try {
++      const result = await this.charge(total, paymentToken);
++      if (result.status === "payment_failed") await this.releaseCode(code.id);
++      return result;
++    } catch (error) {
++      await this.releaseCode(code.id);
++      throw error;
++    }
++  }
++
++  private async lookupCode(code: string, userId: string): Promise<DiscountCode | null> {
++    const rows = await this.db.query(
++      "SELECT * FROM discount_codes WHERE code = $1 AND ownerId = $2",
++      [code, userId]
++    );
++    if (!rows.length) return null;
++    const discount = rows[0] as DiscountCode;
++    if (!Number.isInteger(discount.fixedAmountOff) || discount.fixedAmountOff < 0) return null;
++    const expiresAt = Date.parse(discount.expiresAt);
++    if (!Number.isFinite(expiresAt) || expiresAt <= Date.now()) return null;
++    if (discount.usedCount >= discount.maxUses) return null;
++    return discount;
++  }
++
++  private async reserveCode(id: number): Promise<boolean> {
++    const rows = await this.db.query(
++      "UPDATE discount_codes SET usedCount = usedCount + 1 WHERE id = $1 AND usedCount < maxUses RETURNING id",
++      [id]
++    );
++    return rows.length === 1;
++  }
++
++  private async releaseCode(id: number): Promise<void> {
++    await this.db.query(
++      "UPDATE discount_codes SET usedCount = GREATEST(usedCount - 1, 0) WHERE id = $1",
++      [id]
++    );
++  }
++
++  private async charge(amountCents: number, paymentToken: string) {
++    const result = await this.payments.charge(amountCents, paymentToken);
+     if (!result.ok) return { status: "payment_failed" as const, error: result.error };
+-    return { status: "ok" as const, txId: result.txId, chargedCents: total };
++    return { status: "ok" as const, txId: result.txId, chargedCents: amountCents };
+   }
+ }
+--- a/src/checkout.test.ts
++++ b/src/checkout.test.ts
+@@ -1,11 +1,55 @@
+ import { CheckoutService } from "./checkout";
+ 
+-const db = { query: async () => [] } as any;
+-const payments = { charge: async () => ({ ok: true, txId: "tx_1" }) } as any;
++const discount = {
++  id: 1, code: "SAVE500", fixedAmountOff: 500, expiresAt: "2099-01-01",
++  maxUses: 100, usedCount: 0, ownerId: "u1",
++};
+ 
++function makeDb(row = discount) {
++  const queries: { sql: string; params?: unknown[] }[] = [];
++  return {
++    queries,
++    query: async (sql: string, params?: unknown[]) => {
++      queries.push({ sql, params });
++      if (sql.startsWith("SELECT")) return [row];
++      if (sql.includes("usedCount + 1")) return [{ id: row.id }];
++      return [];
++    },
++  } as any;
++}
++
+ describe("CheckoutService", () => {
+   it("rejects an empty cart", async () => {
+-    const svc = new CheckoutService(db, payments);
++    const svc = new CheckoutService(makeDb(), {} as any);
+     await expect(svc.checkout([], "tok", "u1")).rejects.toThrow("empty cart");
+   });
++
++  it("applies a fixed discount in integer cents", async () => {
++    const db = makeDb();
++    const charge = async (amount: number) => ({ ok: true, txId: "tx_1", amount });
++    const svc = new CheckoutService(db, { charge } as any);
++    const res = await svc.checkout([{ sku: "A", priceCents: 999, qty: 3 }], "tok", "u1", "SAVE500");
++    expect(res.chargedCents).toBe(2497);
++    expect(db.queries[1].params).toEqual([1]);
++  });
++
++  it("never discounts below zero", async () => {
++    const svc = new CheckoutService(makeDb(), { charge: async () => ({ ok: true, txId: "tx_2" }) } as any);
++    const res = await svc.checkout([{ sku: "A", priceCents: 100, qty: 1 }], "tok", "u1", "SAVE500");
++    expect(res.chargedCents).toBe(0);
++  });
++
++  it("rejects expired codes before charging", async () => {
++    const charge = async () => ({ ok: true });
++    const svc = new CheckoutService(makeDb({ ...discount, expiresAt: "2000-01-01" }), { charge } as any);
++    await expect(svc.checkout([{ sku: "A", priceCents: 100, qty: 1 }], "tok", "u1", "SAVE500")).rejects.toThrow("invalid");
++  });
++
++  it("releases a reservation when payment fails", async () => {
++    const db = makeDb();
++    const svc = new CheckoutService(db, { charge: async () => ({ ok: false, error: "declined" }) } as any);
++    const res = await svc.checkout([{ sku: "A", priceCents: 999, qty: 1 }], "tok", "u1", "SAVE500");
++    expect(res.status).toBe("payment_failed");
++    expect(db.queries.some(({ sql }: { sql: string }) => sql.includes("usedCount - 1"))).toBe(true);
++  });
+ });

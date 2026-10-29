@@ -1,0 +1,204 @@
+--- a/src/webhooks/retry-policy.ts
++++ b/src/webhooks/retry-policy.ts
+@@ -0,0 +1,31 @@
++export interface RetryPolicy {
++  /** Total delivery attempts allowed, including the first. */
++  maxAttempts: number;
++  /** Delay before the first retry, before jitter. */
++  baseDelayMs: number;
++  /** Hard ceiling for any single retry delay. */
++  maxDelayMs: number;
++  jitterRatio: number;
++}
++
++export const DEFAULT_RETRY_POLICY: RetryPolicy = { maxAttempts: 5, baseDelayMs: 1_000, maxDelayMs: 60_000, jitterRatio: 0.25 };
++
++/** Transport errors, 408 and 429 are retryable; other 4xx responses are not. */
++export function isRetryable(outcome: { status: number } | null): boolean {
++  if (!outcome) return true;
++  if (outcome.status === 408 || outcome.status === 429) return true;
++  if (outcome.status >= 400 && outcome.status < 500) return false;
++  return outcome.status >= 500;
++}
++
++/** `attempt` is the one-based number of the attempt that just failed. */
++export function nextDelayMs(
++  policy: RetryPolicy,
++  attempt: number,
++  random: () => number = Math.random,
++): number {
++  const exponential = policy.baseDelayMs * 2 ** attempt;
++  const capped = Math.min(exponential, policy.maxDelayMs);
++  const jitter = capped * policy.jitterRatio * (random() * 2 - 1);
++  return Math.round(capped + jitter);
++}
+--- a/src/webhooks/delivery.ts
++++ b/src/webhooks/delivery.ts
+@@ -1,22 +1,73 @@
++import { DEFAULT_RETRY_POLICY, nextDelayMs, type RetryPolicy } from "./retry-policy";
++
+ export interface DeliveryJob { id: string; tenantId: string; url: string; body: unknown; attempts: number; nextAttemptAt: string; }
+-export interface DeliveryStore { claimNext(workerId: string): Promise<DeliveryJob | null>; markDelivered(jobId: string, statusCode: number): Promise<void>; markFailed(jobId: string, error: string): Promise<void>; }
+-export interface HttpClient { post(url: string, body: unknown, headers: Record<string, string>): Promise<{ status: number }>; }
+-export type PulseResult = "idle" | "delivered" | "failed";
+ 
++export interface DeliveryStore {
++  claimNext(options: { workerId: string; now: Date; leaseMs: number }): Promise<DeliveryJob | null>;
++  renewLease(jobId: string, workerId: string, leaseMs: number): Promise<boolean>;
++  markDelivered(jobId: string, workerId: string, statusCode: number): Promise<void>;
++  markDead(jobId: string, workerId: string, reason: string): Promise<void>;
++  scheduleRetry(jobId: string, workerId: string, nextAttemptAt: Date, reason: string): Promise<void>;
++}
++
++export interface HttpClient {
++  post(url: string, body: unknown, headers: Record<string, string>, timeoutMs: number): Promise<{ status: number }>;
++}
++
++/** A claim is invisible to other workers for leaseMs; one HTTP call gets at most httpTimeoutMs. */
++export const DELIVERY_LIMITS = { leaseMs: 5_000, httpTimeoutMs: 15_000 } as const;
++export interface DeliveryOptions { workerId: string; policy?: RetryPolicy; leaseMs?: number; httpTimeoutMs?: number; }
++export type PulseResult = "idle" | "delivered" | "retry_scheduled" | "dead_lettered";
++
+ export class WebhookDelivery {
+-  constructor(private readonly store: DeliveryStore, private readonly http: HttpClient) {}
++  private readonly policy: RetryPolicy;
++  private readonly leaseMs: number;
++  private readonly httpTimeoutMs: number;
+ 
++  constructor(
++    private readonly store: DeliveryStore,
++    private readonly http: HttpClient,
++    private readonly clock: { now(): Date },
++    private readonly options: DeliveryOptions,
++  ) {
++    this.policy = options.policy ?? DEFAULT_RETRY_POLICY;
++    this.leaseMs = options.leaseMs ?? DELIVERY_LIMITS.leaseMs;
++    this.httpTimeoutMs = options.httpTimeoutMs ?? DELIVERY_LIMITS.httpTimeoutMs;
++  }
++
+   async pulse(): Promise<PulseResult> {
+-    const job = await this.store.claimNext("worker-1");
++    const job = await this.store.claimNext({ workerId: this.options.workerId, now: this.clock.now(), leaseMs: this.leaseMs });
+     if (!job) return "idle";
+ 
+-    const result = await this.http.post(job.url, job.body, { "content-type": "application/json", "x-delivery-id": job.id });
+-    if (result.status >= 200 && result.status < 300) {
+-      await this.store.markDelivered(job.id, result.status);
++    const renewed = await this.store.renewLease(job.id, this.options.workerId, this.leaseMs);
++    if (!renewed) return "idle";
++
++    let outcome: { status: number } | null = null;
++    try {
++      outcome = await this.http.post(job.url, job.body, {
++        "content-type": "application/json",
++        "x-delivery-id": job.id,
++        "idempotency-key": `${job.id}:${job.attempts + 1}`,
++      }, this.httpTimeoutMs);
++    } catch {
++      outcome = null;
++    }
++
++    if (outcome && outcome.status >= 200 && outcome.status < 300) {
++      await this.store.markDelivered(job.id, this.options.workerId, outcome.status);
+       return "delivered";
+     }
+ 
+-    await this.store.markFailed(job.id, `HTTP ${result.status}`);
+-    return "failed";
++    const attemptsMade = job.attempts + 1;
++    const reason = outcome ? `HTTP ${outcome.status}` : "request failed";
++    if (attemptsMade > this.policy.maxAttempts) {
++      await this.store.markDead(job.id, this.options.workerId, reason);
++      return "dead_lettered";
++    }
++
++    const delayMs = nextDelayMs(this.policy, attemptsMade);
++    const nextAttemptAt = new Date(this.clock.now().getTime() + delayMs);
++    await this.store.scheduleRetry(job.id, this.options.workerId, nextAttemptAt, reason);
++    return "retry_scheduled";
+   }
+ }
+--- a/src/webhooks/delivery.test.ts
++++ b/src/webhooks/delivery.test.ts
+@@ -1,23 +1,69 @@
+-import { WebhookDelivery, type DeliveryStore } from "./delivery";
++import { WebhookDelivery, type DeliveryJob, type DeliveryStore } from "./delivery";
++import { DEFAULT_RETRY_POLICY, isRetryable, nextDelayMs } from "./retry-policy";
+ 
+-const job = { id: "job_7", tenantId: "tenant_a", url: "https://hooks.example.test/orders", body: { event: "order.created" }, attempts: 0, nextAttemptAt: "2026-02-10T09:00:00.000Z" };
++const NOW = new Date("2026-02-10T09:00:00.000Z");
++const clock = { now: () => NOW };
++const job: DeliveryJob = { id: "job_7", tenantId: "tenant_a", url: "https://hooks.example.test/orders", body: { event: "order.created" }, attempts: 0, nextAttemptAt: NOW.toISOString() };
+ 
+-function store(markDelivered: (id: string) => void, markFailed: (id: string, error: string) => void): DeliveryStore {
+-  return { claimNext: async () => job, markDelivered: async (id) => markDelivered(id), markFailed: async (id, error) => markFailed(id, error) };
++function makeStore(overrides: Partial<DeliveryJob> = {}) {
++  const delivered: string[] = [], dead: string[] = [], retries: Date[] = [];
++  let renewals = 0;
++  const claimed = { ...job, ...overrides };
++  const store: DeliveryStore = {
++    claimNext: async () => claimed,
++    renewLease: async () => { renewals += 1; return true; },
++    markDelivered: async (id) => { delivered.push(id); },
++    markDead: async (id) => { dead.push(id); },
++    scheduleRetry: async (_id, _worker, nextAttemptAt) => { retries.push(nextAttemptAt); },
++  };
++  return { store, delivered, dead, retries, renewals: () => renewals };
+ }
+ 
++function makeHttp(status: number) {
++  const calls: Array<{ headers: Record<string, string> }> = [];
++  const http = { post: async (_url: string, _body: unknown, headers: Record<string, string>) => { calls.push({ headers }); return { status }; } };
++  return { http, calls };
++}
++
++const options = { workerId: "w1" };
++
+ describe("WebhookDelivery", () => {
+-  it("claims and delivers a pending webhook", async () => {
+-    const delivered: string[] = [];
+-    const delivery = new WebhookDelivery(store((id) => delivered.push(id), () => { throw new Error("unexpected failure"); }), { post: async () => ({ status: 204 }) });
++  it("claims, renews and delivers a pending webhook", async () => {
++    const { store, delivered, renewals } = makeStore();
++    const delivery = new WebhookDelivery(store, makeHttp(204).http, clock, options);
+     expect(await delivery.pulse()).toBe("delivered");
+     expect(delivered).toEqual(["job_7"]);
++    expect(renewals()).toBe(1);
+   });
+ 
+-  it("records a non-2xx response as failed", async () => {
+-    const failures: string[] = [];
+-    const delivery = new WebhookDelivery(store(() => { throw new Error("unexpected delivery"); }, (_id, error) => failures.push(error)), { post: async () => ({ status: 500 }) });
+-    expect(await delivery.pulse()).toBe("failed");
+-    expect(failures).toEqual(["HTTP 500"]);
++  it("retries a server error with one idempotency key", async () => {
++    const { store, retries } = makeStore({ attempts: 2 });
++    const { http, calls } = makeHttp(503);
++    const delivery = new WebhookDelivery(store, http, clock, options);
++    expect(await delivery.pulse()).toBe("retry_scheduled");
++    expect(retries).toHaveLength(1);
++    expect(calls[0].headers["idempotency-key"]).toContain("job_7");
+   });
++
++  it("dead-letters after the attempt budget", async () => {
++    const { store, dead } = makeStore({ attempts: 5 });
++    const delivery = new WebhookDelivery(store, makeHttp(500).http, clock, options);
++    expect(await delivery.pulse()).toBe("dead_lettered");
++    expect(dead).toEqual(["job_7"]);
++  });
+ });
++
++describe("retry policy", () => {
++  it("grows and caps the delay", () => {
++    const first = nextDelayMs(DEFAULT_RETRY_POLICY, 1, () => 0.5);
++    const second = nextDelayMs(DEFAULT_RETRY_POLICY, 2, () => 0.5);
++    const capped = nextDelayMs({ ...DEFAULT_RETRY_POLICY, maxDelayMs: 8_000 }, 4, () => 0.5);
++    expect(second).toBe(first * 2);
++    expect(capped).toBeLessThanOrEqual(8_000);
++  });
++
++  it("does not retry deterministic 4xx responses", () => {
++    expect(isRetryable({ status: 404 })).toBe(false);
++    expect(isRetryable({ status: 503 })).toBe(true);
++  });
++});

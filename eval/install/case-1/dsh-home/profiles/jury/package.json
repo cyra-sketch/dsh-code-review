@@ -1,0 +1,16 @@
+{
+  "name": "dsh-profile-jury",
+  "private": true,
+  "dependencies": {
+    "dsh-jury": "file:/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/install/dsh-jury-0.1.0.tgz"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-headless",
+        "dsh-jury"
+      ]
+    }
+  }
+}

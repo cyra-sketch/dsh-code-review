@@ -1,0 +1,13 @@
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages are cloned from the content-addressable store to the virtual store.
+  Content-addressable store is at: /Users/cyra/Library/pnpm/store/v11
+  Virtual store is at:             node_modules/.pnpm
+Packages: +1
++
+Progress: resolved 1, reused 1, downloaded 0, added 1, done
+[WARN] Issues with peer dependencies found. Run "pnpm peers check" to list them.
+
+dependencies:
++ dsh-jury 0.1.0
+
+Done in 37ms using pnpm v12.16.1

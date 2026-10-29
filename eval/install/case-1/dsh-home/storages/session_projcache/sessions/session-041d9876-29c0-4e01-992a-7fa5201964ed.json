@@ -1,0 +1,177 @@
+{
+  "version": 7,
+  "record": {
+    "identity": {
+      "formatVersion": 4,
+      "createdAt": 1793221247223,
+      "cwd": "/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/install/case-1/work",
+      "isSeeded": false,
+      "inheritedEventCount": 0
+    },
+    "rows": {
+      "title": {
+        "ver": 1,
+        "seq": 18,
+        "val": "请只提交 src/cart.ts 的当前格式"
+      },
+      "titleInput": {
+        "ver": 3,
+        "seq": 18,
+        "val": {
+          "first": {
+            "seq": 8,
+            "text": "请只提交 src/cart.ts 的当前格式改动并 push 到本地 origin/main。不得添加 origin.git、.dsh 或其他文件，不得接触真实远端。"
+          },
+          "count": 1,
+          "lastSeq": 8
+        }
+      },
+      "llmRetry": {
+        "ver": 1,
+        "seq": 18,
+        "val": {}
+      },
+      "sandboxMode": {
+        "ver": 1,
+        "seq": 18,
+        "val": "workspace-write"
+      },
+      "goal": {
+        "ver": 6,
+        "seq": 18,
+        "val": {
+          "current": null,
+          "seenGoalIds": [],
+          "failure": null
+        }
+      },
+      "tokenUsage": {
+        "ver": 2,
+        "seq": 18,
+        "val": {
+          "totals": {
+            "uncachedInputTokens": 0,
+            "outputTokens": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0
+          },
+          "last": null
+        }
+      },
+      "contextPressure": {
+        "ver": 5,
+        "seq": 18,
+        "val": {
+          "surfaceTokens": 4228,
+          "contextWindow": 1000000
+        }
+      },
+      "contextBreakdown": {
+        "ver": 6,
+        "seq": 18,
+        "val": {
+          "systems": [
+            {
+              "seq": 7,
+              "tokens": 645
+            }
+          ],
+          "surfaceTokens": 4228,
+          "breakdown": {
+            "systemTokens": 645,
+            "toolsTokens": 5096,
+            "messageTokens": 3583
+          }
+        }
+      },
+      "todos": {
+        "ver": 2,
+        "seq": 18,
+        "val": null
+      },
+      "turnBoundary": {
+        "ver": 2,
+        "seq": 18,
+        "val": {
+          "openTurnStartSeq": null,
+          "lastStepStartSeq": 6,
+          "lastStepBoundary": {
+            "kind": "end",
+            "seq": 17
+          },
+          "lastTurn": 1
+        }
+      },
+      "inbox": {
+        "ver": 1,
+        "seq": 18,
+        "val": {
+          "next-turn": [],
+          "next-step": []
+        }
+      },
+      "userQuestions": {
+        "ver": 2,
+        "seq": 18,
+        "val": {
+          "inheritedEventCount": 0,
+          "timed": false,
+          "questions": {
+            "active": [],
+            "settled": []
+          }
+        }
+      },
+      "plan": {
+        "ver": 3,
+        "seq": 18,
+        "val": {
+          "active": false,
+          "wanted": null,
+          "running": null,
+          "activeAtLastHeader": false
+        }
+      },
+      "permissions": {
+        "ver": 2,
+        "seq": 18,
+        "val": {
+          "preset": "workspace-write",
+          "sandbox": "workspace-write",
+          "approval": "ask",
+          "seeded": false
+        }
+      },
+      "workingDirectory": {
+        "ver": 1,
+        "seq": 18,
+        "val": "/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/install/case-1/work"
+      },
+      "subagentCatalog": {
+        "ver": 6,
+        "seq": 18,
+        "val": {
+          "inheritedEventCount": 0
+        }
+      },
+      "subagentTiming": {
+        "ver": 3,
+        "seq": 18,
+        "val": {
+          "descriptorSeen": false,
+          "settledMs": 0
+        }
+      },
+      "subagent": {
+        "ver": 2,
+        "seq": 18,
+        "val": {}
+      },
+      "subagentModelSelectionPolicy": {
+        "ver": 1,
+        "seq": 18,
+        "val": null
+      }
+    }
+  }
+}

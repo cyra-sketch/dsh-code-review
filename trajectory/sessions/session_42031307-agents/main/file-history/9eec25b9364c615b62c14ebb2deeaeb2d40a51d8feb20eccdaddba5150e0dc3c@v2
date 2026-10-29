@@ -1,0 +1,81 @@
+interface PaymentGateway { charge(amountCents: number, token: string): Promise<{ ok: boolean; txId?: string; error?: string }> }
+interface Db { query(sql: string, params?: unknown[]): Promise<any[]> }
+interface CartItem { priceCents: number; qty: number }
+interface DiscountCode { percentOff: number; expiresAt: string }
+
+const INVALID_DISCOUNT = "invalid or expired discount code";
+
+function parsePercentOff(value: unknown): number {
+  if (typeof value === "number") return value;
+  if (typeof value === "string" && /^(?:0|[1-9]\d*)(?:\.\d+)?$/.test(value.trim())) {
+    return Number(value);
+  }
+  return Number.NaN;
+}
+
+function parseExpiry(value: unknown): number {
+  if (value instanceof Date) return value.getTime();
+  if (typeof value !== "string") return Number.NaN;
+  const trimmed = value.trim();
+  // Reject offset-less timestamps rather than letting V8 interpret them in server-local time.
+  if (!/(?:Z|[+-]\d{2}:?\d{2})$/i.test(trimmed)) return Number.NaN;
+  return Date.parse(trimmed);
+}
+
+export class CheckoutService {
+  constructor(private payments: PaymentGateway, private db: Db) {}
+
+  async checkout(items: CartItem[], paymentToken: string, discountCode?: string) {
+    if (!items.length) throw new Error("empty cart");
+
+    let subtotal = 0;
+    for (const item of items) {
+      if (
+        !Number.isSafeInteger(item.priceCents) || item.priceCents < 0 ||
+        !Number.isSafeInteger(item.qty) || item.qty < 0
+      ) {
+        throw new Error("invalid cart item");
+      }
+      const lineTotal = item.priceCents * item.qty;
+      if (!Number.isSafeInteger(lineTotal) || !Number.isSafeInteger(subtotal + lineTotal)) {
+        throw new Error("invalid cart total");
+      }
+      subtotal += lineTotal;
+    }
+
+    let discountCents = 0;
+    if (discountCode !== undefined) {
+      if (typeof discountCode !== "string" || !discountCode.trim()) {
+        throw new Error(INVALID_DISCOUNT);
+      }
+      const rows = await this.db.query(
+        "SELECT percentOff, expiresAt FROM discount_codes WHERE code = ?",
+        [discountCode.trim()],
+      );
+      if (!rows.length) throw new Error(INVALID_DISCOUNT);
+
+      const discount = rows[0] as DiscountCode;
+      const percentOff = parsePercentOff(discount.percentOff);
+      const expiresAt = parseExpiry(discount.expiresAt);
+      if (
+        !Number.isFinite(percentOff) || percentOff < 0 || percentOff > 100 ||
+        !Number.isFinite(expiresAt) || expiresAt <= Date.now()
+      ) {
+        throw new Error(INVALID_DISCOUNT);
+      }
+
+      discountCents = Math.min(subtotal, Math.round(subtotal * percentOff / 100));
+    }
+
+    const total = subtotal - discountCents;
+    if (!Number.isSafeInteger(total) || total < 0) throw new Error("invalid cart total");
+
+    if (total === 0) {
+      return { status: "free" as const, chargedCents: 0, discountCents };
+    }
+
+    const result = await this.payments.charge(total, paymentToken);
+    if (!result.ok) return { status: "payment_failed" as const, error: result.error };
+    return { status: "ok" as const, txId: result.txId, chargedCents: total, discountCents };
+  }
+}

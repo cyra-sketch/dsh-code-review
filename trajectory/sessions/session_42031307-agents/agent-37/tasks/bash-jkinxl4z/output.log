@@ -1,0 +1,8 @@
+Initialized empty Git repository in /Users/cyra/Documents/Codex/Projects/dsh-jury/eval/regression/single/work/.git/
+[main (root-commit) e5e2038] initial checkout
+ 1 file changed, 14 insertions(+)
+ create mode 100644 src/checkout.ts
+Initialized empty Git repository in /Users/cyra/Documents/Codex/Projects/dsh-jury/eval/regression/single/work/origin.git/
+To /Users/cyra/Documents/Codex/Projects/dsh-jury/eval/regression/single/work/origin.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.

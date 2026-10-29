@@ -1,0 +1,3 @@
+{"inputTokens":9330,"outputTokens":8885,"cacheReadTokens":41088,"cacheWriteTokens":0,"totalTokens":59303}
+juryCalls=0
+subagentCalls=0

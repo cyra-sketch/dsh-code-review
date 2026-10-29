@@ -1,0 +1,44 @@
+{
+  "evidenceType": "coordinator-simulated-clean-environment-install-check",
+  "externalUserAdoptionEvidence": false,
+  "independentCoderSubagentAvailable": false,
+  "installSuccess": 3,
+  "installAttempts": 3,
+  "moduleLoadSuccess": 3,
+  "composedJuryEntrySuccess": 3,
+  "headlessAttempts": 1,
+  "headlessSuccess": 0,
+  "headlessBlocker": "ACCOUNT_SIGN_IN_REQUIRED before any model call",
+  "gateFalseBlocksObserved": 0,
+  "modelCost": 0,
+  "cases": [
+    {
+      "id": "case-1",
+      "install": "passed-after-path-fix",
+      "retrySeconds": 4,
+      "initialBlocker": "pnpm was not found on PATH",
+      "moduleLoad": "passed",
+      "composedJuryEntry": "passed",
+      "headless": "blocked-by-isolated-home-auth",
+      "wouldKeepEnabled": "pending-auth-and-clean-home-e2e"
+    },
+    {
+      "id": "case-2",
+      "install": "passed",
+      "seconds": 5,
+      "moduleLoad": "passed",
+      "composedJuryEntry": "passed",
+      "headless": "not-attempted-after-case-1-established-auth-barrier",
+      "wouldKeepEnabled": "pending-auth-and-clean-home-e2e"
+    },
+    {
+      "id": "case-3",
+      "install": "passed",
+      "seconds": 4,
+      "moduleLoad": "passed",
+      "composedJuryEntry": "passed",
+      "headless": "not-attempted-after-case-1-established-auth-barrier",
+      "wouldKeepEnabled": "pending-auth-and-clean-home-e2e"
+    }
+  ]
+}

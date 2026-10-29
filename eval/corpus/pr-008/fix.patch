@@ -1,0 +1,179 @@
+From fff072e723076c75e1a3142fad554d05c62e254a Mon Sep 17 00:00:00 2001
+From: Pierre Bertet <hi@bpier.re>
+Date: Fri, 9 Oct 2026 16:51:00 +0100
+Subject: [PATCH] Fix rounding carries for negative numbers (#31)
+
+* Fix rounding carries for negative numbers
+
+* Remove redundant benchmark README note
+---
+ benchmarks/parity.ts                 | 25 ++++++++---
+ scripts/check-build.mjs              |  4 ++
+ src/dnum.ts                          |  4 +-
+ test/negative-rounding-carry.test.ts | 65 ++++++++++++++++++++++++++++
+ 4 files changed, 91 insertions(+), 7 deletions(-)
+ create mode 100644 test/negative-rounding-carry.test.ts
+
+diff --git a/benchmarks/parity.ts b/benchmarks/parity.ts
+index f310989..9d73fcc 100644
+--- a/benchmarks/parity.ts
++++ b/benchmarks/parity.ts
+@@ -4,7 +4,11 @@ import { loadImplementations } from "./load";
+ 
+ const { baseline, current } = await loadImplementations();
+ let checks = 0;
+-function check(label: string, call: (dn: typeof current) => unknown) {
++function check(
++  label: string,
++  call: (dn: typeof current) => unknown,
++  expected?: { result: unknown },
++) {
+   const outcome = (dn: typeof current) => {
+     try {
+       return { result: call(dn) };
+@@ -15,7 +19,7 @@ function check(label: string, call: (dn: typeof current) => unknown) {
+       };
+     }
+   };
+-  deepStrictEqual(outcome(current), outcome(baseline), label);
++  deepStrictEqual(outcome(current), expected ?? outcome(baseline), label);
+   checks++;
+ }
+ deepStrictEqual(Object.keys(current).sort(), Object.keys(baseline).sort());
+@@ -201,8 +205,19 @@ for (const value of formatted) {
+     }
+   }
+   for (const digits of [0, 2, 18, 72]) {
+-    check("toParts", (dn) => dn.toParts(value, digits));
+-    check("toString", (dn) => dn.toString(value, digits));
++    // The baseline loses magnitude when a negative fraction carries into the
++    // whole part. Assert the corrected results instead of preserving that bug.
++    const negativeCarry = value[0] === -999n && value[1] === 2 && digits === 0;
++    check(
++      "toParts",
++      (dn) => dn.toParts(value, digits),
++      negativeCarry ? { result: [10n, null] } : undefined,
++    );
++    check(
++      "toString",
++      (dn) => dn.toString(value, digits),
++      negativeCarry ? { result: "-10" } : undefined,
++    );
+     check(
+       "significantDigits",
+       (dn) =>
+@@ -237,5 +252,5 @@ check("patched formatToParts", (dn) => {
+   }
+ });
+ console.log(
+-  `Passed ${checks} differential checks against the baseline, including results, errors and option mutation.`,
++  `Passed ${checks} compatibility checks against the baseline or explicit regression expectations, including results, errors and option mutation.`,
+ );
+diff --git a/scripts/check-build.mjs b/scripts/check-build.mjs
+index e171765..0467c6f 100644
+--- a/scripts/check-build.mjs
++++ b/scripts/check-build.mjs
+@@ -14,6 +14,10 @@ for (const [name, dn] of [["ESM", esm], ["CommonJS", cjs]]) {
+   deepStrictEqual(dn.multiply("1.49", "1.49", 0), [2n, 0]);
+   deepStrictEqual(dn.divide([2999n, 3], [2000n, 3], 0), [2n, 0]);
+   strictEqual(dn.format([123456n, 2], { locale: "en-US" }), "1,234.56");
++  deepStrictEqual(dn.toParts([-199n, 2], 0), [2n, null]);
++  strictEqual(dn.toString([-199n, 2], 0), "-2");
++  strictEqual(dn.toNumber([-199n, 2], 0), -2);
++  strictEqual(dn.format([-199n, 2], { digits: 0, locale: "en-US" }), "-2");
+   deepStrictEqual(dn.fromJSON(dn.toJSON([123n, 2])), [123n, 2]);
+   strictEqual(dn.mul, dn.multiply);
+   strictEqual(dn.div, dn.divide);
+diff --git a/src/dnum.ts b/src/dnum.ts
+index 94d7729..1f6fc49 100644
+--- a/src/dnum.ts
++++ b/src/dnum.ts
+@@ -162,7 +162,7 @@ export function toParts(
+ 
+   const decimalsDivisor = powerOfTen(decimals);
+ 
+-  let whole = value / decimalsDivisor;
++  let whole = abs(value / decimalsDivisor);
+   const fractionValue = abs(value % decimalsDivisor);
+ 
+   const roundFn = decimalsRounding === "ROUND_UP"
+@@ -205,7 +205,7 @@ export function toParts(
+     : fraction.replace(/0+$/, "");
+ 
+   return [
+-    abs(whole),
++    whole,
+     fraction === "" || (BigInt(fraction) === 0n && !trailingZeros)
+       ? null
+       : fraction,
+diff --git a/test/negative-rounding-carry.test.ts b/test/negative-rounding-carry.test.ts
+new file mode 100644
+index 0000000..39e9994
+--- /dev/null
++++ b/test/negative-rounding-carry.test.ts
+@@ -0,0 +1,65 @@
++import { describe, expect, it } from "bun:test";
++import { format, toNumber, toParts, toString } from "../src";
++
++describe("rounding carries in decimal conversions", () => {
++  it.each(
++    [
++      [-199n, 2, 0, 2n, null, "-2"],
++      [-1299n, 2, 0, 13n, null, "-13"],
++      [-9999n, 3, 2, 10n, null, "-10"],
++      [-195n, 2, 1, 2n, null, "-2"],
++      [-194n, 2, 1, 1n, "9", "-1.9"],
++      [-99n, 2, 0, 1n, null, "-1"],
++      [199n, 2, 0, 2n, null, "2"],
++    ] as const,
++  )(
++    "converts %s at scale %s with %s displayed digits",
++    (coefficient, decimals, digits, whole, fraction, text) => {
++      const value = [coefficient, decimals] as const;
++      expect(toParts(value, digits)).toEqual([whole, fraction]);
++      expect(toString(value, digits)).toBe(text);
++      expect(toNumber(value, digits)).toBe(Number(text));
++      expect(format(value, { digits, locale: "en-US" })).toBe(text);
++    },
++  );
++
++  it.each(
++    [
++      ["ROUND_HALF", 2n, "00", "-2.00"],
++      ["ROUND_UP", 2n, "00", "-2.00"],
++      ["ROUND_DOWN", 1n, "99", "-1.99"],
++    ] as const,
++  )(
++    "handles %s with trailing zeros",
++    (decimalsRounding, whole, fraction, text) => {
++      const value = [-1999n, 3] as const;
++      const options = { digits: 2, trailingZeros: true, decimalsRounding };
++      expect(toParts(value, options)).toEqual([whole, fraction]);
++      expect(toString(value, options)).toBe(text);
++      expect(toNumber(value, options)).toBe(Number(text));
++      expect(format(value, { ...options, locale: "en-US" })).toBe(text);
++    },
++  );
++
++  it("carries exactly beyond Number's safe integer range", () => {
++    const value = [-12345678901234567890123456789099n, 2] as const;
++    expect(toParts(value, 0)).toEqual([123456789012345678901234567891n, null]);
++    expect(toString(value, 0)).toBe("-123456789012345678901234567891");
++  });
++
++  it("formats grouping and trailing zeros after a carry", () => {
++    expect(format([-999995n, 2], {
++      digits: 1,
++      trailingZeros: true,
++      locale: "en-US",
++    })).toBe("-10,000.0");
++  });
++
++  it("preserves the negative sign when the rounded value is nonzero", () => {
++    expect(format([-199n, 2], {
++      digits: 0,
++      signDisplay: "exceptZero",
++      locale: "en-US",
++    })).toBe("-2");
++  });
++});

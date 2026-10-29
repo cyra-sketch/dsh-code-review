@@ -1,0 +1,3 @@
+parent {"inputTokens":6199,"outputTokens":3117,"cacheReadTokens":14208,"cacheWriteTokens":0,"totalTokens":23524}
+children 5 {"inputTokens":69550,"outputTokens":88631,"cacheReadTokens":249088,"cacheWriteTokens":0,"totalTokens":407269}
+total {"inputTokens":75749,"outputTokens":91748,"cacheReadTokens":263296,"cacheWriteTokens":0,"totalTokens":430793}

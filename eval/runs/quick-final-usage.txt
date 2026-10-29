@@ -1,0 +1,6 @@
+pr-001-quick-final parent {"inputTokens":1808,"outputTokens":1651,"cacheReadTokens":17152,"cacheWriteTokens":0,"totalTokens":20611}
+pr-001-quick-final children 3 {"inputTokens":12186,"outputTokens":19443,"cacheReadTokens":20224,"cacheWriteTokens":0,"totalTokens":51853}
+pr-001-quick-final total {"inputTokens":13994,"outputTokens":21094,"cacheReadTokens":37376,"cacheWriteTokens":0,"totalTokens":72464}
+pr-003-quick-final parent {"inputTokens":1920,"outputTokens":1743,"cacheReadTokens":17152,"cacheWriteTokens":0,"totalTokens":20815}
+pr-003-quick-final children 3 {"inputTokens":13027,"outputTokens":34963,"cacheReadTokens":20992,"cacheWriteTokens":0,"totalTokens":68982}
+pr-003-quick-final total {"inputTokens":14947,"outputTokens":36706,"cacheReadTokens":38144,"cacheWriteTokens":0,"totalTokens":89797}

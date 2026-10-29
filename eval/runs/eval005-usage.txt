@@ -1,0 +1,15 @@
+gate parent {"inputTokens":52111,"outputTokens":22383,"cacheReadTokens":1313536,"cacheWriteTokens":0,"totalTokens":1388030}
+gate children 24 {"inputTokens":269612,"outputTokens":576380,"cacheReadTokens":4572288,"cacheWriteTokens":0,"totalTokens":5418280}
+gate total {"inputTokens":321723,"outputTokens":598763,"cacheReadTokens":5885824,"cacheWriteTokens":0,"totalTokens":6806310}
+pr005-baseline parent {"inputTokens":9316,"outputTokens":13691,"cacheReadTokens":173312,"cacheWriteTokens":0,"totalTokens":196319}
+pr005-baseline children 0 {"inputTokens":0,"outputTokens":0,"cacheReadTokens":0,"cacheWriteTokens":0,"totalTokens":0}
+pr005-baseline total {"inputTokens":9316,"outputTokens":13691,"cacheReadTokens":173312,"cacheWriteTokens":0,"totalTokens":196319}
+pr005-no-intent parent {"inputTokens":4695,"outputTokens":1681,"cacheReadTokens":14336,"cacheWriteTokens":0,"totalTokens":20712}
+pr005-no-intent children 5 {"inputTokens":120567,"outputTokens":39410,"cacheReadTokens":909696,"cacheWriteTokens":0,"totalTokens":1069673}
+pr005-no-intent total {"inputTokens":125262,"outputTokens":41091,"cacheReadTokens":924032,"cacheWriteTokens":0,"totalTokens":1090385}
+pr005-intent parent {"inputTokens":4638,"outputTokens":1686,"cacheReadTokens":14464,"cacheWriteTokens":0,"totalTokens":20788}
+pr005-intent children 5 {"inputTokens":81983,"outputTokens":36516,"cacheReadTokens":715776,"cacheWriteTokens":0,"totalTokens":834275}
+pr005-intent total {"inputTokens":86621,"outputTokens":38202,"cacheReadTokens":730240,"cacheWriteTokens":0,"totalTokens":855063}
+pr006-intent parent {"inputTokens":4575,"outputTokens":1604,"cacheReadTokens":14464,"cacheWriteTokens":0,"totalTokens":20643}
+pr006-intent children 5 {"inputTokens":131266,"outputTokens":76084,"cacheReadTokens":1591296,"cacheWriteTokens":0,"totalTokens":1798646}
+pr006-intent total {"inputTokens":135841,"outputTokens":77688,"cacheReadTokens":1605760,"cacheWriteTokens":0,"totalTokens":1819289}

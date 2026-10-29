@@ -1,0 +1,1 @@
+{"taskId":"bash-y1wb0x59","description":"R2 exact-HEAD 两阶段回归","status":"failed","detached":true,"startedAt":1793208616635,"endedAt":1793208707228,"timeoutMs":900000,"kind":"process","command":"bash eval/regression/run-head.sh","pid":8734,"exitCode":1,"parentToolCallId":"tool_Bv9MIqd8aVwL50LY1tCw5iYW"}

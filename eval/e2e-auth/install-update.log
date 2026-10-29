@@ -1,0 +1,7 @@
+[WARN] Replaced "dsh-jury" ("file:/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/e2e-auth/dsh-jury-0.1.0.tgz") with "/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/e2e-auth/dsh-jury-0.1.0.tgz" from a different source.
+✓ Lockfile passes supply-chain policies (verified 4m ago)
+Packages: +1
++
+Progress: resolved 1, reused 0, downloaded 1, added 1, done
+[WARN] Issues with peer dependencies found. Run "pnpm peers check" to list them.
+Done in 35ms using pnpm v12.16.1

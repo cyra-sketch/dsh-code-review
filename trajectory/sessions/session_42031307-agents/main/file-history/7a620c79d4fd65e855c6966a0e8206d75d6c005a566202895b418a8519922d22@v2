@@ -1,0 +1,33 @@
+import type { GroupedFinding, Tier } from './types.js'
+
+export const personas = [
+  {
+    id: 'correctness',
+    focus: 'Correctness: boundary conditions, numeric semantics, state ordering, failure paths, API contracts.',
+  },
+  {
+    id: 'security',
+    focus: 'Security: injection, authorization and ownership, tenant isolation, secrets, unsafe data flows.',
+  },
+  {
+    id: 'design',
+    focus: 'Design: transactionality, error handling, observability, coupling, maintainability with concrete failure impact.',
+  },
+  {
+    id: 'test-integrity',
+    focus: 'Test integrity: disabled tests, assertions that cement incorrect behavior, misleading mocks, missing regression coverage.',
+  },
+] as const
+
+const findingShape = `Each finding must contain title, detail, file, line (integer), line_quote (exact changed code or relevant context), severity (critical|major|minor|nit), and pre_existing (boolean).`
+
+export function finderPrompt(persona: string, focus: string, tier: Tier, review: string, diff: string): string {
+  return `You are the ${persona} finder in an independent code-review jury. ${focus}\n${tier === 'quick' ? 'Use a quick pass and report only concrete, high-confidence defects.' : 'Use a thorough standard pass and inspect all relevant changed lines.'}\nReport only actionable defects supported by this diff; do not speculate about unavailable code. Do not edit files or run write operations. Return no prose outside the structured result.\n${findingShape}\nUse severity nit only for non-blocking style or trivial issues. Mark pre_existing true only when the defect is visible in unchanged/context code rather than introduced by this change. If none, return an empty findings array.\n${review ? `Repository REVIEW.md instructions:\n${review}\n` : ''}Unified diff:\n${diff}`
+}
+
+export function voterPrompt(findings: GroupedFinding[], review: string, diff: string): string {
+  const input = findings.map(({ id, title, detail, file, line, line_quote, severity, pre_existing }) => ({
+    id, title, detail, file, line, line_quote, severity, pre_existing,
+  }))
+  return `You are an independent voter reviewing candidate findings from other agents. Verify every candidate against the supplied diff in one batch. Require a concrete file:line and reproducible reasoning. Return one vote for every input id, with verdict valid, invalid, or uncertain, a concise reason, and evidence {file,line}. Use invalid only when the claim is contradicted or unsupported; use uncertain when the diff cannot establish it. Do not add findings, edit files, or return prose outside the structured result.\n${review ? `Repository REVIEW.md instructions:\n${review}\n` : ''}Candidates:\n${JSON.stringify(input, null, 2)}\nUnified diff:\n${diff}`
+}

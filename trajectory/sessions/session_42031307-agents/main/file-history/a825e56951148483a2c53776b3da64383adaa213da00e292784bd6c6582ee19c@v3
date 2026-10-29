@@ -1,0 +1,81 @@
+# dsh-jury
+
+DeepSeek Harness 的多 persona 只读代码评审插件。fresh-context finder 并行审查，独立 voter 批量复核，最后由确定性代码去重、分档并写入 finding 台账；合并报告和风险评分不经过 LLM。
+
+## 安装
+
+要求 dsh `>=0.2.1-rc.2 <0.3.0`。本包是标准 dsh bundle，本地目录、tarball、npm 包和 GitHub spec 均走 `dsh plugin add`。
+
+```sh
+# 建议为插件派生独立 profile；也可直接使用已有的交互式 profile
+npx @deepseek-ai/dsh --profile jury --from-default-profile headless
+npx @deepseek-ai/dsh plugin --profile jury add /absolute/path/to/dsh-jury
+
+# 校验组合结果
+npx @deepseek-ai/dsh --profile jury --dump-config
+```
+
+从 GitHub 源码安装时，包内 `prepare` 会构建 TypeScript；pnpm 若要求 `allowBuilds`，只应对可信源码授权。本地 checkout 可先运行 `npm install && npm run build`。
+
+## 使用
+
+在支持用户命令的交互式 profile 中：
+
+```text
+/jury
+/jury path/to/change.diff
+/jury path/to/change.diff quick
+/jury deep
+/jury --base main --tier standard
+```
+
+在 headless 中通过等价工具调用：
+
+```sh
+npx @deepseek-ai/dsh --profile jury --json \
+  "调用 jury_run 一次，path 为 /absolute/path/to/change.diff，tier 为 auto；原样返回报告。"
+```
+
+`jury_run` 参数：
+
+- `path`：统一 diff 文件。省略时执行当前仓库的 `git diff HEAD`。
+- `base`：可选基线分支；仅在省略 `path` 时使用，评审 `base...HEAD`。
+- `tier`：`quick | standard | deep | auto`，默认 `auto`。quick 为 2 finder + 1 voter；standard 为 4 finder + 1 voter；deep 为 4 finder + 2 个独立 voter。显式档位覆盖风险门控。
+
+auto 使用确定性风险评分：低分不启动，中分 quick，高分 standard，更高分 deep。信号包括高危路径、变更规模、文件数、外部调用、测试断言、并发事务和权限/加密标识。报告第二行始终说明评分、命中信号和最终档位。
+
+运行命令时应以目标仓库为当前目录。若仓库根存在 `REVIEW.md`，其内容会加入每个 finder 和 voter 的 prompt。finder 的共享 diff/规则位于相同 prompt 前缀；超过 800 行的 diff 按文件处理并过滤纯 import/格式 hunk。
+
+报告以计数开头，包含 `consensus / disputed / solo` 和 `Important / Nit / Pre-existing`。voter 判为 invalid 的候选被过滤；uncertain 保留为 disputed；无发现时明确输出“无需修改”。有效 finding 以 `open` 状态追加到 `<repo>/.dsh/jury/findings.jsonl`，包含稳定 finding id、runId 和时间戳。
+
+## 配置
+
+在 profile 的 `cordis.patch.yml` 中覆盖 `jury` 条目。patch 会替换整个 `config`，因此应写出完整配置：
+
+```yaml
+- id: jury
+  config:
+    finderModels:
+      - provider: deepseek-account
+        model: deepseek-flash
+    voterModel:
+      provider: deepseek-account
+      model: deepseek-flash
+    maxRounds: 3
+    severityThreshold: minor
+```
+
+- `finderModels`：按 persona 顺序轮转分配；默认 `[]`，全部继承调用方当前模型。
+- `voterModel`：默认继承调用方当前模型。
+- `maxRounds`：1–3，默认 3。当前仍固定单轮，此参数仅为后续收敛轮次保留。
+- `severityThreshold`：`nit | minor | major | critical`，默认 `minor`（nit 被过滤）。
+
+## 开发与验证
+
+```sh
+npm install
+npm run typecheck
+npm run build
+```
+
+当前不包含 git commit/push 拦截、多轮重审或模型请求改写。

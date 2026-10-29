@@ -1,0 +1,111 @@
+[
+  {
+    "id": "dsh-jury@0.1.0",
+    "name": "dsh-jury",
+    "version": "0.1.0",
+    "size": 16943,
+    "unpackedSize": 53873,
+    "shasum": "269a1955f0ad6d97d52ccef92883f0bed84d2bd5",
+    "integrity": "sha512-SMjFRlZbpmpsNvnZiNLY6EWw5Yo+ST3pB29ePzpp7IV9Im1CieiwrHHt2yGgKbz26MlLEpE8rKg7ye/7JYWbgw==",
+    "filename": "dsh-jury-0.1.0.tgz",
+    "files": [
+      {
+        "path": "README.md",
+        "size": 5702,
+        "mode": 420
+      },
+      {
+        "path": "cordis.patch.yml",
+        "size": 46,
+        "mode": 420
+      },
+      {
+        "path": "lib/diff.d.ts",
+        "size": 120,
+        "mode": 420
+      },
+      {
+        "path": "lib/diff.js",
+        "size": 2348,
+        "mode": 420
+      },
+      {
+        "path": "lib/gate-episode.d.ts",
+        "size": 735,
+        "mode": 420
+      },
+      {
+        "path": "lib/gate-episode.js",
+        "size": 1170,
+        "mode": 420
+      },
+      {
+        "path": "lib/gate.d.ts",
+        "size": 236,
+        "mode": 420
+      },
+      {
+        "path": "lib/gate.js",
+        "size": 9762,
+        "mode": 420
+      },
+      {
+        "path": "lib/index.d.ts",
+        "size": 379,
+        "mode": 420
+      },
+      {
+        "path": "lib/index.js",
+        "size": 5801,
+        "mode": 420
+      },
+      {
+        "path": "lib/jury.d.ts",
+        "size": 405,
+        "mode": 420
+      },
+      {
+        "path": "lib/jury.js",
+        "size": 15770,
+        "mode": 420
+      },
+      {
+        "path": "lib/prompts.d.ts",
+        "size": 1032,
+        "mode": 420
+      },
+      {
+        "path": "lib/prompts.js",
+        "size": 3997,
+        "mode": 420
+      },
+      {
+        "path": "lib/risk.d.ts",
+        "size": 116,
+        "mode": 420
+      },
+      {
+        "path": "lib/risk.js",
+        "size": 2640,
+        "mode": 420
+      },
+      {
+        "path": "lib/types.d.ts",
+        "size": 2392,
+        "mode": 420
+      },
+      {
+        "path": "lib/types.js",
+        "size": 11,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 1211,
+        "mode": 420
+      }
+    ],
+    "entryCount": 19,
+    "bundled": []
+  }
+]

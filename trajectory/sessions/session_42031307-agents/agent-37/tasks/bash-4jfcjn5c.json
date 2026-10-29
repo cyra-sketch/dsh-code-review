@@ -1,0 +1,1 @@
+{"taskId":"bash-4jfcjn5c","description":"Bash: npx --yes @deepseek-ai/dsh --version","status":"failed","detached":true,"startedAt":1793173666208,"endedAt":1793173947545,"timeoutMs":600000,"kind":"process","command":"npx --yes @deepseek-ai/dsh --version","pid":75596,"exitCode":190,"parentToolCallId":"tool_jxlLWa3WglT25HnrulQqQ3if"}

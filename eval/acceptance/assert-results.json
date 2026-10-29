@@ -1,0 +1,328 @@
+{
+  "passed": 20,
+  "failed": 0,
+  "results": [
+    {
+      "name": "low-risk skips review with zero subagents",
+      "pass": true,
+      "evidence": {
+        "episodeId": "f7597e75-bbe8-47c8-b0b9-52b596af7139",
+        "baseSha": "c5b7a2fab73fe49b75e45ebb02c7079142beb2f1",
+        "headSha": "805e0498a442ea27bfd840f5582c2daddae95952",
+        "round": 1,
+        "subagentCalls": 0,
+        "status": "accepted",
+        "findings": [],
+        "type": "gate-episode",
+        "timestamp": "2026-10-28T20:55:20.742Z"
+      }
+    },
+    {
+      "name": "low-risk accepted HEAD reaches bare remote",
+      "pass": true,
+      "evidence": {
+        "local": "805e0498a442ea27bfd840f5582c2daddae95952",
+        "remote": "805e0498a442ea27bfd840f5582c2daddae95952"
+      }
+    },
+    {
+      "name": "high-risk discovery uses one single reviewer",
+      "pass": true,
+      "evidence": {
+        "round": 1,
+        "subagentCalls": 1,
+        "findingIds": [
+          "9d40cd4bee067bec",
+          "b6144457dc9ab3bf"
+        ]
+      }
+    },
+    {
+      "name": "high-risk frozen finding set never expands",
+      "pass": true,
+      "evidence": [
+        {
+          "round": 1,
+          "status": "active",
+          "findingIds": [
+            "9d40cd4bee067bec",
+            "b6144457dc9ab3bf"
+          ]
+        },
+        {
+          "round": 2,
+          "status": "accepted",
+          "findingIds": [
+            "9d40cd4bee067bec",
+            "b6144457dc9ab3bf"
+          ]
+        },
+        {
+          "round": 3,
+          "status": "accepted",
+          "findingIds": [
+            "9d40cd4bee067bec",
+            "b6144457dc9ab3bf"
+          ]
+        },
+        {
+          "round": 3,
+          "status": "human",
+          "findingIds": [
+            "9d40cd4bee067bec",
+            "b6144457dc9ab3bf"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Math.floor is accepted as semantically equivalent fixed",
+      "pass": true,
+      "evidence": {
+        "headSha": "c754a5077a5d5d429ada9c92a6f7d31708624df5",
+        "statuses": {
+          "9d40cd4bee067bec": "fixed",
+          "b6144457dc9ab3bf": "fixed"
+        }
+      }
+    },
+    {
+      "name": "new HEAD is reverified against the same frozen findings",
+      "pass": true,
+      "evidence": {
+        "acceptedHead": "c754a5077a5d5d429ada9c92a6f7d31708624df5",
+        "reverifiedHead": "85c2636e7a3474f08f8195cf075830249f745542",
+        "remote": "85c2636e7a3474f08f8195cf075830249f745542"
+      }
+    },
+    {
+      "name": "unaccepted high-risk HEAD is absent from bare remote",
+      "pass": true,
+      "evidence": {
+        "localHead": "afadefc78c8c731f51c072255528d76442c6adae",
+        "remote": "85c2636e7a3474f08f8195cf075830249f745542"
+      }
+    },
+    {
+      "name": "reintroduced SQL defect transitions fixed to open",
+      "pass": true,
+      "evidence": {
+        "accepted": [
+          {
+            "id": "9d40cd4bee067bec",
+            "status": "fixed"
+          },
+          {
+            "id": "b6144457dc9ab3bf",
+            "status": "fixed"
+          },
+          {
+            "id": "bbdc0ef29b7d7beb",
+            "status": "fixed"
+          }
+        ],
+        "reopened": [
+          {
+            "id": "9d40cd4bee067bec",
+            "status": "open"
+          },
+          {
+            "id": "b6144457dc9ab3bf",
+            "status": "fixed"
+          },
+          {
+            "id": "bbdc0ef29b7d7beb",
+            "status": "fixed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "reopen preserves untouched fixed findings and frozen set",
+      "pass": true,
+      "evidence": {
+        "findingIds": [
+          "9d40cd4bee067bec",
+          "b6144457dc9ab3bf",
+          "bbdc0ef29b7d7beb"
+        ],
+        "untouched": [
+          {
+            "id": "b6144457dc9ab3bf",
+            "file": "src/checkout.ts",
+            "line": 22,
+            "severity": "major",
+            "title": "折扣后金额未取整，charge 收到小数分",
+            "fix": "折扣后 total 可能不是整数（如 333 分打 9 折 = 299.7），导致 amountCents 与 chargedCents 出现小数分；应按冻结要求用 Math.floor 取整（禁用 Math.round）。",
+            "status": "fixed"
+          },
+          {
+            "id": "bbdc0ef29b7d7beb",
+            "file": "src/checkout.ts",
+            "line": 26,
+            "severity": "major",
+            "title": "提交未 push 到本地 origin/main",
+            "fix": "本地 HEAD 3da3460 领先 origin/main 1 个提交，origin/main 仍停在 93d9b3d；要求明确为 push 到本地 origin/main，当前交付未完成。",
+            "status": "fixed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "reopened HEAD is absent from bare remote",
+      "pass": true,
+      "evidence": {
+        "acceptedRemote": "b47e62d26d8d71cf496aa12abb45c5373a0e7ba4",
+        "rejectedHead": "6133b666a99d1f3c1c3823b1eb07c85db5ccd5d1"
+      }
+    },
+    {
+      "name": "maxRounds=1 deterministically escalates after discovery",
+      "pass": true,
+      "evidence": {
+        "round": 1,
+        "status": "human",
+        "subagentCalls": 1
+      }
+    },
+    {
+      "name": "maxRounds=1 rejected commit is absent from bare remote",
+      "pass": true,
+      "evidence": {
+        "baseSha": "a864cbab77125b17a0c461fcea5369d0c5f4caa6",
+        "rejectedHead": "2275c2213fe24b3479ce9df060a0da3e184c72ad",
+        "remote": "a864cbab77125b17a0c461fcea5369d0c5f4caa6"
+      }
+    },
+    {
+      "name": "stable SQL and cents finding ids are used across fixtures",
+      "pass": true,
+      "evidence": {
+        "high": [
+          "9d40cd4bee067bec",
+          "b6144457dc9ab3bf"
+        ],
+        "reopen": [
+          "9d40cd4bee067bec",
+          "b6144457dc9ab3bf",
+          "bbdc0ef29b7d7beb"
+        ],
+        "human": [
+          "9d40cd4bee067bec",
+          "b6144457dc9ab3bf"
+        ]
+      }
+    },
+    {
+      "name": "intent extraction is deterministic and excludes workflow instructions",
+      "pass": true,
+      "evidence": [
+        {
+          "id": "ec0dff81de1a7e86",
+          "text": "折扣金额必须使用整数分"
+        },
+        {
+          "id": "4ca4ae223c22209f",
+          "text": "减免不得超过订单总额"
+        },
+        {
+          "id": "2d58387ac9119df7",
+          "text": "成功支付后必须写审计记录且包含操作者 IP（合规要求）"
+        }
+      ]
+    },
+    {
+      "name": "fractional cents are blocked by finding and unmet intent clause",
+      "pass": true,
+      "evidence": {
+        "findings": [
+          "折扣计算可能产生非整数分",
+          "折扣码直接拼接进 SQL 导致注入"
+        ],
+        "integerClause": {
+          "id": "ec0dff81de1a7e86",
+          "text": "折扣金额必须使用整数分",
+          "status": "unmet",
+          "reason": "折扣后 total 未取整，仍是浮点数，可能把 0.5 分等非整数金额传给 charge 并作为 chargedCents 返回。"
+        }
+      }
+    },
+    {
+      "name": "accepted requires fixed findings and all intent clauses met",
+      "pass": true,
+      "evidence": {
+        "finalStatus": "accepted",
+        "intentClauses": [
+          {
+            "id": "ec0dff81de1a7e86",
+            "text": "折扣金额必须使用整数分",
+            "status": "met",
+            "reason": "兑换金额经 Math.round 取整且 total 本身为整数，charge 与 chargedCents 收到的均为整数分。"
+          },
+          {
+            "id": "4ca4ae223c22209f",
+            "text": "减免不得超过订单总额",
+            "status": "met",
+            "reason": "discountCents = Math.min(total, ...) 保证减免不超过订单总额，折后 total 不为负。"
+          },
+          {
+            "id": "2d58387ac9119df7",
+            "text": "成功支付后必须写审计记录且包含操作者 IP（合规要求）",
+            "status": "met",
+            "reason": "支付成功后写 checkout_audits 审计记录，包含 operatorIp，且入口已校验 operatorIp 非空。"
+          }
+        ],
+        "remote": "949e0300ca383d2dff8ae71a0980bb9ee0f63837"
+      }
+    },
+    {
+      "name": "matching session intent accepts clean implementation without findings",
+      "pass": true,
+      "evidence": {
+        "episodeId": "82ff70e5-1be1-4550-9f28-ae88f4ac8be1",
+        "baseSha": "06026f4073dae79cfbb321f0822f9380ab91e061",
+        "headSha": "f294993d27658eb8ab4a1c4c300b752a2187e292",
+        "round": 1,
+        "subagentCalls": 1,
+        "status": "accepted",
+        "findings": [],
+        "type": "gate-episode",
+        "timestamp": "2026-10-28T20:46:05.016Z"
+      }
+    },
+    {
+      "name": "negative intent does not invent requirement deviations",
+      "pass": true,
+      "evidence": {
+        "findings": [
+          "Audit insert after a successful charge can fail and lose the charge"
+        ]
+      }
+    },
+    {
+      "name": "negative intent retains evidence-based audit failure and blocks HEAD",
+      "pass": true,
+      "evidence": {
+        "status": "active",
+        "findings": [
+          "Audit insert after a successful charge can fail and lose the charge"
+        ],
+        "remote": "5359397533407d8a9c457a123a393f43aba54dba"
+      }
+    },
+    {
+      "name": "post-fix intent reviews never report pending workflow operations",
+      "pass": true,
+      "evidence": {
+        "intentMissing": [
+          "折扣计算可能产生非整数分",
+          "折扣码直接拼接进 SQL 导致注入"
+        ],
+        "intentClean": [],
+        "intentNegative": [
+          "Audit insert after a successful charge can fail and lose the charge"
+        ]
+      }
+    }
+  ]
+}

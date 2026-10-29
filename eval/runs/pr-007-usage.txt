@@ -1,0 +1,9 @@
+baseline parent {"inputTokens":10010,"outputTokens":23218,"cacheReadTokens":66176,"cacheWriteTokens":0,"totalTokens":99404}
+baseline children 0 {"inputTokens":0,"outputTokens":0,"cacheReadTokens":0,"cacheWriteTokens":0,"totalTokens":0}
+baseline total {"inputTokens":10010,"outputTokens":23218,"cacheReadTokens":66176,"cacheWriteTokens":0,"totalTokens":99404}
+quick parent {"inputTokens":4162,"outputTokens":1111,"cacheReadTokens":14336,"cacheWriteTokens":0,"totalTokens":19609}
+quick children 3 {"inputTokens":19461,"outputTokens":25509,"cacheReadTokens":17920,"cacheWriteTokens":0,"totalTokens":62890}
+quick total {"inputTokens":23623,"outputTokens":26620,"cacheReadTokens":32256,"cacheWriteTokens":0,"totalTokens":82499}
+standard parent {"inputTokens":3461,"outputTokens":1140,"cacheReadTokens":23424,"cacheWriteTokens":0,"totalTokens":28025}
+standard children 4 {"inputTokens":46782,"outputTokens":95870,"cacheReadTokens":244736,"cacheWriteTokens":0,"totalTokens":387388}
+standard total {"inputTokens":50243,"outputTokens":97010,"cacheReadTokens":268160,"cacheWriteTokens":0,"totalTokens":415413}

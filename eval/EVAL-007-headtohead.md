@@ -1,0 +1,117 @@
+# EVAL-007：R1 修正与 held-out head-to-head（部分完成）
+
+> 日期：2026-10-29 ｜ 状态：**A 类代码修正完成；B/C 仅部分完成**。运行中发生 `ACCOUNT_QUOTA: Insufficient Balance`，已停止剩余模型任务。没有编造 adverse、pr-008、独立盲裁或 4 PR 混合负载数据。
+
+## 1. A 类修正
+
+- `src/jury.ts` / `src/gate.ts`：R1 当时按 `gateIntent`、同一 agent 最近一次 jury_run intent、全局 `intent`、`intentFile` 获取需求，仍需调用方传入。R4 已在全局 intent 与 intentFile 之间加入 sessionQuery 自动读取当前会话首条用户消息，见 EVAL-011。
+- accepted 快照增加 `headSha`；只有验收时的确切 HEAD 可直接放行。新 HEAD 会回到 active 并重新验收，验收可将之前的 fixed 重新判为 open。
+- push 匹配覆盖 force、set-upstream、`-C`、`-c`、git-dir/work-tree 和链式命令。README 保留绕过面：远端 API、其他执行路径和非 bash/pwsh 工具调用。
+- quick 报告明确“低风险轻审，不作为高危主力”。
+- `npm run typecheck` 与 `npm run build` 已通过。
+
+这些修正回应了代码层面的批评，但本轮没有再次运行 gate+intent 或 accepted 后改 HEAD 的专门回归，不能把它们写成已实测闭环。
+
+## 2. Held-out 语料
+
+### pr-007
+
+独立作者子代理生成，204 行、3 个 TS 文件，webhook retry/delivery 领域，GT 含 6 个雷。作者事件流：`eval/runs/pr-007-author.jsonl`。主协调者直到评审结束才读取 GT。
+
+### pr-008
+
+真实仓库 `bpierre/dnum`：
+
+- bug 引入：[56e44125 — Improve sign handling](https://github.com/bpierre/dnum/commit/56e44125a14b5cb91efde8a5218deb2a2ed6cbaf)
+- 后续修复：[fff072e — Fix rounding carries for negative numbers](https://github.com/bpierre/dnum/commit/fff072e723076c75e1a3142fad554d05c62e254a)
+
+449 行 diff。GT 是修复提交中的真实语义：负数舍入进位到非零整数时不得因 `abs(whole)` 丢失负号。
+
+## 3. pr-007 已完成的臂
+
+> 以下是协调者按 GT 做的**临时计分，不是独立盲裁**。独立盲裁子代理因账户配额未能运行，正式盲裁标记为未完成。
+
+| 臂 | 召回 | 误报 | file:line 证据 | 非缓存输入 | 缓存读 | 输出 | 状态 |
+|---|---:|---:|---:|---:|---:|---:|---|
+| 无插件 baseline | **6/6** | 0 | 9/9 = 100% | 10,010 | 66,176 | 23,218 | 完成 |
+| jury quick | **5/6** | 0 | 5/5 = 100% | 23,623 | 32,256 | 26,620 | 完成 |
+| jury standard | 无报告 | — | — | 50,243 | 268,160 | 97,010 | **max-tokens，部分消耗** |
+| adverse | 未运行成功 | — | — | — | — | — | CLI 接入失败后遇配额，未降级重跑 |
+
+临时映射：baseline 覆盖 B1–B6；quick 覆盖 B1–B5，漏 B6（jitter 后未重新 clamp）。baseline 的额外租约/异常/测试发现均有代码依据；quick 未发现误报。
+
+事件流：`pr-007-baseline.jsonl`、`pr-007-quick.jsonl`、`pr-007-standard.jsonl`。
+
+### adverse 接入边界
+
+adverse CLI 本身可执行，但接入连续遇到具体输入/参数问题：单 `.diff` 文件不支持、目录下没有可识别源码、`--diff` 将 `--agent` 吞为值、`--diff=HEAD` 产生空 diff、末尾无值 `--diff` 又缺值。未产生有效评审。随后账户配额耗尽，无法再运行降级 fresh-context 对照臂。`pr-007-adverse*.log` 保留了这些失败，不能写成 adverse 已对照。
+
+## 4. pr-008 未完成
+
+- baseline 与 quick 在配额错误后被主动停止，没有完整报告。
+- standard 的子代理返回配额错误：`ACCOUNT_QUOTA: Insufficient Balance`。
+- adverse 未启动。
+- 因四臂不全，**pr-008 没有召回、误报、证据率或美元成本数据**。
+
+相关事件流保留为 `pr-008-baseline.jsonl`、`pr-008-quick.jsonl`、`pr-008-standard.jsonl` 及各自 stderr。
+
+## 5. 美元成本（off-peak）
+
+官方价格来源：[DeepSeek Pricing](https://api-docs.deepseek.com/quick_start/pricing/)，抓取时模型为 `DeepSeek-V4.1-Flash-1017`。本轮主要运行在 UTC 16:00 后，属于 off-peak：
+
+- 未命中输入：$0.15 / 1M tokens
+- 缓存命中输入：$0.003 / 1M tokens
+- 输出：$0.60 / 1M tokens
+
+成本公式：`input×0.15 + cacheRead×0.003 + output×0.60`（每 1M tokens，不含工具搜索费）。
+
+### pr-007
+
+| 臂 | 总美元成本 | 真 bug 数 | 每发现一个真 bug |
+|---|---:|---:|---:|
+| baseline | $0.015630828 | 6 | **$0.002605138** |
+| quick | $0.019612218 | 5 | **$0.003922444** |
+| standard | $0.066546930 | 无有效报告 | N/A |
+| adverse | N/A | N/A | N/A |
+
+在 pr-007 上，baseline 召回更高且单位发现成本更低；quick 没有投入产出优势，standard 只产生失败成本。
+
+### pr-003 历史对照（非 held-out，仅用于边际分析）
+
+使用 EVAL-004 同一组 usage 和当前 off-peak 价格：
+
+| 臂 | 总美元成本 | 真 bug 数 | 每发现一个真 bug |
+|---|---:|---:|---:|
+| baseline | $0.005825856 | 6 | $0.000970976 |
+| standard | $0.067201038 | 7 | $0.009600148 |
+
+standard 相对 baseline 多发现 1 个雷，**增量发现的边际成本为 $0.061375182**。这说明“困难 PR 上有增量”不等于“增量便宜”。
+
+### 4 PR 混合负载
+
+pr-001/pr-003/pr-007/pr-008 的默认配置平均成本 **无法计算**：pr-008 四臂与 usage 不完整。没有使用旧数据或估算值补齐。
+
+## 6. 数据上的投入产出判断
+
+- **普通/中等难度 diff-only 评审：没有正投入产出证据。** pr-001 曾无召回增量；pr-007 baseline 更是 6/6、成本低于 quick；standard 还出现 max-tokens。
+- **困难 PR：可能有价值，但边际昂贵。** pr-003 多发现 1 雷的边际成本约 $0.0614，需要真实事故避免成本高于该值才有经济意义。
+- **intent：仍是独有增量来源，但本轮没有新的 held-out 复测。** 既有 pr-005 阳性/阴性结果不能被本轮失败推翻，也不能外推成普遍准确。
+- **gate：发现/验收分离可收敛，但本轮新增的 intent 与 exact-HEAD 修正未重新跑闭环。** 其经济价值不能仅用总 token 宣称。
+- **quick：定位只能是轻审。** pr-007 漏 B6，且历史召回有波动，不能作为高危主力。
+
+## 7. 批评回应状态
+
+| 上轮批评 | 当前状态 |
+|---|---|
+| gate 不传 intent | **代码已修正**；未做新的 gate+intent 实跑 |
+| 经济叙事被 13.86× 反驳 | **仍然成立且被美元数据强化**；baseline 在 pr-007 更准也更便宜 |
+| 没有 adverse/单审 head-to-head、held-out | **仍基本成立**：pr-007 只有 baseline/quick 完成，standard 失败，adverse 未接入，pr-008 未完成 |
+| bash push 绕过面、accepted 放行漏洞 | **代码已扩大匹配并绑定 exact HEAD**；其他执行路径仍无法从插件层阻止，专门回归未跑 |
+| quick 波动、未达到验收线 | **仍然成立**：本轮 quick 5/6，standard max-tokens；quick 已明确降为轻审定位 |
+
+## 8. 遗留与复跑条件
+
+1. 配额恢复后，先完成 pr-008 四臂和独立盲裁，再补 pr-007 adverse 与正式盲裁，之后才计算 4 PR 混合负载。
+2. 为 standard 的 max-tokens 单独做稳定性实验，不能用 quick 的完成率替代。
+3. 新增 gate intent、accepted 后改 HEAD、push 变体的最小本地回归。
+4. 在获得更多 held-out 结果前，不应把插件描述为默认经济型评审方案；可证明的价值仍集中在 intent、特定困难 PR 和 gate 控制流。

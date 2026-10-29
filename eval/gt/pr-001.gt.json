@@ -1,0 +1,63 @@
+{
+  "id": "pr-001",
+  "title": "checkout: add discount code support",
+  "bugs": [
+    {
+      "id": "B1",
+      "category": "correctness",
+      "title": "浮点金额：折扣计算后 total 不再是整数分（999*3*0.9=2697.3），charge/chargedCents 收到浮点数",
+      "file": "src/checkout.ts",
+      "expect_evidence": "total = total * (1 - applied.percentOff / 100)"
+    },
+    {
+      "id": "B2",
+      "category": "correctness",
+      "title": "使用次数校验应为 >=：usedCount > maxUses 允许多用一次（第 maxUses+1 次仍通过）",
+      "file": "src/checkout.ts",
+      "expect_evidence": "dc.usedCount > dc.maxUses"
+    },
+    {
+      "id": "B3",
+      "category": "security",
+      "title": "SQL 注入：discount code 直接字符串拼接进 SELECT",
+      "file": "src/checkout.ts",
+      "expect_evidence": "WHERE code = '${code}'"
+    },
+    {
+      "id": "B4",
+      "category": "security",
+      "title": "IDOR/越权：lookupCode 未校验 ownerId，任何用户可使用任意 campaign 的私有折扣码",
+      "file": "src/checkout.ts",
+      "expect_evidence": "lookupCode 内无 ownerId 校验"
+    },
+    {
+      "id": "B5",
+      "category": "correctness",
+      "title": "顺序错误：支付成功前就 usedCount+1，支付失败不回滚，用户白烧一次使用额度",
+      "file": "src/checkout.ts",
+      "expect_evidence": "UPDATE discount_codes SET usedCount = usedCount + 1 在 charge 之前"
+    },
+    {
+      "id": "B6",
+      "category": "design",
+      "title": "吞异常：audit 失败被 catch 后仅 console.log，checkout 仍返回 ok，审计记录丢失无人知晓",
+      "file": "src/checkout.ts",
+      "expect_evidence": "catch (e) { console.log(...) }"
+    },
+    {
+      "id": "B7",
+      "category": "test-integrity",
+      "title": "测试断言迎合错误行为：expect chargedCents toBe(2697.3) 把浮点分写进断言，固化 B1 的 bug",
+      "file": "src/checkout.test.ts",
+      "expect_evidence": "toBe(2697.3)"
+    },
+    {
+      "id": "B8",
+      "category": "test-integrity",
+      "title": "新功能的过期校验测试被 it.skip 禁用，正好跳过了 expiry 分支的验证",
+      "file": "src/checkout.test.ts",
+      "expect_evidence": "it.skip(\"rejects expired code\")"
+    }
+  ],
+  "notes": "评审只能看 pr-001.diff，不能看本文件。语义命中即算召回（不要求行号精确）。"
+}

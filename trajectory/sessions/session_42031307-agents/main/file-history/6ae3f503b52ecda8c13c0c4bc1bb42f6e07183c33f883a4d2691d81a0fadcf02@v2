@@ -1,0 +1,4 @@
+- id: jury
+  config:
+    gateMode: block
+    maxRounds: 1

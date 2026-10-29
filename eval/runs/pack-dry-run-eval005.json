@@ -1,0 +1,101 @@
+[
+  {
+    "id": "dsh-jury@0.1.0",
+    "name": "dsh-jury",
+    "version": "0.1.0",
+    "size": 13293,
+    "unpackedSize": 40171,
+    "shasum": "e205cc04cb96cc25a39a5aeb16b6499ef59ff233",
+    "integrity": "sha512-ikArFbtBT95gRQKUwY/+xc8ww3kfzMaOVeZHlGYSypoYnfUVeX68sWRhp3SZaKTvabmxVoVV9RQ7OioDUTJjsQ==",
+    "filename": "dsh-jury-0.1.0.tgz",
+    "files": [
+      {
+        "path": "README.md",
+        "size": 3885,
+        "mode": 420
+      },
+      {
+        "path": "cordis.patch.yml",
+        "size": 46,
+        "mode": 420
+      },
+      {
+        "path": "lib/diff.d.ts",
+        "size": 120,
+        "mode": 420
+      },
+      {
+        "path": "lib/diff.js",
+        "size": 2348,
+        "mode": 420
+      },
+      {
+        "path": "lib/gate.d.ts",
+        "size": 236,
+        "mode": 420
+      },
+      {
+        "path": "lib/gate.js",
+        "size": 3042,
+        "mode": 420
+      },
+      {
+        "path": "lib/index.d.ts",
+        "size": 379,
+        "mode": 420
+      },
+      {
+        "path": "lib/index.js",
+        "size": 5461,
+        "mode": 420
+      },
+      {
+        "path": "lib/jury.d.ts",
+        "size": 355,
+        "mode": 420
+      },
+      {
+        "path": "lib/jury.js",
+        "size": 13590,
+        "mode": 420
+      },
+      {
+        "path": "lib/prompts.d.ts",
+        "size": 1032,
+        "mode": 420
+      },
+      {
+        "path": "lib/prompts.js",
+        "size": 3670,
+        "mode": 420
+      },
+      {
+        "path": "lib/risk.d.ts",
+        "size": 116,
+        "mode": 420
+      },
+      {
+        "path": "lib/risk.js",
+        "size": 2640,
+        "mode": 420
+      },
+      {
+        "path": "lib/types.d.ts",
+        "size": 2029,
+        "mode": 420
+      },
+      {
+        "path": "lib/types.js",
+        "size": 11,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 1211,
+        "mode": 420
+      }
+    ],
+    "entryCount": 17,
+    "bundled": []
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "id": "pr-008",
+  "title": "dnum: negative values lose their sign when the whole part is nonzero after rounding",
+  "source": {
+    "repository": "https://github.com/bpierre/dnum",
+    "bugIntroducedBy": "https://github.com/bpierre/dnum/commit/56e44125a14b5cb91efde8a5218deb2a2ed6cbaf",
+    "fixedBy": "https://github.com/bpierre/dnum/commit/fff072e723076c75e1a3142fad554d05c62e254a"
+  },
+  "bugs": [
+    {
+      "id": "D1",
+      "category": "correctness",
+      "title": "toParts 对 whole 使用 abs，导致负数在小数舍入进位到非零整数时丢失负号；例如 -199n/2 保留 0 位应得 -2，错误实现返回 +2",
+      "file": "src/dnum.ts",
+      "expect_evidence": "whole 计算或返回处使用 abs，未保留 value 的负号"
+    }
+  ],
+  "notes": "GT 来自真实修复提交 fff072e：将 whole 的计算改为 abs 参与后续处理，但返回时保留带符号的 whole。"
+}

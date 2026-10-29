@@ -1,0 +1,449 @@
+From 56e44125a14b5cb91efde8a5218deb2a2ed6cbaf Mon Sep 17 00:00:00 2001
+From: Pierre Bertet <hi@bpier.re>
+Date: Thu, 14 Sep 2023 03:11:26 +0100
+Subject: [PATCH] Improve sign handling
+
+API changes:
+
+- format(): add the signDisplay option, which allows to control how to
+  display the sign for the number. It follows the same rules as
+  Intl.NumberFormat#signDisplay.
+
+Internal changes:
+
+- formatSign(): (internal) returns a number sign.
+- toParts(): (internal) the whole part is now always positive. This is
+  to make its behavior consistent: before this change, the sign was only
+  removed when the value of the whole part was 0.
+
+Bug fixes:
+
+- Fixes an issue with the format() function where the sign was missing
+  from negative numbers with a whole part equal to 0.
+---
+ README.md         | 19 +++++-----
+ src/dnum.ts       | 37 ++++++++++++-------
+ src/formatting.ts | 36 +++++++++++++++++--
+ src/operations.ts | 14 ++++----
+ src/utils.ts      |  6 ++--
+ test/all.test.ts  | 91 ++++++++++++++++++++++++++++++++++++++++-------
+ 6 files changed, 156 insertions(+), 47 deletions(-)
+
+diff --git a/README.md b/README.md
+index ba73ae7..70f49a9 100644
+--- a/README.md
++++ b/README.md
+@@ -110,15 +110,16 @@ type Numberish = string | number | bigint | Dnum;
+ 
+ Formats the number for display purposes.
+ 
+-| Name                       | Description                                                                                                                                           | Type                                         |
+-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+-| `value`                    | The value to format.                                                                                                                                  | `Dnum`                                       |
+-| `options.digits`           | Number of digits to display. Setting `options` to a number acts as an alias for this option. Defaults to the number of decimals in the passed `Dnum`. | `number`                                     |
+-| `options.compact`          | Compact formatting (e.g. “1,000” becomes “1K”).                                                                                                       | `object`                                     |
+-| `options.trailingZeros`    | Add trailing zeros if any, following the number of digits.                                                                                            | `object`                                     |
+-| `options.locale`           | The locale used to format the number.                                                                                                                 | `string`                                     |
+-| `options.decimalsRounding` | Method used to round to `digits` decimals (defaults to `"ROUND_HALF"`).                                                                               | `"ROUND_HALF" \| "ROUND_UP" \| "ROUND_DOWN"` |
+-| returns                    | Formatted string.                                                                                                                                     | `string`                                     |
++| Name                       | Description                                                                                                                                                                                                                                  | Type                                                          |
++| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
++| `value`                    | The value to format.                                                                                                                                                                                                                         | `Dnum`                                                        |
++| `options.digits`           | Number of digits to display. Setting `options` to a number acts as an alias for this option. Defaults to the number of decimals in the passed `Dnum`.                                                                                        | `number`                                                      |
++| `options.compact`          | Compact formatting (e.g. “1,000” becomes “1K”).                                                                                                                                                                                              | `object`                                                      |
++| `options.trailingZeros`    | Add trailing zeros if any, following the number of digits.                                                                                                                                                                                   | `object`                                                      |
++| `options.locale`           | The locale used to format the number.                                                                                                                                                                                                        | `string`                                                      |
++| `options.decimalsRounding` | Method used to round to `digits` decimals (defaults to `"ROUND_HALF"`).                                                                                                                                                                      | `"ROUND_HALF" \| "ROUND_UP" \| "ROUND_DOWN"`                  |
++| `options.signDisplay`      | When to display the sign for the number. [Follows the same rules as `Intl.NumberFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#signdisplay). Defaults to `"auto"`. | `"auto" \| "always" \| "exceptZero" \| "negative" \| "never"` |
++| returns                    | Formatted string.                                                                                                                                                                                                                            | `string`                                                      |
+ 
+ #### Example
+ 
+diff --git a/src/dnum.ts b/src/dnum.ts
+index 611a55c..2e28f9f 100644
+--- a/src/dnum.ts
++++ b/src/dnum.ts
+@@ -66,7 +66,9 @@ export function from(
+ 
+   const result = (
+     BigInt(whole) * powerOfTen(decimals) + BigInt(fraction)
+-  ) * BigInt(negative ? -1 : 1);
++  ) * (
++    negative ? -1n : 1n
++  );
+ 
+   return [result, decimals];
+ }
+@@ -116,7 +118,7 @@ export function setDecimals(
+ export function equalizeDecimals(nums: Dnum[], decimals?: number): Dnum[] {
+   const decimals_ = decimals
+     ?? Math.max(...nums.map(([, decimals]) => decimals), 0);
+-  return nums.map(num => setDecimals(num, decimals_));
++  return nums.map((num) => setDecimals(num, decimals_));
+ }
+ 
+ export function toJSON([value, decimals]: Dnum) {
+@@ -137,7 +139,10 @@ export function toParts(
+       decimalsRounding?: "ROUND_HALF" | "ROUND_UP" | "ROUND_DOWN";
+     }
+     | number = {},
+-): [whole: bigint, fraction: string | null] {
++): [
++  whole: bigint, // always positive
++  fraction: string | null,
++] {
+   const [value, decimals] = dnum;
+ 
+   // options.digits can also be passed directly as the second argument
+@@ -183,22 +188,23 @@ export function toParts(
+     ),
+   );
+ 
++  // if the 1 prefix has changed to 2, it means that the
++  // rounding caused the whole part to be incremented
+   if (fraction.startsWith("2")) {
+-    whole += BigInt(1);
++    whole += 1n;
+   }
+ 
+-  // remove the leading 1 and extra decimal places
++  // remove the leading 1 and extra decimal places (see above)
+   fraction = fraction.slice(1, digits + 1);
+ 
+-  if (trailingZeros) {
+-    fraction = fraction.padEnd(digits, "0");
+-  } else {
+-    fraction = fraction.replace(/0+$/, "");
+-  }
++  // trim or pad with trailing zeros
++  fraction = trailingZeros
++    ? fraction.padEnd(digits, "0")
++    : fraction.replace(/0+$/, "");
+ 
+   return [
+-    whole,
+-    fraction === "" || (BigInt(fraction) === BigInt(0) && !trailingZeros)
++    abs(whole),
++    fraction === "" || (BigInt(fraction) === 0n && !trailingZeros)
+       ? null
+       : fraction,
+   ];
+@@ -208,5 +214,10 @@ export function toNumber(
+   value: Dnum,
+   optionsOrDigits: Parameters<typeof toParts>[1],
+ ) {
+-  return Number(toParts(value, optionsOrDigits).join("."));
++  const [whole, fraction] = toParts(value, optionsOrDigits);
++  return Number(
++    (value[0] >= 0n ? "" : "-")
++      + whole
++      + (fraction ? `.${fraction}` : ""),
++  );
+ }
+diff --git a/src/formatting.ts b/src/formatting.ts
+index a0e1fc7..b779aa5 100644
+--- a/src/formatting.ts
++++ b/src/formatting.ts
+@@ -2,12 +2,15 @@ import type { Dnum } from "./types";
+ 
+ import { toParts } from "./dnum";
+ 
++type SignDisplay = "auto" | "always" | "exceptZero" | "negative" | "never";
++
+ export function format(
+   dnum: Dnum,
+   // see toParts() in src/dnum.ts
+   optionsOrDigits: Parameters<typeof toParts>[1] & {
+     compact?: boolean;
+     locale?: ConstructorParameters<typeof Intl.NumberFormat>[0];
++    signDisplay?: SignDisplay;
+   } = {},
+ ): string {
+   const options = typeof optionsOrDigits === "number"
+@@ -17,6 +20,7 @@ export function format(
+   const {
+     compact,
+     locale = Intl.NumberFormat().resolvedOptions().locale,
++    signDisplay = "auto",
+     ...toPartsOptions
+   } = options;
+ 
+@@ -25,16 +29,42 @@ export function format(
+   const decimalsSeparator = (
+     new Intl.NumberFormat(locale)
+       .formatToParts(.1)
+-      .find(v => v.type === "decimal")?.value ?? "."
++      .find((v) => v.type === "decimal")?.value ?? "."
+   );
+ 
+-  const wholeString = whole.toLocaleString(locale, {
++  const roundsToZero = whole === 0n && (fraction === null || /^0+$/.test(fraction));
++
++  const wholeString = formatSign(
++    dnum,
++    roundsToZero,
++    signDisplay,
++  ) + BigInt(whole).toLocaleString(locale, {
+     notation: compact ? "compact" : "standard",
+   });
+ 
+   return fraction === null
+-      // check if the compact notation has been applied
++      // check if a compact notation has been applied
+       || !/\d/.test(wholeString.at(-1) as string) // “as string” is safe because whole.toLocaleString() always returns a non-empty string
+     ? wholeString
+     : `${wholeString}${decimalsSeparator}${fraction}`;
+ }
++
++export function formatSign(
++  dnum: Dnum,
++  roundsToZero: boolean,
++  signDisplay: SignDisplay,
++): "-" | "+" | "" {
++  if (signDisplay === "auto") {
++    return dnum[0] >= 0n ? "" : "-";
++  }
++  if (signDisplay === "always") {
++    return dnum[0] >= 0n ? "+" : "-";
++  }
++  if (signDisplay === "exceptZero") {
++    return roundsToZero ? "" : (dnum[0] >= 0n ? "+" : "-");
++  }
++  if (signDisplay === "negative") {
++    return dnum[0] >= 0n || roundsToZero ? "" : "-";
++  }
++  return "";
++}
+diff --git a/src/operations.ts b/src/operations.ts
+index f21ece2..e0f7d4c 100644
+--- a/src/operations.ts
++++ b/src/operations.ts
+@@ -51,7 +51,7 @@ export function divide(
+   decimals?: Decimals,
+ ): Dnum {
+   const [num1_, num2_] = normalizePairAndDecimals(num1, num2, decimals);
+-  if (num2_[0] === BigInt(0)) {
++  if (num2_[0] === 0n) {
+     throw new Error("dnum: division by zero");
+   }
+   const value1 = setValueDecimals(num1_[0], Math.max(num1_[1], decimals ?? 0));
+@@ -96,10 +96,10 @@ export function lessThan(num1: Numberish, num2: Numberish): boolean {
+ 
+ export function abs(num: Numberish, decimals?: Decimals): Dnum {
+   const [valueIn, decimalsIn] = from(num);
+-  if (decimals === undefined) { decimals = decimalsIn; }
++  if (decimals === undefined) decimals = decimalsIn;
+ 
+   let valueAbs = valueIn;
+-  if (valueAbs < BigInt(0)) {
++  if (valueAbs < 0n) {
+     valueAbs = -valueAbs;
+   }
+ 
+@@ -108,12 +108,12 @@ export function abs(num: Numberish, decimals?: Decimals): Dnum {
+ 
+ export function floor(num: Numberish, decimals?: Decimals): Dnum {
+   const [valueIn, decimalsIn] = from(num);
+-  if (decimals === undefined) { decimals = decimalsIn; }
++  if (decimals === undefined) decimals = decimalsIn;
+ 
+   let whole = BigInt(String(valueIn).slice(0, -decimalsIn));
+   const fraction = BigInt(String(valueIn).slice(-decimalsIn));
+-  if (whole < BigInt(0) && fraction > BigInt(0)) {
+-    whole -= BigInt(1);
++  if (whole < 0n && fraction > 0n) {
++    whole -= 1n;
+   }
+   const numFloored: Dnum = [
+     BigInt(String(whole) + "0".repeat(decimalsIn)),
+@@ -124,7 +124,7 @@ export function floor(num: Numberish, decimals?: Decimals): Dnum {
+ }
+ 
+ export function ceil(num: Numberish, decimals?: Decimals): Dnum {
+-  const minus1: Dnum = [BigInt(-1), 0];
++  const minus1: Dnum = [-1n, 0];
+   return multiply(floor(multiply(num, minus1)), minus1, decimals);
+ }
+ 
+diff --git a/src/utils.ts b/src/utils.ts
+index 24149b5..a6e1ef7 100644
+--- a/src/utils.ts
++++ b/src/utils.ts
+@@ -1,6 +1,6 @@
+ export function divideAndRound(dividend: bigint, divisor: bigint) {
+-  const invertSign = BigInt(dividend < BigInt(0) ? -1 : 1);
+-  return (dividend * invertSign + divisor / BigInt(2)) / divisor * invertSign;
++  const invertSign = dividend < 0n ? -1n : 1n;
++  return (dividend * invertSign + divisor / 2n) / divisor * invertSign;
+ }
+ 
+ export function splitNumber(number: string) {
+@@ -37,5 +37,5 @@ export function floorToPower(value: bigint, power: bigint) {
+ }
+ 
+ export function abs(value: bigint) {
+-  return value < BigInt(0) ? -value : value;
++  return value < 0n ? -value : value;
+ }
+diff --git a/test/all.test.ts b/test/all.test.ts
+index 5d459aa..829f3ec 100644
+--- a/test/all.test.ts
++++ b/test/all.test.ts
+@@ -24,6 +24,7 @@ import {
+   toParts,
+ } from "../src";
+ import { setValueDecimals } from "../src/dnum";
++import { formatSign } from "../src/formatting";
+ import { divideAndRound } from "../src/utils";
+ 
+ describe("isDnum()", () => {
+@@ -388,7 +389,10 @@ describe("format()", () => {
+   it("works with greater digits than decimals", () => {
+     expect(format([123400n, 2], 3)).toBe("1,234");
+   });
+-  it("works with negative values and smaller digits than decimals", () => {
++  it("works with negative numbers when the whole value is zero", () => {
++    expect(format([-123456n, 6], 2)).toBe("-0.12");
++  });
++  it("works with negative numbers and smaller digits than decimals", () => {
+     expect(format([-123400n, 4], 2)).toBe("-12.34");
+   });
+   it("works with very large numbers", () => {
+@@ -449,6 +453,60 @@ describe("format()", () => {
+       decimalsRounding: "ROUND_DOWN",
+     })).toBe("4,569.8");
+   });
++  it("handles options.signDisplay", () => {
++    expect(format([123n, 4], { signDisplay: "auto" })).toBe("0.0123");
++    expect(format([123n, 4], { signDisplay: "always" })).toBe("+0.0123");
++    expect(format([123n, 4], { signDisplay: "exceptZero" })).toBe("+0.0123");
++    expect(format([123n, 4], { signDisplay: "negative" })).toBe("0.0123");
++    expect(format([123n, 4], { signDisplay: "never" })).toBe("0.0123");
++
++    expect(format([-123n, 4], { signDisplay: "auto" })).toBe("-0.0123");
++    expect(format([-123n, 4], { signDisplay: "always" })).toBe("-0.0123");
++    expect(format([-123n, 4], { signDisplay: "exceptZero" })).toBe("-0.0123");
++    expect(format([-123n, 4], { signDisplay: "negative" })).toBe("-0.0123");
++    expect(format([-123n, 4], { signDisplay: "never" })).toBe("0.0123");
++
++    expect(format([0n, 4], { signDisplay: "auto" })).toBe("0");
++    expect(format([0n, 4], { signDisplay: "always" })).toBe("+0");
++    expect(format([0n, 4], { signDisplay: "exceptZero" })).toBe("0");
++    expect(format([0n, 4], { signDisplay: "negative" })).toBe("0");
++    expect(format([0n, 4], { signDisplay: "never" })).toBe("0");
++
++    expect(
++      format([123n, 4], { signDisplay: "exceptZero", digits: 0 }),
++    ).toBe("0");
++    expect(
++      format([123n, 4], { signDisplay: "exceptZero", digits: 2 }),
++    ).toBe("+0.01");
++    expect(
++      format([-123n, 4], { signDisplay: "exceptZero", digits: 0 }),
++    ).toBe("0");
++    expect(
++      format([-123n, 4], { signDisplay: "exceptZero", digits: 2 }),
++    ).toBe("-0.01");
++  });
++});
++
++describe("formatSign()", () => {
++  it("works", () => {
++    expect(formatSign([0n, 2], true, "auto")).toBe("");
++    expect(formatSign([0n, 2], true, "always")).toBe("+");
++    expect(formatSign([0n, 2], true, "exceptZero")).toBe("");
++    expect(formatSign([0n, 2], true, "negative")).toBe("");
++    expect(formatSign([0n, 2], true, "never")).toBe("");
++
++    expect(formatSign([1n, 2], false, "auto")).toBe("");
++    expect(formatSign([1n, 2], false, "always")).toBe("+");
++    expect(formatSign([1n, 2], false, "exceptZero")).toBe("+");
++    expect(formatSign([1n, 2], false, "negative")).toBe("");
++    expect(formatSign([1n, 2], false, "never")).toBe("");
++
++    expect(formatSign([-1n, 2], false, "auto")).toBe("-");
++    expect(formatSign([-1n, 2], false, "always")).toBe("-");
++    expect(formatSign([-1n, 2], false, "exceptZero")).toBe("-");
++    expect(formatSign([-1n, 2], false, "negative")).toBe("-");
++    expect(formatSign([-1n, 2], false, "never")).toBe("");
++  });
+ });
+ 
+ describe("toParts()", () => {
+@@ -457,26 +515,26 @@ describe("toParts()", () => {
+     expect(toParts([123456n, 2], 1)).toEqual([1234n, "6"]);
+     expect(toParts([123456n, 0], 0)).toEqual([123456n, null]);
+     expect(toParts([123400n, 2], 2)).toEqual([1234n, null]);
+-    expect(toParts([-123400n, 2], 2)).toEqual([-1234n, null]);
++    expect(toParts([-123400n, 2], 2)).toEqual([1234n, null]);
+   });
+   it("works with greater digits than decimals", () => {
+     expect(toParts([123400n, 2], 3)).toEqual([1234n, null]);
+   });
+   it("works with negative values and smaller digits than decimals", () => {
+-    expect(toParts([-123400n, 4], 2)).toEqual([-12n, "34"]);
++    expect(toParts([-123400n, 4], 2)).toEqual([12n, "34"]);
+   });
+   it("works with very large numbers", () => {
+     expect(toParts(
+       [-123400932870192873098321798321798731298713298n, 4],
+       { digits: 2, trailingZeros: true },
+     )).toEqual(
+-      [-12340093287019287309832179832179873129871n, "33"],
++      [12340093287019287309832179832179873129871n, "33"],
+     );
+     expect(toParts(
+       [-123400932870192873098321798321798731298713298n, 4],
+       { digits: 8, trailingZeros: true },
+     )).toEqual(
+-      [-12340093287019287309832179832179873129871n, "32980000"],
++      [12340093287019287309832179832179873129871n, "32980000"],
+     );
+   });
+   it("handles trailing zeros", () => {
+@@ -490,22 +548,27 @@ describe("toParts()", () => {
+     expect(toParts(
+       from(5, 4),
+       { digits: 4, trailingZeros: true },
+-    )).toEqual([
+-      5n,
+-      "0000",
+-    ]);
++    )).toEqual(
++      [5n, "0000"],
++    );
+ 
+     expect(
+       toParts([0n, 0], { digits: 2, trailingZeros: true }),
+-    ).toEqual([0n, "00"]);
++    ).toEqual(
++      [0n, "00"],
++    );
+ 
+     expect(
+       toParts([5n, 0], { digits: 2, trailingZeros: true }),
+-    ).toEqual([5n, "00"]);
++    ).toEqual(
++      [5n, "00"],
++    );
+ 
+     expect(
+       toParts([500n, 2], { digits: 8, trailingZeros: true }),
+-    ).toEqual([5n, "00000000"]);
++    ).toEqual(
++      [5n, "00000000"],
++    );
+   });
+   it("rounds decimals properly", () => {
+     expect(toParts([49999999n, 9], 1)).toEqual([0n, null]);
+@@ -548,6 +611,10 @@ describe("toParts()", () => {
+     expect(toParts([49998805n, 9], 8)).toEqual([0n, "04999881"]);
+     expect(toParts([49998805n, 9], 9)).toEqual([0n, "049998805"]);
+ 
++    // negative numbers
++    expect(toParts([-123456n, 4], 2)).toEqual([12n, "35"]);
++    expect(toParts([-123456n, 6], 2)).toEqual([0n, "12"]);
++
+     // decimals for 1-7 digits, rounding half (default)
+     [null, "05", "05", "05", "05", "049999", "0499988"].forEach(
+       (decimals, index) => {

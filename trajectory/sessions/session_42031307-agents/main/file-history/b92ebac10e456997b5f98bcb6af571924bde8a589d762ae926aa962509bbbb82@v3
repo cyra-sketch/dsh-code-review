@@ -1,0 +1,223 @@
+import { execFile } from 'node:child_process'
+import { randomUUID } from 'node:crypto'
+import { promisify } from 'node:util'
+import type { Context } from '@deepseek-ai/cordis'
+import type { Agent } from '@deepseek-ai/dsh-agent'
+import { createUserMessage } from '@deepseek-ai/dsh-llm'
+import type { ObjectJsonSchema, PreToolDecision, ToolExecution } from '@deepseek-ai/dsh-tools'
+import { GateEpisodeStore } from './gate-episode.js'
+import type { GateEpisode, GateFinding } from './gate-episode.js'
+import { JuryRunner } from './jury.js'
+import type { JuryConfig } from './types.js'
+
+const execFileAsync = promisify(execFile)
+
+const acceptanceSchema: ObjectJsonSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['checks'],
+  properties: {
+    checks: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['id', 'status', 'reason'],
+        properties: {
+          id: { type: 'string' },
+          status: { type: 'string', enum: ['fixed', 'open'] },
+          reason: { type: 'string' },
+        },
+      },
+    },
+  },
+}
+
+interface AcceptanceCheck {
+  id: string
+  status: 'fixed' | 'open'
+  reason: string
+}
+
+async function git(args: string[], signal: AbortSignal): Promise<string> {
+  const { stdout } = await execFileAsync('git', args, { cwd: process.cwd(), signal, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 })
+  return stdout.trim()
+}
+
+async function gateBase(signal: AbortSignal): Promise<{ base?: string; baseSha: string; root: string }> {
+  const root = await git(['rev-parse', '--show-toplevel'], signal)
+  try {
+    const base = await git(['rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{upstream}'], signal)
+    const baseSha = await git(['rev-parse', base], signal)
+    return { base, baseSha, root }
+  } catch {
+    const baseSha = await git(['rev-parse', 'HEAD'], signal)
+    return { baseSha, root }
+  }
+}
+
+function gitPushCommand(arguments_: unknown): boolean {
+  if (!arguments_ || typeof arguments_ !== 'object') return false
+  const command = (arguments_ as { command?: unknown }).command
+  if (typeof command !== 'string') return false
+  return /(?:^|[;&|]\s*)\s*(?:\w+=\S+\s+)*git(?:\s+(?:-C\s+\S+|-c\s+\S+|--git-dir(?:=\S+|\s+\S+)|--work-tree(?:=\S+|\s+\S+)))*\s+push(?:\s|$)/.test(command)
+}
+
+function openFindings(episode: GateEpisode): GateFinding[] {
+  return episode.findings.filter(finding => finding.status === 'open')
+}
+
+function feedback(episode: GateEpisode, mode: 'discovery' | 'verification', human: boolean): string {
+  const open = openFindings(episode)
+  return JSON.stringify({
+    kind: human ? 'jury_gate_human_required' : 'jury_gate_blocked',
+    episodeId: episode.episodeId,
+    baseSha: episode.baseSha,
+    round: episode.round,
+    mode,
+    remaining: open.length,
+    message: human ? '请人工裁决' : mode === 'discovery' ? '发现模式：请修复冻结的 findings 后重试' : '验收模式：仍有未清零 findings',
+    findings: open.map(finding => ({
+      id: finding.id,
+      file: finding.file,
+      line: finding.line,
+      severity: finding.severity,
+      title: finding.title,
+      fix: finding.fix,
+    })),
+  }, null, 2)
+}
+
+function isAcceptanceOutput(value: unknown): value is { checks: AcceptanceCheck[] } {
+  return !!value && typeof value === 'object' && Array.isArray((value as { checks?: unknown }).checks)
+    && (value as { checks: AcceptanceCheck[] }).checks.every(check => typeof check.id === 'string'
+      && (check.status === 'fixed' || check.status === 'open') && typeof check.reason === 'string')
+}
+
+async function acceptDiff(
+  ctx: Context,
+  config: JuryConfig,
+  parent: Agent,
+  episode: GateEpisode,
+  diff: string,
+  signal: AbortSignal,
+): Promise<AcceptanceCheck[]> {
+  const frozen = episode.findings.map(({ id, file, line, title, fix }) => ({ id, file, line, title, fix }))
+  const prompt = `You are a lightweight acceptance agent, not a reviewer. Compare the new diff only with the frozen finding set F. For every id in F, decide fixed when the new diff resolves that exact issue and open otherwise. Return every id once with a short reason. Do not report new problems, do not add findings, do not use tools, and do not return prose outside the structured result.\nFrozen F:\n${JSON.stringify(frozen, null, 2)}\nNew diff:\n${diff}`
+  const activation = await ctx.subagents.startActivation({
+    provider: 'spawn',
+    label: `jury-acceptance-${episode.round + 1}`,
+    request: {
+      prompt: [{ type: 'text', text: prompt }],
+      parent,
+      outputSchema: acceptanceSchema,
+      agentOptions: { maxTokens: config.agentMaxTokens },
+      maxDepth: 1,
+    },
+    signal,
+    delivery: 'caller',
+  })
+  const result = await activation.result
+  if (result.stopReason !== 'completed' || !isAcceptanceOutput(result.structured)) {
+    throw new Error(`acceptance failed: ${result.stopReason}`)
+  }
+  const known = new Set(episode.findings.map(finding => finding.id))
+  return result.structured.checks.filter(check => known.has(check.id))
+}
+
+export function registerGate(ctx: Context, config: JuryConfig, runner: JuryRunner): void {
+  if (config.gateMode === 'off') return
+  ctx.on('tools/pre-execute', async (exec: ToolExecution, next: () => Promise<PreToolDecision>) => {
+    if ((exec.name !== 'bash' && exec.name !== 'pwsh') || !gitPushCommand(exec.arguments) || !exec.agent) return next()
+    const parent = exec.agent
+    const settle = (text: string, code: string): PreToolDecision | Promise<PreToolDecision> => {
+      if (config.gateMode === 'report') {
+        parent.inject(createUserMessage({ content: [{ type: 'text', text }], source: { kind: 'tool', callId: exec.callId } }))
+        return next()
+      }
+      return { kind: 'deny', reason: text, info: { name: 'JuryGate', code } }
+    }
+    const { base, baseSha, root } = await gateBase(exec.signal)
+    const store = new GateEpisodeStore(root)
+    const headSha = await git(['rev-parse', 'HEAD'], exec.signal)
+    let episode = await store.load(baseSha)
+    if (episode?.status === 'accepted' && episode.headSha === headSha) return next()
+    if (episode?.status === 'accepted') episode.status = 'active'
+    if (episode?.status === 'human') return settle(feedback(episode, 'verification', true), 'HUMAN_REVIEW_REQUIRED')
+
+    if (!episode) {
+      episode = { episodeId: randomUUID(), baseSha, headSha, round: 1, subagentCalls: 0, status: 'active', findings: [] }
+      try {
+        const result = await runner.run({ tier: 'auto', gate: true, ...base ? { base } : {} }, { parent, signal: exec.signal, cwd: process.cwd() })
+        episode.subagentCalls = result.subagentCalls
+        episode.findings = result.findings
+          .filter(finding => !finding.pre_existing && finding.severity !== 'nit')
+          .map(finding => ({
+            id: finding.id,
+            file: finding.file,
+            line: finding.line,
+            severity: finding.severity,
+            title: finding.title,
+            fix: finding.detail,
+            status: 'open',
+          }))
+      } catch {
+        episode.status = 'human'
+        await store.save(episode)
+        return settle(feedback(episode, 'discovery', true), 'REVIEW_FAILED')
+      }
+      if (!openFindings(episode).length) {
+        episode.status = 'accepted'
+        episode.headSha = headSha
+        await store.save(episode)
+        return next()
+      }
+      if (episode.round >= config.maxRounds || episode.subagentCalls >= config.maxSubagentsPerEpisode) {
+        episode.status = 'human'
+        await store.save(episode)
+        return settle(feedback(episode, 'discovery', true), 'BUDGET_EXHAUSTED')
+      }
+      await store.save(episode)
+      return settle(feedback(episode, 'discovery', false), 'IMPORTANT_FINDINGS')
+    }
+
+    if (episode.round >= config.maxRounds || episode.subagentCalls >= config.maxSubagentsPerEpisode) {
+      episode.status = 'human'
+      await store.save(episode)
+      return settle(feedback(episode, 'verification', true), 'BUDGET_EXHAUSTED')
+    }
+
+    try {
+      const diff = await git(['diff', base ? `${base}...HEAD` : 'HEAD'], exec.signal)
+      const checks = await acceptDiff(ctx, config, parent, episode, diff, exec.signal)
+      episode.round += 1
+      episode.subagentCalls += 1
+      const byId = new Map(checks.map(check => [check.id, check]))
+      for (const finding of episode.findings) {
+        const check = byId.get(finding.id)
+        finding.status = check?.status === 'fixed' ? 'fixed' : 'open'
+      }
+      episode.headSha = headSha
+    } catch {
+      episode.round += 1
+      episode.subagentCalls += 1
+      episode.status = 'human'
+      await store.save(episode)
+      return settle(feedback(episode, 'verification', true), 'ACCEPTANCE_FAILED')
+    }
+
+    if (!openFindings(episode).length) {
+      episode.status = 'accepted'
+      episode.headSha = headSha
+      await store.save(episode)
+      return next()
+    }
+    if (episode.round >= config.maxRounds || episode.subagentCalls >= config.maxSubagentsPerEpisode) {
+      episode.status = 'human'
+      await store.save(episode)
+      return settle(feedback(episode, 'verification', true), 'BUDGET_EXHAUSTED')
+    }
+    await store.save(episode)
+    return settle(feedback(episode, 'verification', false), 'IMPORTANT_FINDINGS')
+  })
+}

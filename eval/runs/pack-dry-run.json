@@ -1,0 +1,71 @@
+[
+  {
+    "id": "dsh-jury@0.1.0",
+    "name": "dsh-jury",
+    "version": "0.1.0",
+    "size": 8767,
+    "unpackedSize": 26300,
+    "shasum": "655312dd19228c8317e7cc06c3a6805f9a4237f5",
+    "integrity": "sha512-GzHeB8jLgH4e7ebJYfcmkcY9bU+t8gdXcHh2WFUQ988hMWvc9CwHOBtekmPi12o5PcrPPlHABSHmQLIuEK8y1g==",
+    "filename": "dsh-jury-0.1.0.tgz",
+    "files": [
+      {
+        "path": "README.md",
+        "size": 2996,
+        "mode": 420
+      },
+      {
+        "path": "cordis.patch.yml",
+        "size": 46,
+        "mode": 420
+      },
+      {
+        "path": "lib/index.d.ts",
+        "size": 379,
+        "mode": 420
+      },
+      {
+        "path": "lib/index.js",
+        "size": 4797,
+        "mode": 420
+      },
+      {
+        "path": "lib/jury.d.ts",
+        "size": 355,
+        "mode": 420
+      },
+      {
+        "path": "lib/jury.js",
+        "size": 11457,
+        "mode": 420
+      },
+      {
+        "path": "lib/prompts.d.ts",
+        "size": 986,
+        "mode": 420
+      },
+      {
+        "path": "lib/prompts.js",
+        "size": 2649,
+        "mode": 420
+      },
+      {
+        "path": "lib/types.d.ts",
+        "size": 1413,
+        "mode": 420
+      },
+      {
+        "path": "lib/types.js",
+        "size": 11,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 1211,
+        "mode": 420
+      }
+    ],
+    "entryCount": 11,
+    "bundled": []
+  }
+]

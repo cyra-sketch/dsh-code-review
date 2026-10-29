@@ -1,0 +1,328 @@
+040822/dsh-codex-approval	2	dsh-codex-approval插件：仿照Codex的AI自动审批，规则+AI三级风险评估自动放行/拒绝，让dsh沙箱审批自动化
+1250589385/dsh-test-autofix	0	DSH 测试自动修复：给 agent 一个 run_tests 工具，跑测试并把结构化失败（文件/行号/断言）直接交给它修复。自动识别 pytest / jest / vitest / cargo / go / npm，Windows 中文断言不乱码，同一失败反复出现时自动停止。
+1283011852/dsh-plugin-research-charts-mode	0	DeepSeek Harness plugin: registers the research-charts-mode (调研与图表模式) agent preset - evidence-graded clinical and pipeline research that ends in auditable figures. Bundles three self-contained skills (high-confidence research, target/indication diligence, clinical landscape charts) and is installable as a .dshpreset.
+1473382/dsh-popper	1	DeepSeek Harness plugin (not MCP): a falsification-driven correction loop — explicit claims, deterministic gates, mutually exclusive hypotheses — that turns agent retry loops into auditable evidence for better development quality.
+1azybug/dsh-real-time-computer-use	3	A plugin used for the real-device evaluation in “On the Capability Boundaries of Turn-Based GUI Agents in Real-Time GUI Environments: A Human Perception–Action Perspective”
+863683348/dsh-plugin-education	0	Education toolkit for DeepSeek Harness agents: lesson-plan skeletons by grade band, quiz scaffolding and answer-key validation, analytic rubrics, Anki/markdown flashcards, and readability levels
+863683348/dsh-plugin-finance-data	6	Finance data toolkit for DeepSeek Harness agents: number/currency formatting (incl. Chinese wan/yi units), return & CAGR math, valuation and profitability ratios, PV/FV, risk metrics, and a data-quality checklist
+863683348/dsh-plugin-quality-hub	0	Independent ratings and security signals for the DSH plugin ecosystem - which plugins are actually worth installing?
+863683348/dsh-plugin-scorecard	0	DSH plugin health scorecard: quality & security audit, rankings and search across the dsh-plugin ecosystem.
+8b-is/deepsiper-enthea	0	Sovereign, agent-driven LLM evaluation harness forked from deepseek-harness (dsh) — Cordis plugin architecture, EntheAI backends, and multi-model benchmarking
+abworks-dev/dsh-plugin-lab	0	Workshop and lab for developing, testing, and maintaining DeepSeek Harness Cordis plugins.
+ACCSCI/dsh-plugins	0	Plugins for DeepSeek Harness (dsh): host + web-client plugin packages, dependency-free tests
+acosmi/dsh-session-supervisor	1	Durable, bounded lifecycle supervisor with scheduled evaluation for live DeepSeek Harness sessions (community plugin)
+acus9345/dsh-protect-tests	3	DeepSeek Harness plugin that blocks agent edits that weaken tests, such as .skip, deleted or watered-down assertions.
+AdamPlatin123/dsh-plugin-radar	1486	DSH Plugin Radar — open-source ecosystem radar for DeepSeek Harness plugins: continuous discovery (21k+ candidates), k8s runtime validation (13k+ tests), 15-min snapshots; the catalog is a generated artifact — 开源 DSH 插件生态雷达：持续发现 2.1 万+ 候选、k8s 运行级实测 1.3 万+、15 分钟快照；插件目录为自动生成的产物
+addxing/function-testing	1	面向各类 AI 编程代理的功能测试用例生成 Skill。它可以根据 PRD、Git 提交记录或用户故事生成功能测试用例，并输出 Excel 风格测试报告     A skill for generating functional test cases from PRDs, Git commits, or user stories, and exporting an Excel-style test report. Works with any AI coding agent
+agi-fans/oh-my-dsh	33	omdsh is the terminal client for DeepSeek Harness: a focused, keyboard-first DeepSeek coding agent built on its plugin architecture, with interaction quality inspired by oh-my-pi and the original Pi agent harness.
+akash-digitavision/dsh-serena	1	DeepSeek Harness bundle: Serena MCP integration - IDE-grade symbolic code intelligence (find/rename/edit symbols) for DSH agents, plus tool-usage hooks bridge
+Akimiya-z/codex-guard	132	Quality gate for AI/Codex-generated pull requests: blocks TODO leftovers, leaked secrets, sloppy commits and red CI before they reach main.
+alison-xx/deepseek-harness-flow	0	Visual workflows and multi-model evaluation for DeepSeek Harness
+aLIZELI/belief-merge	2	Provenance-retaining cross-session context merge for DeepSeek Harness — a confluence theorem with a counterexample, and a benchmark for it.
+All3nCN/dsh-qa-suite-N23	0	DSH quality suite plugin: automatic tsc --noEmit diagnostics (code_check tool) + multi-lens /code-review command. Merged absorption of dsh-code-check (BSD-3) and dsh-command-code-review (MIT).
+AngelosZou/dsh-multi-folder	11	Secondary working directories for a DeepSeek Harness project — edit a source repo, a test repo, and a docs repo side by side without leaving the primary workspace.
+Ansonfishing/dsh-model-manager	0	Manage local LLM inference servers in DSH: GPU registry, parameter profiles, VRAM validation, and tok/s benchmarks for llama.cpp, SGLang, and vLLM
+anweat/jev-websearch-eval	0	Independent offline evaluation of the Bocha Jev decision model in a web-search evidence pipeline (vs. rule baseline and Laya): tasks, metadata-only snapshots, LLM-draft labels, judge outputs, reports
+arch3rPro/dsh-skills	5	Generalized development-specification skills distilled from DeepSeek Harness's engineering conventions — defensive patterns, code conventions, testing tiers, prose standards, decision records, review and PR discipline.
+aryswisnu/dsh-eval-regression	1	
+Aurora-Lucas/dsh-chrome-browser	0	DeepSeek Harness plugin: a model-facing `chrome` tool that drives the installed Google Chrome over CDP — screenshots returned as images, DOM/text/eval, console & network diagnostics, real input events. Runs in the Host, so no per-call approval and no bash sandbox limits.
+B1lli/dsh-plugin-bench	1	Evidence-backed, type-aware quality scorecards for DeepSeek Harness plugins.
+bailong-Hakuryu/dsh-security-assurance	1	DeepSeek Harness 策略驱动的仓库安全评估插件，支持包生命周期评估、证据、发现、裁决、导出和 /security 指令。 | Policy-driven repository security assurance plugin for DeepSeek Harness with package lifecycle assessments, evidence, findings, verdicts, exports, and /security routing.
+BiBoyang/dsh-eval-harness	14	DSH 插件评测工具：YAML 用例驱动真实 agent 回归评测 + baseline 对比 PASS/WARN/FAIL 门禁｜Regression eval harness for DeepSeek Harness plugins
+bigfatdsh/dsh-wechat-media-turbo	1	DSH 插件：给 dsh-wechat-media 的微信聊天层 —— 鲸鱼娘·大肥鱼人设 + 接梗规则 + 精简工具集 + 短回复约定，含对照测评数据。
+Biogod2020/dsh-bing-search	1	DSH web search: DuckDuckGo first, locale-aware Bing fallback, quality scores so agents skip junk.
+boheastill/phone-eye	4	MCP server that lets an AI agent see and operate an Android device you own over adb, for app testing and automation. Vision plus UI-tree fusion, for any MCP client.
+boomzikazita/dsh-skill-authoring	0	DSH skill authoring toolkit: scaffold + 9-gate quality audit for skills
+boxiaolanya2008/dsh-internal-test-mode	0	DSH agent 预设：内部测试模式 —— 8 工具白名单 + 7 节思考机制提示词 + 请求参数注入
+builtin-pb/dsh-developer	7	The single plugin you need for DSH — build, test, diagnose, and maintain DeepSeek Harness plugins and core.
+bujue600-arch/dsh-testgen	2	Automated unit-test generation for DeepSeek Harness: /testgen command + generate_tests tool that scaffold, run, and fix unit tests until they pass.
+CAI-MH/dsh-quality-review	2	AI response quality review for DeepSeek Harness: audits each finished assistant turn with an independent reviewer model and steers the agent to fix unreasonable output (up to 2 review rounds).
+cat552/dsh-agent-quality-diagnosis	1	Actionable quality diagnostics for DSH agent sessions, with tool-call evidence and next-step recommendations.
+CatheadOwl/dsh-eval	0	Agent eval framework over dsh headless runs: case runner, session-trace assertions, and a scripted mock-LLM layer for plugin intent tests.
+CatheadOwl/dsh-extras	0	Out-of-tree plugin suite for deepseek-harness (dsh): markdown tooling, relates tables, review-evals dispatch.
+Cavan-Ou/hermes-dsh-collab	6	Battle-tested multi-agent collaboration playbook for DeepSeek Harness: model-tier routing, spec discipline, git single-writer rule — as an installable skill. 多 agent 管线里运行 DSH 的实战协作规范
+ChenChen913/dsh-security-doctor	0	One-click local security checkup button for the DeepSeek Harness (DSH) Web UI: read-only checks (!!js config, third-party plugins, credential file perms, instruction files), severity-graded report, plus AI-usable security-review & secure-development guides. / DSH 安全医生：一键本机安全体检插件
+chs-1108/dsh-purge	4	DeepSeek Harness 本机安全评测与提示词清洗插件：侧栏面板管理提示词分层、补丁、规则集与技能；带授权演练台。Local security-eval & prompt-cleaning plugin for DeepSeek Harness.
+chunfenxiazhi-collab/dsh-stability-audit	1	Scan installed dsh plugins and grade stability risk (hook surface, startup work, preflight, deps) with optional isolated install verification
+ciceroyang/dsh-plugin-starter	3	Scaffold a battle-tested DeepSeek Harness plugin (bundle, tool, skill, tests, CI) in one command
+Classicoke/cleverer-dsh	18	DSH execution-discipline plugin suite: 11 plugins + 6 skills, zero dependencies, 426 tests. 让 DeepSeek Harness 变聪明的插件套件。
+cocofhu/dsh-testsuite	2	testsuite of dsh plugins
+cofy-x/axern	65	Secure, reproducible sandboxes for AI agent evaluation, training, and data synthesis.
+Culeot/dsh-weixin-bridge	2	test
+cxkctrl24-lgtm/dsh-purge-021	2	dsh-purge fork (upstream YuJunZhiXue/dsh-purge) — DeepSeek Harness 破甲 + 网络安全红队评测插件，维护 dsh 0.2.1-rc.2。已并入上游 1.1.74–1.1.78，并追加宿主退出诊断、asar 重启兜底、注入正文覆盖修复、装配性能优化与可见性探针。未发布到 npm，从本仓库或 Releases 安装。
+cyanseek/dsh-tool-chaos	4	Deterministic fault injection and autonomous resilience tests for DeepSeek Harness tools
+DBinK/dbk-skills	3	面向代码质量、工程安全与人机权责边界的 Agent Skills 集合（涵盖协作守则、Git/PR 工作流、Python 与 Rust 门禁）。 | Agent Skills for code quality, human-in-the-loop safety, Git/PR workflows, and Python/Rust gates across any AI coding agent.
+DEVbyQIN/dsh-plugin-kit	3	DeepSeek Harness plugin authoring kit: a skill, a tested repository template, a scaffolder, a cross-host skill validator, a GitHub REST publisher and a pitfall library.
+Devin-AXIS/iPolloWork	7294	Enterprise-grade, local-first Agent Workbench for people and agent teams. A unified multi-engine workspace for Codex Harness, DeepSeek Harness, and OpenCode, with unified plugins and Skills, multi-agent projects and tasks, and editable code, documents, presentations, design, and video.
+DevRico003/dsh-verifier-gate	2	LLM-as-a-verifier plugin for DeepSeek Harness: end-of-turn quality gate, best-of-N selection and assessment tools (port of llm-as-a-verifier)
+dingchenhui0618-arch/dsh-compress-bench	0	Local mirrored A/B benchmark for DeepSeek Harness context compression: input tokens, turns, tool success, fact coverage, answer diff, JSON + SVG.
+dmsobtl/dsh-agent-eval	0	DSH 插件：Agent 能力评估框架 — 定义任务、跑 benchmark、评分、跟踪改进。
+dmsobtl/dsh-test-workbench	1	基于 DeepSeek Harness 的测试工作台 Profile —— 开箱即用的 QA Agent。
+dongsheng123132/dsh-benchmark	3	Deterministic revision-pinned benchmarks and regression evidence for DeepSeek Harness
+dqsjqian/AriaAgent	6	Industrial-grade C++23 Agent Tooling Framework GUI — provider-agnostic LLM agent with true SSE streaming (Continuo transport), tool registry, approval gate. Built on Aria (C++23 MVVM).
+dsh-plugin-evaluation/dsh-agent-observe	0	DSH plugin for agent observability and security evaluation
+dsh-plugin-evaluation/dsh-plugin-evaluation-standards	2	Open evaluation datasets, test cases, and metrics for DSH plugins.
+duyanta123/dsh-test-insight	0	
+Ed-Marcavage/awesome-security-agent-harnesses	36	AI agents for pentesting, code audit, fuzzing, vulnerability discovery, and reverse engineering: harnesses, sandboxes, security MCP servers, benchmarks, and evals.
+egnmosk/dsh-browser-bridge	3	DeepSeek Harness plugin + browser extension bridge: browser_* agent tools (navigate, click, type, screenshot, eval) over a localhost WebSocket — like Kimi WebBridge / Claude's browser extension.
+ElioChen240/dsh-prompt-studio	0	Prompt & Agent Preset Evolution Studio for DeepSeek Harness: Git-style versioning, diff timeline, golden test bench, and one-click regression evaluation.
+EternalNight996/agent-teams-pixel	1	DSH Pixel Team - a pixel cultivation hall for DeepSeek Harness multi-agent teams: durable members, dependency-aware tasks, quality gates and 15 realms. MIT, local-first.
+EternalNight996/dsh-pixel-team	1	DSH Pixel Team - a pixel cultivation hall for DeepSeek Harness multi-agent teams: durable members, dependency-aware tasks, quality gates and 15 realms. MIT, local-first.
+ethanrise/dsh-model-deploy	0	Inspect ONNX models and benchmark them with ONNX Runtime on the local machine or over SSH, with PASS/FAIL deployment gates. DSH plugin.
+EverMind-AI/SkillCorpus	693	Open-source infrastructure that turns scattered SKILL.md files into curated, retrieval-ready agent-skill corpora—with retrieval and evaluation tooling included.
+EvoMap/evolver-dsh-plugin	0	Evolver for DeepSeek Harness, by EvoMap: a harness that gets smarter the more you use it. Recalls a proven strategy before each prompt, grades it on evidence (checks run, edits kept, your next reply), and reports back to the EvoMap network so what works gets reused and what fails sinks.
+f0909172434/dsh-second-agent-kit	0	Tested macOS safeguards, memory isolation patches and offline document tools for DeepSeek Harness
+fangchenghao/dsh-web-search	1	Key-free web search for DeepSeek Harness: 8 engines fused with RRF, 34 vertical sources, page fetch ladder, Chinese relevance gating, research packs, and a replayable benchmark.
+fb0sh/dsh-pentester	79	基于 DeepSeek Harness 的多 Agent PTES 渗透测试编排插件，支持自动化侦察、漏洞分析、验证与报告，使用 Docker/Kali 隔离工具箱 | Multi-agent PTES penetration testing plugin for DeepSeek Harness with automated recon, vulnerability analysis, validation, reporting, and Docker/Kali toolbox
+feely0208/dsh-ai-output-trust	0	AI 输出信任边界：检查代码有没有直接执行 AI 输出（eval/shell/SQL/路径）。
+feely0208/dsh-cn-data-export	0	数据出境检查：查代码与配置里的境外数据出口、个人信息外发、缺安全评估说明。
+feely0208/dsh-industry-medical	0	医疗行业多出来的那几项，别等测评才发现
+feely0208/dsh-pipia	1	个人信息保护影响评估：查是否按个保法 55 条做了评估、56 条留存三年。
+fomalhaut1998/dsh-ai-research	0	AI research toolkit for DeepSeek Harness: model release radar, model benchmark & community report, AI news digest. 零依赖 Node，4 工具 + 3 技能。
+frederico-kluser/dsh-plugin-dev-agent-skill	0	Global agent skill: create, extend, secure, test and publish Cordis plugins for the DeepSeek Harness (DSH). Verified-by-measurement API surface (ctx.webServer, spawn(spec)), frontend levers, IPC, security, testing, packaging & publishing.
+full-aigc-plugins/image-factory-plugin	0	Plan, batch-generate, and evaluate images with approved spend and hash-verified receipts.
+Gan-lang/dsh-project-handbook	0	DeepSeek Harness plugin that generates a company-grade project handover and onboarding handbook from repository evidence.
+gavinc-cn/touchstone-dsh	1	Automated testing platform for DeepSeek Harness (dsh): case library, bug reports, per-project serial queue, dev board, built-in load testing.
+GooDAnDReaDY/dsh-context-lens	4	DSH plugin for AST context compression, test log filtering, and token budget guard
+GooDAnDReaDY/dsh-test-pilot	0	Bounded automatic test feedback plugin for DeepSeek Harness
+gxinxing/dsh-tool-test-runner	0	
+GYINT/infoseek	0	端到端内容智能采集与调研工作流：多源嗅探 → 四维评分门控 → 深度抓取 → 跨源矛盾检测 → 结构化报告 + 长期归档
+harde1/dsh-xcodebuild	2	Xcode build, test, archive, run and log streaming for DeepSeek Harness: build/test/clean/archive/run an iOS or macOS project, with a live filterable build log and simulator and USB device log channels. macOS only.
+Harzva/dsh-research-lab	0	DSH-native multi-runtime baseline, ablation, and reproducible evaluation control plane
+haveanote06/dsh-plugin-advisor	0	Plugin advisor for DeepSeek Harness: senses a need, checks installed plugins first, searches the dsh-plugin ecosystem with multi-signal quality scoring, and installs the best pick after confirmation.
+hccccc01333/dsh-eval	2	Agent evaluation platform for DeepSeek Harness: benchmark YAML, headless dsh orchestration, trace-based metrics, LLM judge, paired A/B, keyless replay, and cross-harness import.
+hetu-altas/hetu-hammurabi	1	hetu 系列「宪章编程」harness 模块。通过 dsh和opencode 的 Commands / Agents / Skills / Plugins 将研发流程固化为可自动执行的节点流水线：输入任务书路径或一句话需求，自动完成 任务书生成(按需) → 分析 → 编码 → 单元测试（硬门禁）→ 代码评审 → 研发日志 → 资产沉淀 → 钉钉通知。
+hlxstc-create/challenge-project-methodology	0	A battle-tested methodology for high-difficulty AI-agent projects: grading gates, evidence-driven verification & self-evolution. OpenClaw & DSH versions.
+Hope-Phenom/dsh-plugin-code-quality	0	DSH 插件：给 `/` 菜单加上 /simplify（不改行为的清理）与 /code-review（多角度找 bug + 独立验证，/review 为别名），适配 DSH 的工具、指令文件布局与 subagent 模型。｜A DSH plugin adding /simplify and /code-review (alias /review) to the `/` menu.
+hrhgit/dsh-test	0	
+huangdaxianer/dsh-dual-model-eval	2	Compare multiple coding models side by side in DeepSeek Harness with isolated Git worktrees, live traces, and adoptable results
+huhu23333/dsh-eval-guard	1	Evaluation guard for DSH: workspace-only filesystem, no network/subagents, wall-clock limits, and tank task installation.
+hululuzzzgululu/dsh-evals-promptfoo	0	This project connects Deepseek Harness and Promptfoo: it launches a real Agent through the official DSH TypeScript SDK, collects the final answers, tool calls, subagents, and execution state, and hands everything to Promptfoo for display and scoring.
+humditty/dsh-quality	0	Quality gate plugin for coding agents with automated tests, PASS/WARN/FAIL policies, and agent feedback.
+Hwayn-pixel/dsh-touchstone	0	璇曢噾鐭?路 dsh-touchstone: the missing evaluation half of DSH's self-evolution 鈥?same golden cases, run the current config vs a candidate prompt change, score with rule checks + an LLM judge, keep it only if it got better.
+hy-sde/dsh-session-intelligence	0	The session_health tool for DeepSeek Harness: per-session health intelligence (outcome classification, tool-health signals, prompt-quality heuristics, context pressure).
+hy-sde/dsh-tool-debug	0	The debug tool for DeepSeek Harness: a model-facing Debug Adapter Protocol tool with 28 operations (launch/attach, breakpoints, continue/step, evaluate, memory, terminate) + the dsh-dap capability seam.
+hyhmrright/brooks-lint	1550	Portable AI code quality reviews for Codex, Cursor, Copilot and other coding agents: six Agent Skills for architecture, technical debt, tests and remediation.
+iamaanahmad/everything-codex	3	The complete collection of OpenAI Codex skills, automations, multi-agent workflows, and prompts. 50+ production-ready skills, 100+ reusable prompts, background automations, and battle-tested patterns for AI-powered development.
+iiwish/dsh-testkit	2	Lifecycle conformance testing for DeepSeek Harness plugins
+Ikalus1988/MisakaNet	543	Re-debugging Solved Failures? No Way. 500+ Evidence-graded fix lessons, One MCP Call-->https://misakanet.org
+Inceptzws/software-design-test	0	DeepSeek Harness 插件：模拟真实用户做软件设计测试 / Simulate a real user to test software — personas, task cards, three input modes, screen evidence, zero input injection.
+initial-d/dsh-plugin-mlquant-benchmark	4	DeepSeek Harness tools for reproducing the ml-quant-trading protocol v1 benchmark.
+istarwyh/harbor-self-evolving	2	DeepSeek Harness plugin and Harbor template for reproducible Agent evaluation, self-evolution, and controlled promotion.
+jackchen13755/dsh-jev-lens	0	Jev quality bench for DeepSeek Harness: shadow-accounted dangerous-command judging, injection screening, canary A/B drills, optional gate mode.
+JayYuen666/dsh-quality-gate	0	
+jeffxuan/dsh-godot-game-studio	1	Seven bounded Godot 4 MCP tools for DeepSeek Harness: audit, test, simulate, validate, and release
+jiangzhengyuan777-tech/dsh-aitestcase	0	DeepSeek Harness 的 AI 测试设计插件：需求 -> 测试 PRD -> 测试点 -> 测试用例 -> 质检评审，自包含、无外部后端
+jigjoy-ai/baro	126	A CLI that turns a goal into a pull request - and a sandbox for testing concurrent AI coding agents on the Mozaik runtime.
+jingzhao-l/iterate-plugin	2	A quality command center for the DeepSeek Harness (dsh) desktop client: run the iterate review/fix loop natively, follow its convergence dashboard and triage panel live, enforce quality gates, and carry forward what earlier iterations learned.
+jli658942-web/dsh-market-skill	1	DSH Market 全局 skill：教 Agent 发现、评估、安装 DeepSeek Harness 插件/技能。Global skill teaching agents to use DSH Market (dsh.market) to discover, evaluate and install DSH plugins and skills.
+JOJO-Adam/dsh-release	0	One-command release pipeline for DSH plugins: check, bump, test, push, publish, verify, install.
+jonah791/dsh-agent-evolve	1	跨代自评估进化插件：配置仓库（版本化资源+锚点链）、热重载（.agent-presets 运行时应用/回滚）、子智能体白纸继承配置跑 modeltest 评测、账本（分数/轨迹/失败模式）。受益主体为宿主 agent 本体。
+jonah791/dsh-agent-self-test	0	自我检验闭环插件：把「猜想→检验→学习」自指引擎做成运行时机制——可证伪自我假设库 + 工具管线自动采证（4 探针含 5.9 probe-before-action 行动前探测传感器）+ finding 浮现裁决，实现惊奇最小化的主动自我实
+jonah791/dsh-blue-team	0	蓝队防御插件：资产发现/漏洞评估/威胁检测/日志取证/加固基线（8 工具，ATT&CK 能力地图）
+jukanntenn/grill-me-sleek	5	Stress-test your plan before vibe coding. The AI asks you questions to build a shared understanding — you answer in a sleek web UI.
+junhongchashui/dsh-plugin-web-access	0	纯本地的 DSH 按需网页访问插件：web_fetch 命令行抓取 + 无头浏览器（open/snapshot/eval/screenshot）双通道，免费、无需 API Key | Local-first web access plugin for DeepSeek Harness
+jwilson411/dsh-plugin-kit	0	A minimal, tested template for DeepSeek Harness plugins.
+KannaKuron/dsh-ide-git	16	DSH plugin: an IDE-grade Git tool window as a native dsh-better-sidebar tab — branch tree, commit graph, changes, commit details, JetBrains-style actions, in the right sidebar and the bottom panel. | DSH 插件:IDE 级 Git 工具窗口,以 dsh-better-sidebar 原生 Tab 挂载——分支树 / 提交图谱 / 变更与提交详情 / JetBrains 风格操作,右侧栏与底部面板双布局自适应。
+KDB-Wind/dsh-minimal-anchored	7	DeepSeek Harness preset: first round uses the official Minimal tools, then unlocks full Standard. 复现 Project2 评测中更高分的 We/Let's 思维链（Minimal 99/96 vs Standard 91/92），改善 Windows 上 DeepSeek V4 Pro 的 Let me 现象。
+keerzzz/dsh-account-switcher	2	DeepSeek Harness 运维级多账号管理与高可用平滑切换插件 (DevOps & SRE-grade Account Switcher)
+KirschBluteX/engineer-software	5	Evidence-driven engineering workflows for Codex and DeepSeek Harness, backed by deterministic routing and behavior evaluations.
+kiterunner1/dsh-plugin-audit	0	Agent Skill for DeepSeek Harness (DSH)：装第三方插件前的静态安全审计 —— 扫出 eval、patch 层 !!js、安装期脚本、开机自启、凭据复制、出网域名与提示词注入面。Audit third-party DSH plugins before installing. Works with DSH, Claude Code, Codex, Cursor & any Agent Skills compatible agent.
+kittimzhe/dsh-session-eval	0	Retrospective evaluation for DeepSeek Harness agent sessions: deterministic grade cards + cross-session regression diffs over persisted logs — no benchmarks, no LLM judges
+knowz-io/deepseek-knowzcode-plugin	0	KnowzCode TDD / quality-gate workflow for DeepSeek Harness. No MCP. Publisher: Knowz AI.
+kolawong/dsh-plugin-toolkit	1	DeepSeek Harness personal toolkit: runtime-toggleable quality-of-life optimizations, each shipped as one card in the Toolkit settings page.
+kovey/dsh-engineering-suite	0	Engineering suite for DeepSeek Harness: seven plugins covering roles, specifications, test design, quality gates, evidence, audit trail and pipeline orchestration
+Leeaoyin/dr-agent-skills	3	Structured, reusable skill modules for AI coding agents — covering engineering workflows, reliability evaluation, and production readiness.
+leechen298/Code2Skill	10	Generate Function, MCP, Agent Skill, and offline test packages from existing code; installable as a DeepSeek Harness bundle.
+LeeKai233/dsh-whale-picks	0	🐳 鲸选 dsh-whale-picks — 敢装，值得装：有品味的 DeepSeek Harness 插件精品商店（创始人亲测 + 安全体检 + 四维评分）
+LeifDai/MACKORN-hydraulic-cone-crusher	2	mining industry vertical-domain MACKORN cone crusher plugin: MACKORN NH/NS hydraulic cone crushers, comparable to Sandvik CH/CS and Metso HP/MP. Cone crusher selection and crushing-plant design. 22 tools, 6 skills, MCP server, no runtime dependencies, good quality, reliable, partner for sustainable development.
+lemonxiny55/dsh-code-index	10	Local code intelligence for DSH: task-aware source context packs with relationships, changes, likely tests, and hard budgets.
+lemonxiny55/dsh-lint-loop	3	The change-aware quality loop for DeepSeek Harness. Fix what the agent broke. Ignore what was already broken. Prove the change is clean.
+Leo-Ayh-Oday/motion-pro-max	1	Design-aware motion engineering for coding agents. 动效，是时间的排版。26-scene dispatch, engine routing, quality gates, independent review.
+LeoGoat2004/dsh-eval-harness	0	Diagnostic evaluation plugin for the DeepSeek Harness: confirmed harness/model/benchmark gates, hermetic traced episodes, and a standalone HTML report that attributes every failure to model, harness, benchmark, or environment.
+LeslieWylie/dsh-ops-kit	2	Evidence-driven memory, orchestration, benchmarks, and release workflows for DeepSeek Harness.
+Lhy723/dsh-self-evolution	3	Benchmark-driven self-evolution for DeepSeek Harness · 冻结基准上的 Agent Profile 自我进化：评测 → 候选 → 严格接受/回滚
+libiwolve/dsh-experience-library	1	dsh-experience-library: 更有经验的 DeepSeek - 经验验证固化层(实时采集/加工/三层检验/技能书/benchmark验证)
+lijx122/dsh-plugin-auth-guard	1	Enterprise-grade Zero-Trust Authentication, LAN/Public Access Control & Security Gate Plugin for DeepSeek Harness (DSH)
+LiLiLi-Zi/dsh-gray-test	1	dsh gray-model detection plugin — launch N concurrent sessions, stream reasoning chains, auto-classify gray models (I'm+ing > Let me×5), normal models (Let me≥3), and abnormal models (no features). Supports standard/PTC/minimal/cordis presets.
+linux-tools/ojgen	0	Multi-platform OJ test data generator: generate problem test data for Luogu / HDOJ / POJ / ZOJ / Nowcoder / LeetCode using CYaRon
+lishinho/dsh-quality-lens	0	Quality and topic-coverage radar for every DeepSeek Harness answer: evidence-backed reports plus copy-ready prompt fixes. Observational, local-first, optional Jev review.
+litefuse/dsh-litefuse-plugin	0	DeepSeek Harness Litefuse Plugin for Agent Observability and Evals
+liuhange789/data-asset-inspector	2	30 DSH plugins | data asset registration | gov data inspection | AML compliance | research provenance | BIM inventory | pipeline inspection | geo quality | GB/T 24356-2023 | zero hardcode | policyBasis | 538 tests
+liujianqiao701/dsh-test-framework	0	面向测试工程师的 DSH 插件：把空文件夹一键变成「测试工作框架」骨架，并在 AI 会话里带上框架约束 —— 需求文档拆模块 / 确认版本 / 跨文档关联 / 登记测试环境与账密。AI test-framework plugin for DeepSeek Harness.
+liulei237136/dsh-test-plugin	0	
+Lixiuxiu559/AgentForge	4	通用 agent 工作流与工程技能集，同时作为 Claude Code 插件与 DeepSeek Harness 插件分发。实施编排 + 三轴 diff 评审 + 复杂度审计 + 突变测试，零外部依赖。
+liyown/dshx	7	Build, test, and ship typed DeepSeek Harness plugins — framework, scaffolding, and a verified community Hub.
+lizhiyao/oh-my-knowledge	23	OMK — Evidence-backed evaluation and observability for prompts, RAG, skills, agents, and workflows. Native Codex, Claude Code, and DeepSeek Harness support.
+ljwzhaoxiaoniu/DLR	1	DLR (Decoupled Logic Representation) + Three-Level Semantic Modeling (TSM) — a data-source-level semantic-layer paradigm, its TypeScript service (LanceDB + Neo4j), the dsh integration, and two benchmark scenarios: BIRD mini-dev (500/500) and Cloud-OpsBench (JRA 752/754).
+lkdx0220/dsh-ai-code-quality	0	
+longmiaoo/dsh-native-browser	4	A production-grade, DSH-native browser runtime for DeepSeek Harness with visible human-agent collaboration.
+LouisCanBe/dsh-plugin-ollama-monitor	1	Ollama 监控与测评平台 · DeepSeek Harness (DSH) 插件组合包：agent 工具 + Web 设置页面板（npm: ollama-monitor）
+lpeixin/dsh-qualityforge	4	QualityForge is an enterprise-grade DeepSeek Harness QA plugin that automates systematic end-to-end testing and delivers P0–P3 severity-based, actionable reports and quality gates to help developers identify issues and prioritize fixes. QualityForge 是一个面向企业级项目的 DeepSeek Harness QA 插件，自动执行系统性端到端测试，并通过 P0–P3 严重度分级、可勾选的测试报告与质量门禁，帮助开发者快速识别问题并确定修复优先级。
+lucifer726/dsh-safe-updater	0	Guarded automatic updates for DeepSeek Harness with isolated profile smoke tests and rollback.
+LuminariSoftwares/stack-guardian	0	One command tells you why your local AI stack is slow or broken: unloaded Ollama models, VRAM held by something else, offline or relayed tailnet peers. Graded findings, typed fixes, MCP server.
+luomeii/dsh-review-squad	1	DeepSeek Harness 并行多角色代码评审插件：/review 派出安全/正确性/测试/风格四名只读评审员子代理（可各自指定模型与思考强度），汇总为结构化报告。
+LX2000WASD/dsh-plugin-manager-companion	7	Companion to the official DSH plugin manager: pre-install quality gate, environment diagnostics, marketplace, and upgrades.
+mario03690/dsh-validate	0	test
+masknull/dsh-model-tester	0	DSH 插件：在「模型」设置页一键测试模型可用性（可用性 / TPS / 首 token / 耗时）。 | DSH plugin: one-click model availability testing (available / TPS / first token / elapsed) in the Models settings page.
+Memory175/blender-mentor	0	Blender 全栈导师 AI Skill：教学、评分、资产验收、ESD/BIO   Blender Full-Stack Mentor AI Skill — teaching, grading, asset acceptance, ESD/BIO
+mengge237/dsh-pulse	0	本机脉象：压缩判级 / 四道机械闸 / 未提交改动，做成 DSH 统计条上的一格常驻读数，点一下按配置跑命令集并把报告落成 md+json ｜ Local pulse for DSH: compaction grade, four mechanical gates and uncommitted changes as one always-on readout in the stats dock; one click runs your command set and writes an md + json report
+Mengtiansoul/dsh-douyin-on-base	2	DSH 抖音插件：内容模块（star-browser 刷推荐流 / 视觉评估 / 互动）+ 社交模块（douyin-im 收发私信群聊，零浏览器）。设置面板分三页，保存即时生效。
+meto-ventus/dsh-ventus-search	1	🔍 Ventus 搜索 · DeepSeek Harness 多引擎搜索与正文抓取插件 — Bing/360/Bilibili 并发搜索、评分去重、正文抽取、总开关与测试按钮 / Multi-engine web search and fetch providers for DeepSeek Harness (Bing, 360, Bilibili) with scoring, dedup, readability extraction, master switch and test button.
+MicroHEROX/dsh-Kimi-WebBridge	3	Kimi WebBridge for DeepSeek Harness — a third-party dsh plugin bundle that turns the local Kimi WebBridge daemon into 15 native kimi_webbridge_* browser tools (navigate, click, fill, snapshot, screenshot, evaluate, network, upload, PDF).
+MicroMilo/upstream-radar	10	Always-on compatibility testing for DeepSeek Harness plugins: exact releases, isolated runners, and fixable upstream issues.
+mitao-su/dsh-playwright-cli	2	DeepSeek Harness (DSH) host plugin wrapping the Playwright CLI: install browsers, run tests, open the HTML report from the agent loop.
+MjxUpUp/Forge	2	AI development gate engine — structured quality gates for AI-generated code
+MkaliezZ/dsh-policy-test	0	Deterministic regression tests for DSH policy decisions, evaluated without invoking the protected tool body.
+MkaliezZ/dsh-test-normalizer	0	Structured test-result normalization for DSH: pytest, Vitest, Jest, and Cargo summaries into a stable shape.
+Mo3ter/dsh-model-latency-test	0	DSH plugin: adds a 模型测试 (Model Test) settings page that measures first-token latency (TTFT) for every configured model. Works in the DSH Web GUI and DSH Desktop.
+Mreate/dsh-cc-import	3	Import high-quality conversations into Claude Code and provide CLAUDE.md recognition, add basic features like the "/init" command, and help speed up migration progress | 高质量导入Claude Code中的对话，并提供CLAUDE.md识别，添加"/init"命令等基础功能，帮助快速迁移进度
+Muredsa/dsh-benchup	0	Install with npm i dsh-benchup. Reproducible, profile-aware benchmarks for DeepSeek Harness — compare models, plugins, prompts, and agent strategies.
+Mutton-hub/adatile-mcp	0	AdaTile-MCP: high-resolution image adaptive tiling MCP server for DeepSeek vision model (deepseek-v4-flash-vision-exp). L1-L6 pipeline (fastpath, saliency, adaptive tiling, Files API assembly, streaming VLM, rule-based merge) + eval harness. Setup: clone, run setup.bat, add your agent MCP config -> see README.
+muyangplus/dsh-oi-workbench	2	OI 出题工作台：知识点锁定、数据构造、本地评测，打包 Hydro/HOJ 原生题目包，发布/管理 Hydro 与 HOJ OJ。Opt-in skill-first plugin for DeepSeek Harness.
+myc0576/SmartMoney-Cub	27	Read-only trading journal and review harness: Jev typed judgments, agent integration, and a reproducible finance benchmark. No orders, no advice.
+naodeng/dsh-qa	32	dsh-qa · QA Workbench — A local software testing workbench plugin for DeepSeek Harness. Zero-dependency test project & iteration management with AI-assisted requirements, test cases, defects, milestones, reports, kanban and calendar.
+nightwhale-dev/nightwhale	1	The community power-layer for DeepSeek Harness (dsh). 夜鲲 — 吞并生态好能力,评测集筛选,只喂真正有效的增强。
+NMTZ-z/system-one-benchmark-lab	1	
+nuaaweixinye/dsh-gme-test-generator	0	GME Test Generator workflow tools for DeepSeek Harness (dsh): pick interfaces, generate and repair tests through a local Python backend, poll progress, and decide with consent.
+Nzssm1/dsh-strategy-deployment-review	1	DSH agent preset for rigorous strategy live-deployment testing/evaluation. Retest.
+oliverkim5017/dsh-oliver-qol	0	Personal quality-of-life features for the DeepSeek Harness
+omdsh-dev/dsh-accessibility	1	DSH accessibility companion, core remediation, test tooling, assistive-technology evidence, and accessible authoring.
+omdsh-dev/dsh-plugin-skills	14	Agent skills for building and testing DeepSeek Harness plugins — from scaffolding a new plugin package to choosing the right test tiers, entirely inside an agent session.
+openguardrails/openguardrails	60	The vendor-neutral protocol for AI agent safety & security — and the neutral benchmark that ranks the vendors.
+Opr4Mp3r/deepseek-harness-plugin-from-scratch	1	Code-audited, progressive guide to production-grade DeepSeek Harness plugins
+Paraso42/dsh-bioinfo	0	生信模式 (Bioinformatics Mode) — research-grade protein structure & interaction agent preset for DeepSeek Harness: AF2-Multimer, ESMFold, AutoDock Vina, MM-GBSA/MD, structure QA, virtual screening.
+Pegasus-Yang/DSH-Test-Plugin	2	在 DeepSeek Harness（DSH）的当前对话 中完成测试规划、UI/API 操作、证据采集、确定性断言和报告生成的插件。
+pengkodam/dsh-lab	0	Production-grade DeepSeek Harness plugin laboratory, featuring read-only Git worktree intelligence.
+PerryLink/dsh-budget	10	Cost governance for DeepSeek Harness: token/cost metering per model, session and day, budget caps with threshold alerts and over-limit policies, carbon footprint estimation, per-model latency benchmarks, a Settings budget tab, and the /budget command. Maintenance status: FROZEN since 2026-10-05.
+PerryLink/dsh-data-quality	54	DeepSeek Harness plugin: deterministic data profiling, cleaning, and verification (dsh-data-quality)
+PerryLink/dsh-doublecheck	59	Double-check before you ship: grill the requirements, test the implementation, prove the delivery. An engineering-discipline bundle for DeepSeek Harness.
+PerryLink/dsh-github	28	Official-grade GitHub CI for DeepSeek Harness: composite action.yml, PR review bot with idempotent inline comments and a status-check gate, plus PR/issues tools with every write gated by human approval (Apache-2.0, dsh-plugin).
+PerryLink/dsh-mask	14	PII masking middleware for DeepSeek Harness: anonymize names, phones, emails, ID cards, bank cards, keys, and addresses to placeholders before they reach the model, restore them at the display layer, keep the restore table only in memory and a controlled storage domain, never log plaintext, and expose /mask and the mask_test tool
+PerryLink/dsh-plugin-certification	0	Community certification spec and registry for DeepSeek Harness plugins: five machine-checkable dimensions, A-D grades, and a security veto.
+PerryLink/dsh-score	13	Multi-dimensional quality scoring for DeepSeek Harness plugins: scores a repo or npm package across install success (consuming dsh-test-drive results), maintenance activity, documentation completeness, security scan, and protocol compliance — every conclusion backed by real CLI evidence with audit timestamps.
+PerryLink/dsh-test-drive	13	Isolated install-and-smoke test drives for DeepSeek Harness plugins: installs a repo or npm package into a throwaway DSH_HOME profile, verifies the bundle patch layer and boot logs, records a structured pass/fail result matrix (JSON/Markdown) for scoring pipelines, and quarantines every temp directory it owns
+peterwangze/software-project-governance	2	AI coding delivery trust layer for evidence-backed planning, review, risk, quality, and release control.
+plyflai/dsh-ux-plus	22	UX enhancements and quality-of-life plugins that make DeepSeek Harness easier to handle.
+poplarity/dsh-science-workbench	11	A reproducible science workbench plugin for the DeepSeek Harness: agent-driven cells, inline figures with feedback/rerun, manifest provenance, and environment snapshots. 9 bio_* tools + workbench UI + publication-grade figure skills.
+Psynosaur/dsh-token-gobbler	0	Benchmark any model, whilst using DSH
+Pugto-AI/yue-token-cost	0	Measure what Chinese/Cantonese actually costs in tokens - and why. MCP server: cross-script comparison, per-token attribution, reproducible benchmark.
+Punky971210/dsh-punky-swarm	3	Engine-enforced guardrails for DeepSeek Harness agent swarms: quality gates reject half-done work, crash-safe checkpoints resume in place — keeps AI teams from breaking, not just running.
+Q00/ouroboros	6286	Agent OS: the agent gets smarter on its own. We just hold the line: Interview-gated, staged evaluation, budgeted evolution loop. MCP server, 14 runtimes: Claude Code, Codex CLI, Gemini CLI, OpenCode, Copilot, Kiro and more.
+qomob/dsh	1	Home of dsh-plugin-hub: discover, evaluate, and install DeepSeek Harness (dsh) community plugins from inside dsh — plugin_search / plugin_info / plugin_install / plugin_remove tools, supply-chain trust tiers, and a Web Plugins marketplace tab. Also powers dsh.qomob.ai: a Chinese 0-to-1 Wiki and a daily-updated dsh plugin directory
+qq247505/DeepSeek-VisionPlus	1	DeepSeek VisionPlus — official-grade vision extension for DeepSeek Harness. Routes image understanding to a free vision-model pool (Zhipu GLM, SiliconFlow Qwen) with automatic fallback, rate limiting, one-click platform tests and live status lines; text stays on DeepSeek. One-command install. MIT.
+que3sui/dsh-darwin	1	DeepSeek Harness (dsh) 双插件自进化架构：dsh-sentinel 机械挖掘会话日志生成问题工单 + dsh-forge 分级合成/评测门/确定性回滚 | Two-plugin self-evolution for DSH: hindsight mining, gated synthesis, deterministic rollback (verified in simulation lab)
+r600a-code/dsh-swarm-router	3	DSH plugin: sub-agent matrix swarm — routes heterogeneous tasks to the most suitable model (OpenRouter-like + cfgpu.com/llm/square), dispatches each via in-process subagents. 32/32 benchmark green.
+Rainnnnnnny/lumina-dsh	0	Photoshop automation for DeepSeek Harness: grading recipes, layered HDR, multi-zone masks, quality-first super-resolution
+RavenWangChina/yuanzhu	1	Meta-Forge Workshop: turn recurring work into governed AI workflow assets. MCP server + Claude Code plugin + dsh plugin — staged writes, evals-gated forging, inference engine. 元铸工坊 SOSOFAST：把最佳实践铸成可治理的 AI 工作流资产
+renjianguojinqianfan/dsh-skill-eval	2	DSH 插件：用 LLM judge 评测技能 description 的触发准确率（欠触发/过触发）
+rogerdigital/dsh-vet	2	Security vetting for DeepSeek Harness (DSH) plugins: permission & supply-chain audits before install, graded via the open dsh-vet/v1 report standard.
+rootkiller6788/dsh-plugin-anything	4	An agent-native compilation & verification pipeline that converts software capabilities such as CLI, APIs, and local services into installable, testable, verifiable DeepSeek Harness plugins.
+ruby1304/dsh-public-plugins	0	Public, reusable DeepSeek Harness plugins and skills: workflow canvas toolkit, blind eval harness, LLM cost lab, incident ledger.
+runcat-tommy/dsh-windows-c-cleanup	2	DSH plugin: scan, grade and clean up Windows C: drive - five-tier safety grading, staging area, UAC elevation, and migration.
+Sculptor815/scrna-seq-workbench	1	One plugin, six agent skills for guided single-cell RNA-seq analysis in Codex, Claude Code, and DeepSeek Harness. And one benchmark for evaluating agent performance on scRNA-seq data analysis .
+SeaOf0/dsh-redteam-model	771	基于dsh web实现的多种模式，目的是服务于redteam进行授权的安全研究，覆盖渗透测试、红队评估、代码审计等范围领域，请勿用于非法行为。（允许二开，赋予模块各位自己的业务逻辑，方法论只有自己熟练的才好用，好的方法论=好的生态）
+seed-forge/harness-ai-kit	25	Package manager for AI agent assets — 42 skills, 5 CLIs, 1 plugin. Skills for AI/LLM agent engineering, eval-driven dev, spec-driven dev, database (MySQL/PG/Redis/Kafka/Mongo/Oracle/NL2SQL), K8s/Docker diagnostics, infra ops (Dify/Nexus/Harbor/SonarQube) & docs/patent. Runtimes: Codex, Claude Code, Cursor, Kiro, DSH.
+shao-01-test/dsh-chat-rail	0	dsh-chat-rail — DeepSeek Harness 聊天右侧导航拉条插件：按「提问→回答」轮次显示彩色节点（绿/黄/红/蓝表状态），点击即跳转对应提问与回答段落，悬停展开状态面板，刚回答完有闪光动画，关键词自动提炼成短句。一个拉条，快速定位整场对话。
+Shaw529/dsh-token-saver	7	DeepSeek Harness plugin: aggressive token savings, no task-quality loss
+ShawnSiao/dsh-agent-eval	0	Planned repeatable agent and plugin regression evaluation for DeepSeek Harness
+ShenXuAkaEkstasis/dsh-ai-shopping-assistant	0	AI Shopping Assistant plugin for DeepSeek Harness (DSH), with product comparison, price analysis, merchant/review evidence and source-quality checks.
+Shiyuedong-Jade/DM-recovery	1	达梦 DM8 数据库可恢复能力评估插件。按 16 个恢复场景逐项对照「要求 vs 本库实际」，回答能恢复到哪一点、要丢什么，生成 HTML 报告。
+Shiyuedong-Jade/DM-security	1	达梦 DM8 数据库只读安全评估插件：13 个域 60 项检查（53 项库内 + 7 项主机侧 OS/SSH），六态结论不评分，等保 2.0（GB/T 22239-2019）控制点对照（2/3/4 级可选），输出单文件 HTML 报告。
+shizhanyu13/dsh-waom	0	@shizhanyu13/dsh-waom — DSH plugin: autonomous-ops (WAOM). Monitor / decide / drive a subagent fix / evaluate independently (GAN). dsh-plugin.
+Shonean/deepseek-harness-vscode-desktop	0	Enhanced VS Code extension + Desktop app for DeepSeek Harness (DSH): inline diff, @mentions, selection context, approval UI, plan mode, global shortcut. Claude Code-grade experience. Unofficial community project.
+shuguang1994/project-blueprint	23	Make any project AI-agent-ready in one command. Adaptive tech stack detection (7 languages × 14 frameworks × 61 components), auto-generates AGENTS.md, docs skeleton, CI/CD, and testing infrastructure. 一句话让任何项目具备 AI 开发能力。
+SingleMelon/dsh-balance-panel	0	test
+slywalker2006/dsh-passwords	79	Server-grade gateway that turns DeepSeek Harness into a multi-tenant platform: remote access + auto HTTPS, subuser permissions & quotas, sandbox enforcement, encrypted auth, audit log.
+snhna-a/dsh-reactor	1	Event-Condition-Action (ECA) automation plugin for DeepSeek Harness: turns your agent into a proactive watchdog with polling/push event sources, condition evaluation, and composable actions.
+snow-The/dsh-browser	0	Browser interaction for DeepSeek Harness: drive local Chrome/Edge via playwright-core (CDP). Open, snapshot, click, type, scroll, evaluate, screenshot. Real browser, local-only.
+snow-The/dsh-research-lab	0	Research lab toolkit for DeepSeek Harness: AutoSci wiki, ASI-Bench eval ledger, self-building FTS5 retrieval, arXiv digest/review, writing rewrite
+SolidiFact/dsh-session-list-cache	0	Retired: a controlled benchmark found no measurable gain. See the README.
+songrui111/dsh-agent-bench	1	Regression benchmark for DSH agents: run fixed cases in isolated sandboxes and diff two runs.
+stas130286-blip/dsh-brainagent	6	BrainAgent — brain-inspired plugin for DeepSeek Harness (dsh): a pipeline of heuristic filters, statistical memory stores and context injections; reward-ledger + UCB1 bandit learning loop (RL-lite). 915 tests. Free noncommercial use.
+StudioPlatforms/aistupidlevel-sdk	0	Official SDKs for the AI Stupid Level Smart Router (benchmark-driven LLM router) and Data API: TypeScript, Python, Vercel AI SDK provider, MCP server, LangChain, n8n.
+suimi8/dsh-test-runner	2	DSH plugin: structured test runner tool (test_run) — auto-detect vitest/jest/pytest/node:test, run tests, parse failure summaries for the model.
+sunshine-lang/dsh-plugin-template	6	Ready-to-publish DeepSeek Harness plugin skeleton: bundle format, tool DSL, config, tests, and a scaffold script
+sunxin-ai/dsh-design-qa	44	Design-fidelity QA for DeepSeek Harness: lend any text-only model an eye, then judge whether the implementation matches the mock. Ships the benchmark behind that judgement — four fixtures, 23 injected defects, and every raw model transcript. Retires itself when DeepSeek ships vision.
+superclaude1/dsh-vision-android	3	DeepSeek Harness plugin: multimodal vision (OpenAI-compatible) + Android adb UI automation for real-tap mobile app testing
+superfly/sprites-deepseek-plugin	6	DeepSeek Harness plugin for Fly.io Sprites: computers for agents. Sprites MCP tools and packaged workflow guidance for remote builds, tests, and long-running services.
+Sutera-Diffusus/dsh-sandbox-tester	5	DSH sandbox tester: process-isolated testing ground for DeepSeek Harness
+Sutera-Diffusus/dsh-windows-notify	1	Windows-grade notifications for DeepSeek Harness: system toasts, custom sounds, and a taskbar tray badge — a native DSH profile plugin (zero patching).
+suyukun/dsh-tech-selection	0	Stop letting your AI guess — a research protocol for tech decisions that any AI agent (DSH/Claude/Cursor/Codex) can follow: quantified requirements, T1-T6 source tiers, quality gates, traceable verdicts. 模型无关的技术选型调研协议。
+T-Markus-Liang/dsh-game-studio	1	DSH Game Studio: AI-native Game Development Runtime for DeepSeek Harness — 可安装/卸载/升级的游戏开发插件（/game 子命令、动态 Agent Pool、引擎适配器、Verifier + Quality Gate）
+TecFancy/dsh-deeptutor	7	Learning assistant extension for DeepSeek Harness (dsh): brings DeepTutor tutoring to your agent — deep explanations, self-test questions, learning paths, personal knowledge-base search (RAG), and note archiving. | 面向 DeepSeek Harness 的学习辅助扩展:为 agent 接入 DeepTutor 辅导能力 —— 深度讲解、自测题、学习路径规划、个人知识库检索(RAG)与笔记归档。
+TheHeartFickle/dsh-skill-creator	2	DSH Skill Creator：创建、评测、迭代改进 DSH skill 的 skill 与零依赖 CLI 工具 / A skill and zero-dependency CLI toolkit for creating, benchmarking, and iterating DSH skills.
+Tiger3807861189/GLM-5.3-Flash-J-Space-Capability-Realization-Report	1017	GLM-5.3-Flash × J-Space capability realization — benchmark presentation of the J-Space Cognition Suite
+tkwkeven/dsh-sim-restart	0	Simulated-restart testing for DeepSeek Harness plugins: verifies plugins survive restart (module eval → apply → smoke → dispose) in isolated subprocesses, with a resident auto-watcher and agent feedback loop
+tomandpotato/dsh-chess-board	0	在 DSH（DeepSeek Harness）右侧边栏里下国际象棋：完整规则、八档内置对手、lichess 云端评估 / 复盘 / 战术题，中英双语。· A chess tab for DeepSeek Harness: full rules, built-in opponent, lichess eval, review and puzzles.
+trapstreet/dsh-trapstreet	1	Check which DeepSeek Harness plugins actually loaded, and look up public evaluation boards on trapstreet.run
+try-works/dsh-browser-agent	1	DeepSeek Harness bundle: a Chrome browser for agents (browser_goto / browser_evaluate / browser_screenshot tools) with a live two-way pane inside the DSH Web GUI. The browser engine is a fork of zenbu-labs/terminal-browser with the React Ink terminal UI replaced by a DSH tool surface and web pane.
+TT-Wang/dsh-eval-infra	1	Paired A/B evaluation infrastructure for DeepSeek Harness (dsh) components: interleaved repeated runs through the real runtime, verifier self-checks, one-variable arms, regression gating, cache- and calendar-aware cost, CLI + web UI
+TYEclipse/dsh-musictheory	1	Music theory math toolbox for DeepSeek Harness (dsh): note parsing, frequency/MIDI conversion, correctly spelled chords (26 qualities) and scales (17 types) — zero runtime dependencies
+uckkk/dsh-api-testgen	0	接口测试生成：解析 OpenAPI 3.x，生成覆盖成功/缺参/非法枚举的 pytest/vitest 接口测试骨架
+uckkk/dsh-sleep-score	0	睡眠评估
+uckkk/dsh-test-coverage	0	测试覆盖率分析：解析 LCOV/Cobertura/Istanbul/Go 覆盖率报告，输出结构化覆盖数据与未覆盖行区间
+uluckystar/dsh-plugin-market	3	DSH 插件市场：在设置页浏览 mydsh.dev 插件大全（5596 候选 / 3656 有效），分类/AI 搜索、一键安装启用停用卸载、安全评估与自动重启。非官方社区 mydsh.dev 出品
+umairrrkhan/dsh-novel-quality-analyzer	2	Novel analyzer for DeepSeek Harness that checks vocabulary diversity, clichés, and repetition locally.
+umerkhalid204/dsh-career-ops	0	career-ops job-search agent as a DeepSeek Harness plugin: A-H evaluations with a 1-5 fit score, zero-token ATS scans, CV tailoring, applications tracker, and a Career Ops panel.
+Unclecheng-li/DeepSec	498	DeepSec — AI Security Offense & Defense Platform. Shield audits AI-generated code for hallucinated packages, missing safeguards & AI pattern errors in real time. Spear automates authorized penetration testing with 40+ skill packs, from recon to PoC. 
+usssserd/my-dsh-plugin	0	DSH插件test
+victorzhong0110/dsh-code-reference	2	DeepSeek Harness (DSH) 代码参考检索与复用调查插件：开发前检索本地代码库与 GitHub/npm 开源项目，评估复用/改造/引入依赖/自制并询问用户，支持架构级复用。Code reference & reuse-survey plugin for DSH: search local code + GitHub/npm before building, evaluate reuse vs rewrite, ask the user, architecture-level reuse.
+Vithrive/dsh-livebench-panel	0	DSH web plugin: a LiveBench tab in the Trajectory view. Run LiveBench evaluations against every model configured in the DeepSeek Harness and read scores in place.
+Viy1204/recruiting-copilot	104	给 HR 和猎头的 AI 招聘工作流：岗位梳理、BOSS 直聘与猎聘双通道寻源初筛、人才盘点、简历评估、面试安排、候选台账与日报。支持 Claude Code、Codex、WorkBuddy 等工具及 DeepSeek Harness 插件，配有招聘进展看板；标准、台账与档案保存在自己的工作区。
+vlozg/dsh-autoresearch	0	Metric-driven autonomous experiment loop for DeepSeek Harness: the agent proposes, benchmarks, keeps or discards, and repeats, with a live dashboard sidebar. pi-autoresearch compatible.
+vostride/agent-qa	900	Open-source self-improving QA agent for software teams. A test harness with memory. Write tests in natural language for web and mobile. agent-qa learns from every run, adapts to UI changes, and catches regressions before you ship.
+Wang-Lin-Chang/dsh-vap	0	VAP - Verifiable Agent Protocol: a tested trust machine for agent-to-agent messages (zero third-party dependencies, 217 tests, full experiment ledger)
+wangdapeng325/dsh-oi-coach	0	信奥教练插件 for DeepSeek Harness：教练规则提示词 + 学习路线图/知识点/命题/C++ 真评测 + ima 知识库检索与 4 笔记本归档，面向 GESP、CSP-J/S、NOIP、NOI 教学
+wangdapeng325/dsh-oi-senior	0	信奥学长（oi-senior）DSH 插件：陪刷 + 三版 C++14 参考实现 + 解题说明，本地 g++ 真编译真评测，做题记录归档到 ima 笔记本「信奥学长-题解复盘」，面向 GESP、CSP-J/S、NOIP、NOI 教学
+wasteoneslife/scenes-skill-creator	0	DeepSeek Harness plugin: create spec-compliant skills from the Web UI (Huawei Cloud / generic / REST API), with a 10-point evaluation loop
+whaojie797-design/cn-brand-voice	1	Responsible Chinese brand-voice & content-quality editor Skill: specific, factual, on-brand. 中文品牌表达校准 Skill
+whaojie797-design/Novera-AI-agent	0	四智能体 AI 编程流水线提示词：需求规格官→编码官→重构官→架构守门官，钢铁笼子质量关卡（覆盖率/圈复杂度/变异得分）+ 失败路由表，让 AI 互相制衡、机器卡终局 | Four-agent AI coding pipeline prompts (Specifier→Coder→Refactorer→Architect) with steel-cage quality gates, mutation testing and failure routing.
+whaojie797-design/Novera-AI-pipeline	1	four-agent-pipeline agent skill: Specifier -> Coder -> Refactorer -> Architect. Turn a vague requirement into gate-verified code with Gherkin acceptance specs, steel-cage quality gates (coverage, complexity, duplication, mutation score), and automatic failure routing. Zero-dependency Python scaffolder included. MIT.
+whaojie797-design/Novera-AI-skills	2	8 款生产级 AI Agent Skill：持久记忆、代码安全评审、自然语言数据分析、调试复现、测试生成、IaC 安全扫描、性能诊断、文档生成 | 8 production-ready agent skills (memory, code-review security, NL data analysis, agentic debugger, testforge, iac-guard, perf-doctor, docsmith). Pure Python stdlib, zero dependencies.
+whaoran1018-cmd/dsh-plugin-weather	0	Global weather, multi-day forecast and air quality for DeepSeek Harness, Claude Code, Codex, Cursor and any MCP/shell agent - Open-Meteo, no API key.
+whyihaveyou/dsh-suite	64	The living DeepSeek Harness plugin directory — refreshed hourly, compat-tested daily, with an in-app plugin store and scaffolder. DSH 插件活目录：每小时刷新，每日兼容实测，内置插件商店与脚手架。
+Willmylife/dsh-model-connection-test	0	DeepSeek Harness plugin: connection tests for the models configured in Settings -> Models - one minimal chat round-trip per model with failure codes and latency.
+wjc300000000-beep/dsh-plugin-open-source-first	0	DSH plugin: injects an auditable open-source-first workflow (search -> three-tier evaluation -> build) into the system prompt at order 50.
+wly8691-jpg/dsh-office-com	6	Windows-native real-Office automation plugin (DSH). Contract, task-level, fault-injection and process-leak regressions covered; real-Office tests must be run on the target machine.
+Wonjader/dsh-permission-workspace-write-plus	0	deepseek harness中workspace write权限的增强插件。使用前请自行评估风险。
+wula1223/dsh-plugin-dev	1	DSH plugin/hook/skill development standard - a battle-tested playbook for DeepSeek Harness
+wulun811/LiuHe	1	LLM-native code toolkit: Rust multi-language parser (tree-sitter) + 44 MCP tools for atomic editing, impact analysis, reference tracing and deterministic zero-LLM code quality gates. Built for the handless, eyeless, memoryless LLM.
+WZZNNE/DSH-CyberWorkStation	24	DSH CyberWorkStation — one-click DeepSeek Harness (dsh) bundle: cyberpunk desktop launcher, SillyTavern-grade Control Deck, 8 production plugins, AI skin studio & markets. Vendored core rc.8, run setup.cmd and go. 一键部署的 dsh 赛博工作站整合包。
+xby-skill/xby-article	0	基于FastMCP框架开发的专业文献搜索工具，支持多源文献搜索、文献详情获取、参考文献管理、文献关系分析、期刊质量评估和批量结果导出等功能，适用于学术研究和AI助手集成。
+xby-skill/xby-chucknorris	0	ChuckNorris MCP服务器是一个通过动态模式适配为大型语言模型提供增强提示的工具，主要用于安全研究和评估。
+xby-skill/xby-mbit-test	0	一个用于MBTI人格测试的MCP服务器，支持AI助手引导用户完成人格测试并给出结果分析。
+Xiaooooo434680/dsh-tool-tdd	0	TDD test-runner tool plugin for DeepSeek Harness: run test commands, parse structured failures (Jest/Vitest/Pytest/Go/Rust/TAP/tsc), drive a red-green loop
+XiaoSong1223/dsh-release-guardian	0	Deterministic release-risk checks and quality gates for DeepSeek Harness
+xiaosu19/dsh-codex-mode	5	Codex, adaptive Codex PTC, and optional Codex Harness agent presets for DeepSeek Harness, with published benchmarks
+xienda/dsh-jev-verify	1	TypeSafe Jev (System One) for DeepSeek Harness: 7 tools (decide, choose, batch), a two-tier auto-guard with metered verdicts, a settings card, a money-first usage pill, a local ledger that survives restarts, a derived remaining balance, per-turn auto-triage, and a live 27-question benchmark (96.3%).
+xinchen03/minta	12	The context quality layer for AI agents — memory that checks itself: lifecycle governance, calibrated confidence, and   staged claim gates. Local-first, MCP 13 tools, DeepSeek Harness plugin.
+xxy0722/dsh-purge-deep	5	DeepSeek Harness 破甲深度分支：首尾夹击 + 生成层熔断 + 宿主源码级补丁。基于 YuJunZhiXue/dsh-purge (MIT) 改造，适配 dsh 桌面版 0.2.1-rc.3。仅供学习研究与红队评测。
+xylt369/dsh-browser	14	Browser capability for DeepSeek Harness: headed Edge/Playwright provider, SSRF-safe navigation, a11y-ref clicking, permission gate with auto-remember, gated evaluate
+xyrrrrr-r/dsh-eval-control	27	DSH 会话轨迹分析插件：上下文演化、团队协作图、工具错误证据链、智能告警、会话对比与导出，兼作 aeval 评测控制
+yanggaihao5-sys/dsh-sci-figures	1	DeepSeek Harness skill: publication-quality scientific figures - CJK vector output, colorblind-safe palette, SciencePlots styling
+yanqd0/dsh-covtrim	0	DSH plugin: one-shot test coverage flow — run tests with coverage, compress with covtrim, return compact TSV to the agent
+yanzhao77/deepseek_software	3	Autonomous software factory built on DeepSeek Harness — turn natural-language requirements into real, tested, buildable and deployable software.
+Yash-Kavaiya/dsh-cxas	0	DeepSeek Harness plugin exposing the CXAS SCRAPI (cxas) CLI as model-facing tools (apps, deployments, evals, traces, tools, pull/push, lint).
+yh01010/dsh-mcp-matlab	3	DSH plugin: bridge to the MATLAB MCP server (matlab-mcp-server-windows-x64). Registers mcp__matlab__* tools: evaluate code, run scripts and tests, inspect toolboxes.
+yijiezhong/dsh-testhud	1	On-screen progress HUD for automated tests in DeepSeek Harness (dsh): a click-through panel drawn over the app under test, plus the test_hud tool that drives it.
+yiqizhuapangxiema/harness-plugin-store-optimized	2	Harness 插件商店优化版：图形化浏览/搜索/一键安装 DSH 插件，评分评论、依赖拓扑、审计日志、质量门一应俱全；本 fork 新增可配置插件下载目录、bundle 层冲突检测、pnpm 自动寻路，并修复多项上游 bug
+Ylight-cpu/dsh-creative-studio	2	Portable AI image-retouching and video-editing skill pack for DeepSeek Harness: matting with quality tiers, inpainting retouch, text/logo compositing, batch platform exports, footage review, timeline editing.
+yu-xin-c/dsh-evolution-console	0	Offline evaluation and guarded self-evolution loop for DeepSeek Harness
+Yuer6327/ModelTester	2	模型测试器 ModelTester（前身 NoLetMe）
+yugejixian/vm-blackbox	2	Black-box GUI testing for DeepSeek Harness: an AI tester drives a real Windows VM with only screenshots and mouse/keyboard.
+yumimanji/dsh-ui-spec	2	DeepSeek Harness plugin: turn UI screenshots into structured, implementation-grade web frontend specs. Deterministic geometry (sharp) + optional vision-model semantics, merged into one JSON + Markdown spec.
+yuzuqiang/advanced-compact	0	Adaptive context compaction plugin for DeepSeek Harness — final 0.1.22 release, verification and headless benchmarks
+YZDame/dsh-suhuang-scroll	0	DSH Web plugin for Suhuang Scroll grading controls in Better Sidebar
+Z-Asset/ZA_data	0	ZA Research data stage — data discovery and quality assessment for asset pricing + ML/DL research.
+ZariaEcho/dsh-github-workflow	1	GitHub deep-workflow tools for DeepSeek Harness (DSH) agents: issue triage with 4-layer context, template-aware draft PRs, graded PR review, CI diagnosis and GraphQL merge — behind a fail-closed mutation guard (read-only / approval / token scopes).
+Zerozhao314/dsh-everything-wp	0	专为 WordPress 建站调试打造的 Skill 集合 · 包含 DeepSeek Harness (DSH) Plugin 开发 Skill + WordPress 插件开发 AI 工具包（5 Agents + 18 命令，规划→执行→审查→质量验证完整工作流） / WordPress site-building & debugging Skill collection — includes DeepSeek Harness (DSH) Plugin development Skill + WordPress Plugin AI Toolkit (5 Agents + 18 Commands with Plan→Execute→Review→Quality workflow)
+zetaluolang-cyber/deepseek-harness-phone-remote	10	DeepSeek Harness phone remote control via Tailscale - persistent file/workspace plugin - tested on OPPO Find X8 Ultra
+zhangyy0423/veripipe	1	An anti-false-positive verification pipeline for AI agents that test web/HTTP products.
+ZhaoZiyangShaanxi/dsh-test-guard	0	Test-aware code review, coverage gating, and LLM routing for DeepSeek Harness.
+zhengjy01/dsh-updater	0	Track DeepSeek Harness's own releases and update in one click: npm dist-tags + GitHub changelog, risk-graded, with an atomic-rename backup and automatic rollback
+zhengqiuyang/dsh-mcp-test	0	Tool-surface snapshot and drift gate for DeepSeek Harness — every visible tool (incl. MCP) baselined; silent surface changes fail loud
+ZhenMoon/browser-auto	0	Real-browser automation for DeepSeek Harness: 12 browser model tools (open/snapshot/click/type/press/navigate/screenshot/eval/wait/status/close/launch) over a zero-dependency CDP driver, structured page snapshots, trusted input for JS-managed forms, live screenshot panel in the DSH GUI, ephemeral privacy-safe profiles.
+zjhaaa042-cloud/dsh-dashboard	1	DeepSeek Harness sidebar dashboard plugin: task progress, downloads/extraction, training, tests, local+SSH GPU monitoring
+ZK-Andy/dsh-continual-evolve	24	Continual self-evolution plugin for DeepSeek Harness: versioned, auditable, rollback-safe harness state refined from session trajectories, with a benchmark-driven validation loop.
+ZXEB/dsh-purge	5	dsh-purge v1.1.71 完整源码镜像（原仓库 YuJunZhiXue/dsh-purge 与 npm 包均已删除）。DeepSeek Harness 破甲 / 红队评测插件，支持官方 web 与桌面宿主。

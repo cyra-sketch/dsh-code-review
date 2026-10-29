@@ -1,0 +1,7 @@
+session-d1c92a13-e362-4be8-862b-fe0e3ceaa399 {"inputTokens":2800,"outputTokens":2714,"cacheReadTokens":17152,"cacheWriteTokens":0,"totalTokens":22666}
+720c5f3e-09ef-436a-8526-06cae44bd5eb {"inputTokens":9558,"outputTokens":7633,"cacheReadTokens":22272,"cacheWriteTokens":0,"totalTokens":39463}
+325978f7-5e06-4aa7-8309-56fd567065b2 {"inputTokens":18754,"outputTokens":42980,"cacheReadTokens":312960,"cacheWriteTokens":0,"totalTokens":374694}
+917efe54-3752-441a-a69e-23335e19606b {"inputTokens":12376,"outputTokens":34530,"cacheReadTokens":94848,"cacheWriteTokens":0,"totalTokens":141754}
+24b35029-486c-4232-8630-4503f7a7b219 {"inputTokens":10603,"outputTokens":29404,"cacheReadTokens":28032,"cacheWriteTokens":0,"totalTokens":68039}
+7d3481ac-9724-47f9-98df-dfb0bf33cb11 {"inputTokens":31865,"outputTokens":10148,"cacheReadTokens":133376,"cacheWriteTokens":0,"totalTokens":175389}
+TOTAL {"inputTokens":85956,"outputTokens":127409,"cacheReadTokens":608640,"cacheWriteTokens":0,"totalTokens":822005}

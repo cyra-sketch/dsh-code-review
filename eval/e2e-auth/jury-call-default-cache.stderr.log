@@ -1,0 +1,304 @@
+dsh: startup failed: 2 required plugins did not activate
+
+Failed plugins (21):
+  typert
+    Package: @deepseek-ai/dsh-typert-registry
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-typert-registry/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-typert-registry/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  session-title
+    Package: @deepseek-ai/dsh-session-title
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-title/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-title/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  session-title-llm
+    Package: @deepseek-ai/dsh-session-title-first-prompt-llm
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-title/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-title/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  user-questions
+    Package: @deepseek-ai/dsh-user-questions
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-user-questions/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-user-questions/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  llm-retry
+    Package: @deepseek-ai/dsh-llm-retry
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-llm-retry/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-llm-retry/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  deepseek-account
+    Package: @deepseek-ai/dsh-deepseek-account-platform
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-deepseek-account-platform/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-deepseek-account-platform/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  session-query-sqlite
+    Package: @deepseek-ai/dsh-session-query-sqlite
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-title/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-title/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  session-projection-cache
+    Package: @deepseek-ai/dsh-session-projection-cache
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-projection-cache/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-projection-cache/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  sandbox-policy
+    Package: @deepseek-ai/dsh-sandbox-policy
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-sandbox-policy/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-sandbox-policy/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  permission
+    Package: @deepseek-ai/dsh-permission-presets
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-permission-presets/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-permission-presets/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  goal
+    Package: @deepseek-ai/dsh-goal
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-goal/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-goal/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  command-goal
+    Package: @deepseek-ai/dsh-command-goal
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-goal/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-goal/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  plan-mode
+    Package: @deepseek-ai/dsh-plan-mode
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-plan-mode/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-plan-mode/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  token-meter
+    Package: @deepseek-ai/dsh-token-meter
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-token-meter/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-token-meter/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  subagent
+    Package: @deepseek-ai/dsh-subagent
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-subagent/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-subagent/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  tool-subagent
+    Package: @deepseek-ai/dsh-tool-subagent
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-tool-subagent/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-tool-subagent/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  tool-subagent-fork
+    Package: @deepseek-ai/dsh-tool-subagent
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-tool-subagent/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-tool-subagent/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  tool-todo
+    Package: @deepseek-ai/dsh-tool-todo
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-tool-todo/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-tool-todo/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  tool-goal
+    Package: @deepseek-ai/dsh-tool-goal
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-goal/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-goal/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  agent-loop (required)
+    Package: @deepseek-ai/dsh-agent-loop
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-agent-loop/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-agent-loop/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+  headless-runner (required)
+    Package: @deepseek-ai/dsh-headless
+    failed to import: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-title/node_modules/zod/v4/classic/external.js' imported from /Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-session-title/node_modules/zod/index.js
+        at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+        at moduleResolve (node:internal/modules/esm/resolve:861:10)
+        at defaultResolve (node:internal/modules/esm/resolve:985:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+        at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1942:77
+        at adapted (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1855:80)
+        at file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1914:19
+        at ModuleLoader.wrapped [as resolve] (file:///Users/cyra/.npm/_npx/1e7f6d9597241db0/node_modules/@deepseek-ai/dsh-app-boot/lib/index.js:1944:71)
+        at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+
+Plugins waiting for services (23):
+  Plugin                     Missing services
+  typert-loader              typert
+  typert-gateway             typert
+  working-directory          fs
+  tool-working-directory     workingDirectory
+  bash-sandbox               sandboxPolicy
+  tool-bash                  shell, workingDirectory
+  tool-fs                    fs, workingDirectory
+  tool-fs-search             workingDirectory
+  agent-instructions         workingDirectory
+  tool-skill                 workingDirectory
+  goal-round-driver          goals
+  compaction-basic           tokenMeter
+  command-compact            compaction
+  subagent-spawn-in-process  subagents
+  subagent-fork-in-process   subagents
+  tool-subagent-control      subagents
+  tool-subagent-list-agents  subagents
+  ptc-runtime                fs, sandboxPolicy
+  workflow-ptc               subagents, ptcRuntime, sandboxPolicy, workingDirectory
+  tool-workflow              workflowEngine
+  tool-result-pruner         tokenMeter
+  fs-sandbox                 sandboxPolicy
+  jury                       subagents
+
+Full diagnostics: /Users/cyra/.dsh/logs/startup-2026-10-28T21-43-27.365Z-3641a74b-41d5-40c4-9d46-cbce6e0c3476.log

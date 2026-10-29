@@ -1,0 +1,47 @@
+{
+  "passed": 5,
+  "failed": 0,
+  "results": [
+    {
+      "name": "installed tarball composes the plugin into independent authenticated profile",
+      "pass": true,
+      "evidence": {
+        "profile": "jury-r4-e2e",
+        "artifact": "dsh-jury-0.1.0.tgz"
+      }
+    },
+    {
+      "name": "headless performs one real jury_run without recursion or pseudo clauses",
+      "pass": true,
+      "evidence": {
+        "calls": 1,
+        "result": "评审结果：0 项（consensus 0 / disputed 0 / solo 0；Important 0 / Nit 0 / Pre-existing 0；已过滤 0）\n评审档位：single（用户显式覆盖；风险评分 0；命中信号：无风险信号）\n报告边界：findings 与 intent 条款核对不等于对代码全部正确性的保证\n无需修改"
+      }
+    },
+    {
+      "name": "commit and push are separate ordered tool calls",
+      "pass": true,
+      "evidence": {
+        "commit": "git commit -m \"chore(cart): apply formatting update\"",
+        "push": "git push origin main"
+      }
+    },
+    {
+      "name": "block gate accepts exact pushed HEAD and bare remote matches",
+      "pass": true,
+      "evidence": {
+        "episodeHead": "fc3aaf80e5711fbcbdddf5149526797bac4261da",
+        "localHead": "fc3aaf80e5711fbcbdddf5149526797bac4261da",
+        "remoteHead": "fc3aaf80e5711fbcbdddf5149526797bac4261da",
+        "status": "accepted"
+      }
+    },
+    {
+      "name": "pushed commit contains only src/cart.ts",
+      "pass": true,
+      "evidence": {
+        "files": "src/cart.ts"
+      }
+    }
+  ]
+}

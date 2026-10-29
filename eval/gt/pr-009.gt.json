@@ -1,0 +1,19 @@
+{
+  "id": "pr-009",
+  "title": "dnum: compare() compares normalized Dnum arrays instead of their coefficients",
+  "source": {
+    "repository": "https://github.com/bpierre/dnum",
+    "bugIntroducedBy": "https://github.com/bpierre/dnum/commit/530a83a3dcd3da5ed54381bfb617b458706883c4",
+    "fixedBy": "https://github.com/bpierre/dnum/commit/6f5b048d49f7f88dcc8f46b3045d725d78689254"
+  },
+  "bugs": [
+    {
+      "id": "D1",
+      "category": "correctness",
+      "title": "compare() 直接对 normalizePairAndDecimals 返回的数组做关系比较，JS 会按字符串/字典序转换，导致不同精度的小数排序错误；修复提交改为比较 num1_[0] 与 num2_[0] 的系数。",
+      "file": "src/operations.ts",
+      "expect_evidence": "return num1_ > num2_ ? 1 : num1_ < num2_ ? -1 : 0；真实反例 [16000000000000n,18] 与 [1300000000000000n,18] 应返回 -1"
+    }
+  ],
+  "semanticHit": "finding 必须指出对 Dnum 数组整体比较导致字典序/隐式字符串转换错误，或指出应比较 BigInt 系数而非数组；仅泛泛讨论类型缺失不算命中。"
+}

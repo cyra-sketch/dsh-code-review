@@ -1,0 +1,12 @@
+node_modules/
+.npm-cache/
+lib/
+/.dsh/
+eval/install/bin/
+eval/**/work*/
+eval/**/*.tgz
+
+# embedded fixture repos
+eval/acceptance/command-normal-work/
+eval/runs/adverse-pr007-repo/
+eval/runs/adverse-pr008-repo/
