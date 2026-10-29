@@ -1,0 +1,37 @@
+
+> dsh-code-review@0.1.0 prepare
+> tsc -p tsconfig.json
+
+
+added 42 packages, and audited 43 packages in 13s
+
+1 package is looking for funding
+  run `npm fund` for details
+
+25 high severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> dsh-code-review@0.1.0 build
+> tsc -p tsconfig.json
+
+To /tmp/dsh-code-review-final-gBWzIu/eval/acceptance/high/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-final-gBWzIu/eval/acceptance/reopen/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-final-gBWzIu/eval/acceptance/human/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-final-gBWzIu/eval/acceptance/intent-missing/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-final-gBWzIu/eval/acceptance/intent-clean/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-final-gBWzIu/eval/acceptance/intent-negative/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-final-gBWzIu/eval/acceptance/low/work/origin.git
+ * [new branch]      main -> main
