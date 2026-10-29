@@ -7,7 +7,7 @@
 - `sessions/session_42031307-agents/`：主会话。`main/wire.jsonl` 为主 agent 全过程；`agent-*/wire.jsonl` 为各子代理（调研、评审团实验、coder 实现、面试官盲评）的独立轨迹
 - `sessions/session_1a7569a2-agents/`：中段关联会话（部分调研子代理）
 
-共 49 个事件流文件，约 28MB。角色分工：
+共 50 个事件流文件，约 28MB。角色分工：
 
 - `agent-0` ~ `agent-17`：方向调研（dsh 本体、插件生态、闭源 harness 功能、用户画像、白空间矩阵、Hermes 自进化等）
 - `agent-18` ~ `agent-36`：评审团机制验证实验（finder/voter  swarm）
