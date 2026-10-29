@@ -6,6 +6,10 @@
 
 包名 `dsh-code-review`，命令与工具沿用 `jury` 命名空间（`/jury`、`jury_run`、配置键 `jury`）。
 
+## 为什么做这个
+
+AI 写码越来越快，review 成了瓶颈：Anthropic 说 Claude 写了 Claude Code 约 90% 的代码，Manus 也把 AI 审核机器人称作“最划算的一笔支出”。方法论来自 Claude Code 团队的 review 经验帖。dsh 用户的代码本就由 agent 生成，所以评审必须嵌进执行回路：能拦 push、能带需求、能验收后才放行。
+
 ---
 
 ## 30 秒看懂：有它 vs 没它（全部来自真实运行记录）
@@ -13,7 +17,7 @@
 | 场景 | 没它（裸 dsh） | 有它 |
 |---|---|---|
 | agent 写完带雷代码就 `git push` | SQL 注入、浮点金额直接进入远端 | push 被 deny，agent 收到带 file:line 的 finding 并修复，验收通过才放行 |
-| 修复过程 | 每轮评审都冒出新问题，人机互卷（我们实测失控烧掉 **680 万 token**） | 首轮冻结 finding 集，之后**只验收、不新增**（同场景降到 **28.1 万 token，-95.9%**） |
+| 旧版评审团（无冻结） vs 新版（冻结+纯验收） | 旧版 quick 插件失控（不是裸 dsh）：**680 万 token** | 冻结后只验收、不新增：**28.1 万 token（-95.9%）** |
 | 需求里写了"审计必须含操作者 IP"，实现漏了 | diff-only 评审看不出来（baseline 实测漏检） | intent 条款逐条核对，`unmet` 即拦截；补上后才放行 |
 | 验收通过后 agent 又改了两行 | 没人知道 | exact-HEAD 绑定：新 HEAD 必须重新验收 |
 | 修不好 / 反复失败 | 无限循环 | 达到轮次/预算上限 → 确定性输出"请人工裁决"，push 保持阻断 |
@@ -51,7 +55,8 @@
 
 - **只想要"审得更准"**：R3 对照没有证明 single/standard 比 dsh 原生单审更强。本插件的价值在契约与闭环，不在召回优势
 - 大型真实 diff（>400 行）上 standard 出现过超时，深度档需要分块与预算策略
-- gate 只覆盖 bash/pwsh 工具回路里的 git 操作：直接操作远端 API、GUI、其他执行路径**不在防护边界内**
+- gate 已覆盖直接 git、cd/-C、常见串联，以及 bash/sh/zsh/pwsh -c、eval、env、nohup、sudo、time 的递归解包；无法安全解析的 push 包装会 fail-closed。**完整 shell 控制流、远端 API、GUI、其他执行路径仍不在防护边界内**
+- 发现/验收分离意味着**修复过程中引入的新问题不在冻结集内**。accepted 只表示冻结项清零且已提取 intent 条款无 unmet，不等于最终 diff 已完整重审；需要最终完整 discovery 时显式开启 `postAcceptReview`
 - 干净 DSH_HOME 登录流程未测；外部真实用户采用未验证（安装验证为本机模拟）
 
 ## 验证与复现
@@ -80,7 +85,7 @@ node eval/acceptance/assert.mjs                # 期望：20 passed / 0 failed
 node eval/acceptance/gate-command-assert.mjs   # 期望：21 passed / 0 failed
 ```
 
-`prepare.sh` 默认不覆盖已有工作区；只有显式 `bash eval/acceptance/prepare.sh --reset` 才重置。新断言输出写入被 gitignore 的 `eval/acceptance/.results/`，不会重写历史证据 `assert-results.json`。原始事件流在 `eval/runs/`、验收场景在 `eval/acceptance/`、预算账在 `eval/budget-*.md`——所有结论都可对照原始证据复核。
+`prepare.sh` 默认不覆盖已有工作区；只有显式 `bash eval/acceptance/prepare.sh --reset` 才重置。场景日志、usage、预算和新断言输出全部写入被 gitignore 的 `eval/acceptance/.results/`，不会重写历史证据 `assert-results.json`、历史场景日志或 `eval/budget-R4.md`。原始事件流在 `eval/runs/`、验收场景在 `eval/acceptance/`、预算账在 `eval/budget-*.md`——所有结论都可对照原始证据复核。
 
 ## 安装
 
@@ -125,13 +130,15 @@ npx @deepseek-ai/dsh@0.2.1-rc.2 --profile jury --json \
 - `tier`：`single | quick | standard | deep | auto`，默认 `auto`。single 为 1 个通用 fresh-context reviewer、无独立 voter；quick 为 2 finder + 1 voter；standard 为 4 finder + 1 voter；deep 为 4 finder + 2 个独立 voter。显式档位覆盖风险门控。
 - `intent`：可选需求摘要；finder 和 voter 会检查实现是否遗漏或偏离需求，而不仅是代码缺陷。gate 按 `gateIntent`、同一 agent 最近一次 jury_run intent、全局 `intent`、sessionQuery 读取的当前会话首条用户消息、`intentFile` 的顺序获取需求。显式 intent 始终优先；session 读取失败时回退到 `intentFile`。插件先确定性地拆出代码需求条款与稳定 ID，过滤 jury_run/git/报告交付等工作流指令；discovery 和验收均逐条记录 met/unmet/unknown。未提及的可选功能不视为需求偏离。
 
+`jury_human_approve` 用于显式人工放行，参数为 `episodeId` 和该 episode 等待人工时的完整 `headSha`。批准只绑定 exact HEAD，不调用模型；批准后若代码改变，必须重新人工裁决。也可以在台账中追加同一 episode 的 `approved` 快照作为人工批准记录。
+
 auto 使用确定性风险评分：低分不启动，中/高分默认 single；standard/deep 只在用户显式指定或 `gateTier` 强制时启用。信号包括高危路径、变更规模、文件数、外部调用、测试断言、并发事务和权限/加密标识。报告第二行始终说明评分、命中信号和最终档位。**只有低风险变更的评审模型成本接近零（none 时为 0）；中高危 single、显式深度档和修复循环仍有模型费用。**
 
 默认 single 的依据是 R3 物理隔离对照（EVAL-010）：三个样本上 baseline 全部命中，standard 没有超过 baseline，默认不为未显示增量的评审团支付多倍成本。single 是健康默认单审；quick 仅作较低成本轻审，standard/deep 定位为用户明确要求的深度审查。本机小 PR 实验中 single 常见约 $0.01–0.03，评审团通常数倍至十余倍，实际随 diff、推理和缓存波动，不能当作报价承诺。
 
 运行命令时应以目标仓库为当前目录。若仓库根存在 `REVIEW.md`，其内容会加入每个 finder 和 voter 的 prompt。finder 的共享 diff/规则位于相同 prompt 前缀；超过 800 行的 diff 按文件处理并过滤纯 import/格式 hunk。
 
-报告以计数开头，包含 `consensus / disputed / solo` 和 `Important / Nit / Pre-existing`，并逐条列出 intent 条款的 met/unmet/unknown 与理由。voter 判为 invalid 的候选被过滤；uncertain 保留为 disputed；评审后无发现时输出"无需修改"，低风险 none 则明确输出"未启动评审（低风险）"。finding 按 `file + symbol + category` 确定性近重复合并。有效 finding 以 `open` 状态追加到 `<repo>/.dsh/jury/findings.jsonl`，包含稳定 finding id、runId 和时间戳。报告与 accepted 都不构成对代码全部正确性的保证。
+报告以计数开头，包含 `consensus / disputed / solo` 和 `Important / Nit / Pre-existing`，并逐条列出 intent 条款的 met/unmet/unknown 与理由。voter 判为 invalid 的候选被过滤；uncertain 保留为 disputed；评审后无发现时输出"无需修改"，低风险 none 则明确输出"未启动评审（低风险）"。finding 按 `file + symbol + category + 规范化行号` 形成确定性语义键与稳定 ID，并据此近重复合并。有效 finding 以 `open` 状态追加到 `<repo>/.dsh/jury/findings.jsonl`，包含稳定 finding id、runId 和时间戳。报告与 accepted 都不构成对代码全部正确性的保证。
 
 ## 配置
 
@@ -149,6 +156,7 @@ auto 使用确定性风险评分：低分不启动，中/高分默认 single；s
     maxRounds: 3
     severityThreshold: minor
     gateMode: off
+    postAcceptReview: false
     agentMaxTokens: 24000
     standardMaxTokens: 32768
     maxSubagentsPerEpisode: 10
@@ -158,21 +166,12 @@ auto 使用确定性风险评分：低分不启动，中/高分默认 single；s
 - `voterModel`：默认继承调用方当前模型。
 - `maxRounds`：1–3，默认 3。普通 jury_run 仍固定单轮；push gate 以此限制发现+验收总轮次。
 - `severityThreshold`：`nit | minor | major | critical`，默认 `minor`（nit 被过滤）。
-- `gateMode`：`off | report | block`，默认 `off`。首轮发现冻结 F 后，后续不新增 finding，但会独立复核所有 intent 条款。**accepted = 冻结 findings 清零 AND intent 条款无 unmet**，并绑定验收时的确切 HEAD；unknown 明示保留，accepted 不等于对代码全部正确性的保证。新 HEAD 必须重新验收，达到轮次或子代理预算时确定性升级人工。block 通过工具 deny 拦截，report 仅注入告警。覆盖常见 git push 选项与链式命令，但无法阻止直接操作远端 API、其他执行路径或绕过 bash/pwsh 工具的方式。**如果同一 bash/pwsh 命令通过 `&&`、`;`、`|`、`&` 或换行把 push 与 commit、merge、rebase、amend、reset、cherry-pick、revert、checkout、switch、pull 等 HEAD 变更命令串联，gate 会在任何评审前确定性拒绝并提示"请分步执行：先提交，再单独 push"**；block 返回 deny，report 注入告警。原因是前置钩子无法验收同一命令中尚未产生的 HEAD。`cd repo && git push` 与 `git -C repo push` 不改变 HEAD，允许执行，且 gate 会在解析后的 repo 中读取 diff、episode 和 HEAD；组合使用时 `-C` 相对 cd 目录解析。无 upstream 的首次 push 会从 Git empty tree 评审 HEAD 的完整已提交树，不再用空 `git diff HEAD` 跳过。
+- `gateMode`：`off | report | block`，默认 `off`。首轮发现冻结 F 后，后续不新增 finding，但会独立复核所有 intent 条款。**accepted = 冻结 findings 清零 AND intent 条款无 unmet**，并绑定验收时的确切 HEAD；非 low-risk 未实际运行 discovery 不得 accepted。unknown 明示保留，accepted 不等于对代码全部正确性的保证。新 HEAD 必须重新验收，达到轮次或子代理预算时确定性升级人工；human 状态跨 base 持续阻断，只有 exact-HEAD 人工 approved 才放行。block 通过工具 deny 拦截，report 仅注入告警。覆盖常见 git push 选项与链式命令，但无法阻止直接操作远端 API、其他执行路径或绕过 bash/pwsh 工具的方式。**如果同一 bash/pwsh 命令通过 `&&`、`;`、`|`、`&` 或换行把 push 与 commit、merge、rebase、amend、reset、cherry-pick、revert、checkout、switch、pull 等 HEAD 变更命令串联，gate 会在任何评审前确定性拒绝并提示"请分步执行：先提交，再单独 push"**；block 返回 deny，report 注入告警。原因是前置钩子无法验收同一命令中尚未产生的 HEAD。`cd repo && git push` 与 `git -C repo push` 不改变 HEAD，允许执行，且 gate 会在解析后的 repo 中读取 diff、episode 和 HEAD；组合使用时 `-C` 相对 cd 目录解析。无 upstream 的首次 push 会从 Git empty tree 评审 HEAD 的完整已提交树，不再用空 `git diff HEAD` 跳过。
 - `agentMaxTokens`：quick 子代理的输出与推理总上限，默认 24000。
 - `standardMaxTokens`：standard/deep 子代理的输出与推理总上限，默认 32768。finder 每 persona 最多 5 条且 detail≤200 字符；voter 每批最多 8 条且理由≤80 字符。
 - `maxSubagentsPerEpisode`：每个 base SHA episode 的子代理总预算，默认 10；episode 持久化在 `<repo>/.dsh/jury/gate-episodes.jsonl`。
 - `gateTier`：可选 `single | quick | standard | deep`，强制 gate 发现档；缺省与 auto 一样使用 single。
-
-## 为什么做这个
-
-AI 写码越来越快，code review 成了新的瓶颈。Anthropic 在 2026 年 10 月公开的 Claude Code 团队经验帖中提到，Claude 写了 Claude Code 约 90% 的代码；Manus 也把内部 AI 审核机器人称为"最划算的一笔支出"。问题已经不只是怎么生成代码，而是谁在合入前检查它。
-
-方法论来自同一篇经验帖：finder/voter 分工、收敛控制和按风险决定评审投入。我们不把这些名词当卖点，而把它们变成可执行的约束。
-
-做成 dsh 插件，是因为 dsh 用户的代码本来就由 agent 生成。只有嵌进 agent 的执行回路，才能直接拦住它的 push，并把当前会话的需求原话带进评审；外部 CLI 可以补一部分能力，但没有这么低摩擦。
-
-实测后也要说清楚：R3 对照没有证明我们比你的 agent 审得更准。真正提供的是无插件 baseline 没有的工程契约——冻结 findings、修完后验收、绑定确切 HEAD、超限升级人工，让"检查过"不止是一句口头结论。
+- `postAcceptReview`：默认 `false`。开启后在 accepted 前对最终 HEAD 再运行一次独立完整 discovery，不依赖冻结集；发现新增 finding 或 unmet 条款则进入 human 并阻断 push，干净后才 accepted。
 
 ## 证据与轨迹
 

@@ -18,7 +18,7 @@ export interface GateEpisode {
   headSha?: string
   round: number
   subagentCalls: number
-  status: 'active' | 'accepted' | 'human'
+  status: 'active' | 'accepted' | 'human' | 'approved'
   findings: GateFinding[]
   intentClauses?: IntentClauseAssessment[]
 }
@@ -54,6 +54,16 @@ export class GateEpisodeStore {
   async loadLatest(): Promise<GateEpisode | undefined> {
     const snapshots = await this.snapshots()
     return snapshots.at(-1)
+  }
+
+  async approve(episodeId: string, headSha: string): Promise<GateEpisode> {
+    const episode = await this.loadLatest()
+    if (!episode || episode.episodeId !== episodeId) throw new Error('human episode not found')
+    if (episode.status !== 'human') throw new Error('episode is not awaiting human approval')
+    if (episode.headSha !== headSha) throw new Error('approval must bind the exact HEAD awaiting review')
+    episode.status = 'approved'
+    await this.save(episode)
+    return episode
   }
 
   async save(episode: GateEpisode): Promise<void> {

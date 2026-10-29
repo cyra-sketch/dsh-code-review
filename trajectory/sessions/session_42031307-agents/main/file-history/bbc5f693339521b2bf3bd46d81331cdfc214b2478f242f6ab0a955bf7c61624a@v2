@@ -1,0 +1,188 @@
+{
+  "passed": 21,
+  "failed": 0,
+  "results": [
+    {
+      "name": "reject HEAD mutation chained with push: git commit -m \"change\" && git push origin main",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git commit --amend && git push",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git merge feature; git push",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git rebase main && git push",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git reset --hard HEAD~1 && git push",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git cherry-pick abc123 && git push",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git revert HEAD && git push",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git checkout feature && git push",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git pull && git push",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git commit -m \"change\" &&\ngit push origin main",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "reject HEAD mutation chained with push: git merge feature | git push",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": true
+      }
+    },
+    {
+      "name": "allow push without HEAD mutation: git push origin main",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": false
+      }
+    },
+    {
+      "name": "allow push without HEAD mutation: git add src/cart.ts && git push origin main",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": false
+      }
+    },
+    {
+      "name": "allow push without HEAD mutation: cd repo && git push origin main",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": false
+      }
+    },
+    {
+      "name": "allow push without HEAD mutation: cd \"repo with space\" && git push origin main",
+      "pass": true,
+      "evidence": {
+        "push": true,
+        "headMutation": false
+      }
+    },
+    {
+      "name": "quoted git push in a commit message is not a push command",
+      "pass": true,
+      "evidence": {
+        "push": false
+      }
+    },
+    {
+      "name": "cd working directory is resolved for gate inspection",
+      "pass": true,
+      "evidence": {
+        "plain": "/Users/cyra/Documents/Codex/Projects/dsh-jury/repo",
+        "quoted": "/Users/cyra/Documents/Codex/Projects/dsh-jury/repo with space"
+      }
+    },
+    {
+      "name": "block mode deterministically denies commit+push before review",
+      "pass": true,
+      "evidence": {
+        "decision": {
+          "kind": "deny",
+          "reason": "请分步执行：先提交，再单独 push；同一命令中的 HEAD 变更无法被 pre-push gate 验收",
+          "info": {
+            "name": "JuryGate",
+            "code": "HEAD_MUTATION_CHAIN"
+          }
+        },
+        "nextCalls": 0,
+        "runnerCalls": 0
+      }
+    },
+    {
+      "name": "report mode injects the same deterministic warning",
+      "pass": true,
+      "evidence": {
+        "nextCalls": 1,
+        "runnerCalls": 0,
+        "injected": "[{\"content\":[{\"type\":\"text\",\"text\":\"请分步执行：先提交，再单独 push；同一命令中的 HEAD 变更无法被 pre-push gate 验收\"}],\"source\":{\"kind\":\"tool\",\"callId\":\"command-assert\"},\"role\":\"user\",\"id\":\"a70598d5-023b-4b8a-9960-5cb23c0fa8c9\"}]"
+      }
+    },
+    {
+      "name": "standalone push follows normal accepted gate flow: git push origin main",
+      "pass": true,
+      "evidence": {
+        "decision": {
+          "kind": "allow"
+        },
+        "nextCalls": 1,
+        "runnerCalls": 0
+      }
+    },
+    {
+      "name": "standalone push follows normal accepted gate flow: cd eval/acceptance/command-normal-work && git push origin main",
+      "pass": true,
+      "evidence": {
+        "decision": {
+          "kind": "allow"
+        },
+        "nextCalls": 1,
+        "runnerCalls": 0
+      }
+    }
+  ]
+}

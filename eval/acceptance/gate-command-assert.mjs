@@ -1,9 +1,10 @@
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import {
   gitPushChainHasHeadMutation,
   gitPushCommand,
+  gitPushCommandUnparsed,
   gitPushWorkingDirectory,
   registerGate,
 } from '../../lib/gate.js'
@@ -44,6 +45,39 @@ for (const command of allowed) {
     headMutation: gitPushChainHasHeadMutation(args(command)),
   })
 }
+const unwrapped = [
+  `bash -c 'git push origin main'`,
+  'sh -c "git push origin main"',
+  'zsh -c "git push"',
+  'pwsh -Command "git push"',
+  'eval git push',
+  'env FOO=bar bash -c "git push"',
+  'nohup git push',
+  'sudo -n git push',
+  'time -p bash -c "git push"',
+  `bash -c "bash -c 'git push'"`,
+]
+for (const command of unwrapped) {
+  check(`recursively unwrap shell command: ${command}`, gitPushCommand(args(command)) && !gitPushCommandUnparsed(args(command)), {
+    push: gitPushCommand(args(command)),
+    unparsed: gitPushCommandUnparsed(args(command)),
+  })
+}
+check('nested commit and push retains HEAD mutation detection', gitPushChainHasHeadMutation(args(`bash -c 'git commit && git push'`)), {
+  command: `bash -c 'git commit && git push'`,
+})
+const unparsed = [
+  'if git push; then echo pushed; fi',
+  `bash --noprofile -c 'git push'`,
+  'xargs git push',
+  'eval eval eval eval eval git push',
+]
+for (const command of unparsed) {
+  check(`fail closed for unparsed shell command: ${command}`, gitPushCommand(args(command)) && gitPushCommandUnparsed(args(command)), {
+    push: gitPushCommand(args(command)),
+    unparsed: gitPushCommandUnparsed(args(command)),
+  })
+}
 check('quoted git push in a commit message is not a push command', !gitPushCommand(args('git commit -m "git push"')), {
   push: gitPushCommand(args('git commit -m "git push"')),
 })
@@ -60,7 +94,7 @@ function harness(mode) {
   const runner = {
     run: async () => {
       runs += 1
-      return { subagentCalls: 0, findings: [], intentClauses: [] }
+      return { subagentCalls: 0, findings: [], intentClauses: [], effectiveTier: 'none' }
     },
   }
   registerGate(ctx, { gateMode: mode }, runner)
@@ -110,6 +144,25 @@ function execution(command, injected) {
   })
 }
 
+{
+  const { handler, runs } = harness('block')
+  const decision = await handler(execution('if git push; then echo pushed; fi', []), async () => ({ kind: 'allow' }))
+  check('block mode denies unparsed nested shell before review', decision.kind === 'deny'
+    && decision.info.code === 'UNPARSED_GIT_PUSH' && runs() === 0, { decision, runnerCalls: runs() })
+}
+
+{
+  const { handler, runs } = harness('report')
+  const injected = []
+  let nextCalls = 0
+  await handler(execution('if git push; then echo pushed; fi', injected), async () => {
+    nextCalls += 1
+    return { kind: 'allow' }
+  })
+  check('report mode warns for unparsed nested shell', nextCalls === 1 && runs() === 0
+    && JSON.stringify(injected).includes('无法安全解析嵌套 shell'), { nextCalls, runnerCalls: runs(), injected })
+}
+
 const projectCwd = process.cwd()
 const normalWork = resolve(projectCwd, 'eval/acceptance/command-normal-work')
 if (!existsSync(resolve(normalWork, '.git'))) {
@@ -145,6 +198,64 @@ for (const { command, cwd } of normalCases) {
     nextCalls,
     runnerCalls: runs(),
   })
+}
+
+async function postAcceptCase(secondResult) {
+  const work = mkdtempSync(resolve(projectCwd, 'eval/acceptance/work-post-accept-'))
+  mkdirSync(resolve(work, 'src'), { recursive: true })
+  writeFileSync(resolve(work, 'src', 'cart.ts'), 'export const cart = () => 0\n')
+  const git = args => execFileSync('git', args, { cwd: work, stdio: 'pipe' })
+  git(['init', '-b', 'main'])
+  git(['add', 'src/cart.ts'])
+  git(['-c', 'user.name=Post Accept Assert', '-c', 'user.email=post-accept@localhost', 'commit', '-m', 'initial'])
+  git(['init', '--bare', 'origin.git'])
+  git(['remote', 'add', 'origin', resolve(work, 'origin.git')])
+  git(['push', '-u', 'origin', 'main'])
+  let handler
+  const outputs = [
+    { subagentCalls: 0, findings: [], intentClauses: [], effectiveTier: 'none' },
+    secondResult,
+  ]
+  const ctx = { on: (_event, callback) => { handler = callback } }
+  const runner = { run: async () => outputs.shift() }
+  registerGate(ctx, { gateMode: 'block', postAcceptReview: true }, runner)
+  let nextCalls = 0
+  let runnerCalls = 0
+  const originalRun = runner.run
+  runner.run = async (...args) => {
+    runnerCalls += 1
+    return originalRun(...args)
+  }
+  process.chdir(work)
+  let decision
+  try {
+    decision = await handler(execution('git push origin main', []), async () => {
+      nextCalls += 1
+      return { kind: 'allow' }
+    })
+  } finally {
+    process.chdir(projectCwd)
+  }
+  return { decision, nextCalls, runnerCalls }
+}
+
+{
+  const cleanReview = { subagentCalls: 1, findings: [], intentClauses: [], effectiveTier: 'single' }
+  const outcome = await postAcceptCase(cleanReview)
+  check('postAcceptReview accepts final HEAD after independent clean discovery', outcome.decision.kind === 'allow'
+    && outcome.nextCalls === 1 && outcome.runnerCalls === 2, outcome)
+}
+{
+  const newIssue = {
+    subagentCalls: 1,
+    findings: [{ id: 'post-accept-new', file: 'src/cart.ts', line: 1, severity: 'major', title: 'new defect', detail: 'new issue', pre_existing: false }],
+    intentClauses: [],
+    effectiveTier: 'single',
+  }
+  const outcome = await postAcceptCase(newIssue)
+  check('postAcceptReview blocks a newly introduced issue before push', outcome.decision.kind === 'deny'
+    && outcome.decision.info.code === 'POST_ACCEPT_FINDINGS'
+    && outcome.nextCalls === 0 && outcome.runnerCalls === 2, outcome)
 }
 
 const output = { passed: results.filter(result => result.pass).length, failed: results.filter(result => !result.pass).length, results }

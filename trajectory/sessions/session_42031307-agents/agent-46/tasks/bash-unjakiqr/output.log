@@ -1,0 +1,15 @@
+file:///private/tmp/dsh-cr-review-check/eval/acceptance/run.mjs:32
+    throw new Error(`${command} ${args.join(' ')} failed (${result.status})\n${result.stderr ?? ''}`)
+          ^
+
+Error: npx --yes @deepseek-ai/dsh@0.2.1-rc.2 --profile dsh-code-review-acceptance --from-default-profile headless --dump-config failed (127)
+sh: @deepseek-ai/dsh@0.2.1-rc.2: No such file or directory
+
+    at command (file:///private/tmp/dsh-cr-review-check/eval/acceptance/run.mjs:32:11)
+    at dsh (file:///private/tmp/dsh-cr-review-check/eval/acceptance/run.mjs:38:10)
+    at file:///private/tmp/dsh-cr-review-check/eval/acceptance/run.mjs:139:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.22.2

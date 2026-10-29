@@ -141,15 +141,69 @@ function gitSubcommand(segment: string): string | undefined {
   return /^\s*(?:\w+=\S+\s+)*git(?:\s+(?:-C\s+\S+|-c\s+\S+|--git-dir(?:=\S+|\s+\S+)|--work-tree(?:=\S+|\s+\S+)))*\s+([a-z-]+)(?:\s|$)/.exec(segment)?.[1]
 }
 
+function unquote(value: string): string {
+  const trimmed = value.trim()
+  const quote = trimmed[0]
+  return (quote === '"' || quote === "'") && trimmed.at(-1) === quote ? trimmed.slice(1, -1) : trimmed
+}
+
+function wrapperScript(segment: string): string | undefined {
+  const shell = /^\s*(?:bash|sh|zsh)\s+-c\s+([\s\S]+)$/.exec(segment)
+    ?? /^\s*pwsh\s+-Command\s+([\s\S]+)$/i.exec(segment)
+  if (shell?.[1]) return unquote(shell[1])
+  const evalCommand = /^\s*eval\s+([\s\S]+)$/.exec(segment)
+  if (evalCommand?.[1]) return unquote(evalCommand[1])
+  const environment = /^\s*env(?:\s+(?:-[A-Za-z]\S*|--[\w-]+(?:=\S+)?|\w+=\S+))*\s+([\s\S]+)$/.exec(segment)
+  if (environment?.[1]) return environment[1]
+  return /^\s*(?:nohup|sudo|time)(?:\s+(?:-[A-Za-z]\S*|--[\w-]+(?:=\S+)?))*\s+([\s\S]+)$/.exec(segment)?.[1]
+}
+
+function hasPushSyntax(segment: string): boolean {
+  return /\bgit\b[\s\S]*\bpush\b/.test(segment)
+}
+
+function unwrapCommand(command: string, depth = 0): { segments: string[]; unparsed: boolean } {
+  const segments: string[] = []
+  let unparsed = depth > 4
+  for (const segment of commandSegments(command)) {
+    if (gitSubcommand(segment)) {
+      segments.push(segment)
+      continue
+    }
+    const script = wrapperScript(segment)
+    if (script) {
+      const nested = unwrapCommand(script, depth + 1)
+      segments.push(...nested.segments)
+      unparsed ||= nested.unparsed
+      continue
+    }
+    segments.push(segment)
+    if (hasPushSyntax(segment) && (depth > 4 || /^(?:if|for|while|case|command|exec|xargs|parallel|bash|sh|zsh|pwsh|eval|env|nohup|sudo|time)\b/.test(segment.trim()))) {
+      unparsed = true
+    }
+  }
+  return { segments, unparsed }
+}
+
 export function gitPushCommand(arguments_: unknown): boolean {
   const command = commandText(arguments_)
-  return command !== undefined && commandSegments(command).some(segment => gitSubcommand(segment) === 'push')
+  if (command === undefined) return false
+  const unwrapped = unwrapCommand(command)
+  return unwrapped.segments.some(segment => gitSubcommand(segment) === 'push')
+    || (unwrapped.unparsed && unwrapped.segments.some(hasPushSyntax))
+}
+
+export function gitPushCommandUnparsed(arguments_: unknown): boolean {
+  const command = commandText(arguments_)
+  if (command === undefined) return false
+  const unwrapped = unwrapCommand(command)
+  return unwrapped.unparsed && unwrapped.segments.some(hasPushSyntax)
 }
 
 export function gitPushChainHasHeadMutation(arguments_: unknown): boolean {
   const command = commandText(arguments_)
   if (command === undefined) return false
-  const subcommands = commandSegments(command).map(gitSubcommand)
+  const subcommands = unwrapCommand(command).segments.map(gitSubcommand)
   const mutations = new Set(['amend', 'cherry-pick', 'checkout', 'commit', 'merge', 'pull', 'rebase', 'reset', 'revert', 'switch'])
   return subcommands.includes('push') && subcommands.some(subcommand => subcommand !== undefined && mutations.has(subcommand))
 }
@@ -157,7 +211,7 @@ export function gitPushChainHasHeadMutation(arguments_: unknown): boolean {
 export function gitPushWorkingDirectory(arguments_: unknown): string {
   const command = commandText(arguments_)
   if (command === undefined) return process.cwd()
-  const segments = commandSegments(command)
+  const segments = unwrapCommand(command).segments
   const first = segments[0]
   const cd = first ? /^\s*cd\s+(?:"([^"]+)"|'([^']+)'|(\S+?))\s*$/.exec(first) : undefined
   const cdTarget = cd?.[1] ?? cd?.[2] ?? cd?.[3]
@@ -277,26 +331,86 @@ export function registerGate(ctx: Context, config: JuryConfig, runner: JuryRunne
     if (gitPushChainHasHeadMutation(exec.arguments)) {
       return settle('请分步执行：先提交，再单独 push；同一命令中的 HEAD 变更无法被 pre-push gate 验收', 'HEAD_MUTATION_CHAIN')
     }
+    if (gitPushCommandUnparsed(exec.arguments)) {
+      return settle('无法安全解析嵌套 shell 中的 git push，请改为直接命令后重试', 'UNPARSED_GIT_PUSH')
+    }
     const cwd = gitPushWorkingDirectory(exec.arguments)
     const { base, baseSha, root, fromEmptyTree } = await gateBase(exec.signal, cwd)
     const store = new GateEpisodeStore(root)
     const headSha = await git(['rev-parse', 'HEAD'], exec.signal, cwd)
+    const acceptWithPostReview = async (episode: GateEpisode, base?: string, fromEmptyTree?: boolean) => {
+      if (config.postAcceptReview) {
+        try {
+          const result = await runner.run({ tier: config.gateTier ?? 'auto', gate: true, ...base ? { base } : {}, ...fromEmptyTree ? { fromEmptyTree: true } : {} }, { parent, signal: exec.signal, cwd })
+          episode.subagentCalls += result.subagentCalls
+          if (result.subagentCalls === 0 && result.effectiveTier !== 'none') {
+            episode.status = 'human'
+            episode.headSha = headSha
+            await store.save(episode)
+            return settle(feedback(episode, 'discovery', true), 'POST_ACCEPT_DISCOVERY_REQUIRED')
+          }
+          const existing = new Set(episode.findings.map(finding => finding.id))
+          const additional = result.findings.filter(finding => !finding.pre_existing && finding.severity !== 'nit' && !existing.has(finding.id))
+          if (additional.length || result.intentClauses.some(clause => clause.status === 'unmet')) {
+            episode.findings.push(...additional.map(finding => ({
+              id: finding.id,
+              file: finding.file,
+              line: finding.line,
+              severity: finding.severity,
+              title: finding.title,
+              fix: finding.detail,
+              status: 'open' as const,
+            })))
+            episode.intentClauses = result.intentClauses
+            episode.status = 'human'
+            episode.headSha = headSha
+            await store.save(episode)
+            return settle(feedback(episode, 'discovery', true), 'POST_ACCEPT_FINDINGS')
+          }
+        } catch {
+          episode.status = 'human'
+          episode.headSha = headSha
+          await store.save(episode)
+          return settle(feedback(episode, 'discovery', true), 'POST_ACCEPT_REVIEW_FAILED')
+        }
+      }
+      episode.status = 'accepted'
+      episode.headSha = headSha
+      await store.save(episode)
+      return next()
+    }
     let episode = await store.load(baseSha)
     if (!episode) {
       const latest = await store.loadLatest()
-      if (latest?.status === 'accepted' && latest.headSha && latest.headSha !== headSha
+      if (latest && ['accepted', 'human', 'approved'].includes(latest.status) && latest.headSha
         && await isAncestor(latest.headSha, headSha, exec.signal, cwd)) {
         episode = latest
       }
     }
+    if (episode?.status === 'approved') {
+      if (episode.headSha === headSha) return next()
+      episode.status = 'human'
+      episode.headSha = headSha
+      await store.save(episode)
+      return settle(feedback(episode, 'verification', true), 'HUMAN_REVIEW_REQUIRED')
+    }
     if (episode?.status === 'accepted' && episode.headSha === headSha) return next()
     if (episode?.status === 'accepted') episode.status = 'active'
-    if (episode?.status === 'human') return settle(feedback(episode, 'verification', true), 'HUMAN_REVIEW_REQUIRED')
+    if (episode?.status === 'human') {
+      episode.headSha = headSha
+      await store.save(episode)
+      return settle(feedback(episode, 'verification', true), 'HUMAN_REVIEW_REQUIRED')
+    }
 
     if (!episode) {
       episode = { episodeId: randomUUID(), baseSha, headSha, round: 1, subagentCalls: 0, status: 'active', findings: [], intentClauses: [] }
       try {
         const result = await runner.run({ tier: config.gateTier ?? 'auto', gate: true, ...base ? { base } : {}, ...fromEmptyTree ? { fromEmptyTree: true } : {} }, { parent, signal: exec.signal, cwd })
+        if (result.subagentCalls === 0 && result.effectiveTier !== 'none') {
+          episode.status = 'human'
+          await store.save(episode)
+          return settle(feedback(episode, 'discovery', true), 'DISCOVERY_REQUIRED')
+        }
         episode.subagentCalls = result.subagentCalls
         episode.intentClauses = result.intentClauses
         episode.findings = result.findings
@@ -315,12 +429,7 @@ export function registerGate(ctx: Context, config: JuryConfig, runner: JuryRunne
         await store.save(episode)
         return settle(feedback(episode, 'discovery', true), 'REVIEW_FAILED')
       }
-      if (canAccept(episode)) {
-        episode.status = 'accepted'
-        episode.headSha = headSha
-        await store.save(episode)
-        return next()
-      }
+      if (canAccept(episode)) return acceptWithPostReview(episode, base, fromEmptyTree)
       if (episode.round >= config.maxRounds || episode.subagentCalls >= config.maxSubagentsPerEpisode) {
         episode.status = 'human'
         await store.save(episode)
@@ -361,12 +470,7 @@ export function registerGate(ctx: Context, config: JuryConfig, runner: JuryRunne
       return settle(feedback(episode, 'verification', true), 'ACCEPTANCE_FAILED')
     }
 
-    if (canAccept(episode)) {
-      episode.status = 'accepted'
-      episode.headSha = headSha
-      await store.save(episode)
-      return next()
-    }
+    if (canAccept(episode)) return acceptWithPostReview(episode, base, fromEmptyTree)
     if (episode.round >= config.maxRounds || episode.subagentCalls >= config.maxSubagentsPerEpisode) {
       episode.status = 'human'
       await store.save(episode)

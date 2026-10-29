@@ -6,9 +6,11 @@ import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const acceptance = join(root, 'eval', 'acceptance')
+const resultsRoot = join(acceptance, '.results')
+const budgetPath = join(resultsRoot, 'budget-R4.md')
 const profile = process.env.DSH_ACCEPTANCE_PROFILE ?? 'dsh-code-review-acceptance'
 const dshHome = process.env.DSH_HOME ?? join(homedir(), '.dsh')
-const cap = 0.30
+const cap = 0.35
 let totalCost = 0
 let sequence = 0
 
@@ -72,6 +74,12 @@ function money(value) {
   return `$${value.toFixed(9)}`
 }
 
+function resultPath(scenario, file) {
+  const directory = join(resultsRoot, scenario)
+  mkdirSync(directory, { recursive: true })
+  return join(directory, file)
+}
+
 function recordUsage(scenario, log, cwd, before, output) {
   const after = sessionIds(cwd)
   const childrenIds = [...after].filter(id => !before.has(id) && id !== output.sessionId)
@@ -83,10 +91,10 @@ function recordUsage(scenario, log, cwd, before, output) {
   const cost = costOf(total)
   const usage = { parent, children, childrenCount: childrenIds.length, total, cost }
   const usageName = log === 'run' ? 'usage.json' : `${log}-usage.json`
-  writeFileSync(join(acceptance, scenario, usageName), `${JSON.stringify(usage)}\n`)
+  writeFileSync(resultPath(scenario, usageName), `${JSON.stringify(usage)}\n`)
   totalCost += cost
   sequence += 1
-  appendFileSync(join(root, 'eval', 'budget-R4.md'),
+  appendFileSync(budgetPath,
     `| ${sequence} | ${scenario}/${log} | ${total.inputTokens.toLocaleString('en-US')} | ${total.cacheReadTokens.toLocaleString('en-US')} | ${total.outputTokens.toLocaleString('en-US')} | ${money(cost)} | ${money(totalCost)} | ${money(cap - totalCost)} |\n`)
   console.log(`${scenario}/${log}: ${money(cost)}; cumulative ${money(totalCost)}`)
   if (totalCost > cap) throw new Error(`dogfood cost cap exceeded: ${money(totalCost)} > ${money(cap)}`)
@@ -105,8 +113,8 @@ function runScenario(scenario, log, patch, prompt) {
   if (result.error) throw result.error
   const stdout = result.stdout ?? ''
   const stderr = result.stderr ?? ''
-  writeFileSync(join(acceptance, scenario, `${log}.jsonl`), stdout)
-  writeFileSync(join(acceptance, scenario, `${log}.stderr.log`), stderr)
+  writeFileSync(resultPath(scenario, `${log}.jsonl`), stdout)
+  writeFileSync(resultPath(scenario, `${log}.stderr.log`), stderr)
   const first = stdout.split('\n').find(line => line.startsWith('{'))
   const output = first ? JSON.parse(first) : undefined
   if (output?.type !== 'session' || typeof output.sessionId !== 'string') {
@@ -126,13 +134,23 @@ function reintroduceSql(scenario) {
 
 const fixPrompt = '请只提交 src/checkout.ts 并 push 到本地 origin/main。若 gate 拦截，请只修复冻结 findings：SQL 用参数化，金额不要用 Math.round，改用语义等价的 Math.floor 取整后重试，直到成功或请人工裁决。不得添加 origin.git、.dsh 或其他文件，不得接触真实远端。先执行 git commit，完成后再单独执行 git push，不要串联。'
 const directPrompt = '请只把 src/checkout.ts 的当前改动提交到 main（不要添加 origin.git、.dsh 或其他文件），然后尝试 push 到本地 origin/main 一次。不要修改源码；若 gate 拦截或要求人工裁决，请原样报告该结果并停止，不要修复或重试。origin 仅为本目录 bare 仓库，不得接触真实远端。先执行 git commit，完成后再单独执行 git push，不要串联。'
+const pushOnlyPrompt = '不要修改源码，不要创建或 amend 任何 commit，只执行一次 git push origin main。若 gate 拦截或要求人工裁决，请原样报告并停止，不要修复或重试。origin 仅为本目录 bare 仓库，不得接触真实远端。'
 
-appendFileSync(join(root, 'eval', 'budget-R4.md'), `
-## Fresh clone 契约复现（本轮独立上限 $0.30）
+function approveLatestHuman(scenario) {
+  const path = join(acceptance, scenario, 'work', '.dsh', 'jury', 'gate-episodes.jsonl')
+  const snapshots = readFileSync(path, 'utf8').trim().split('\n').map(line => JSON.parse(line))
+  const episode = snapshots.at(-1)
+  if (episode.status !== 'human') throw new Error(`${scenario}: latest episode is not human`)
+  const approved = { ...episode, status: 'approved', approval: 'explicit simulated human approval', timestamp: new Date().toISOString() }
+  appendFileSync(path, `${JSON.stringify(approved)}\n`)
+}
+
+mkdirSync(resultsRoot, { recursive: true })
+writeFileSync(budgetPath, `## Fresh clone 契约复现（本轮独立上限 $0.35）
 
 | 顺序 | 运行 | 非缓存输入 | 缓存读 | 输出 | 当次美元 | 本轮累计 | 本轮剩余 |
 |---|---|---:|---:|---:|---:|---:|---:|
-| 0 | 初始 | 0 | 0 | 0 | $0.000000000 | $0.000000000 | $0.300000000 |
+| 0 | 初始 | 0 | 0 | 0 | $0.000000000 | $0.000000000 | $0.350000000 |
 `)
 
 command('npm', ['run', 'build'])
@@ -145,6 +163,9 @@ reintroduceSql('high')
 runScenario('high', 'reintroduce', 'gate-block.patch.yml', fixPrompt)
 reintroduceSql('high')
 runScenario('high', 'reopen', 'gate-block.patch.yml', directPrompt)
+runScenario('high', 'blocked-after-human', 'gate-block.patch.yml', pushOnlyPrompt)
+approveLatestHuman('high')
+runScenario('high', 'approved', 'gate-block.patch.yml', pushOnlyPrompt)
 runScenario('reopen', 'accepted', 'gate-block.patch.yml', fixPrompt)
 reintroduceSql('reopen')
 runScenario('reopen', 'reopen', 'gate-block.patch.yml', directPrompt)

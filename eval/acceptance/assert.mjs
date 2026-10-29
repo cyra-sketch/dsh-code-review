@@ -1,14 +1,20 @@
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { extractIntentClauses } from '../../lib/intent-clauses.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
 const acceptance = join(root, 'eval', 'acceptance')
-const sqlId = '9d40cd4bee067bec'
-const centsId = 'b6144457dc9ab3bf'
 const results = []
+
+function sqlFinding(episode) {
+  return episode?.findings.find(finding => /SQL.*(?:injection|注入)/i.test(finding.title))
+}
+
+function centsFinding(episode) {
+  return episode?.findings.find(finding => /integer cents|非整数分|fractional cents/i.test(finding.title))
+}
 
 function check(name, condition, evidence) {
   results.push({ name, pass: Boolean(condition), evidence })
@@ -77,13 +83,22 @@ check('new HEAD is reverified against the same frozen findings', highReverified
   && highReverified.headSha !== highAccepted.headSha
   && sameFindingSet(highReverified, highDiscovery.findings)
   && highReverified.findings.every(finding => finding.status === 'fixed')
-  && remote('high', ['rev-parse', 'refs/heads/main']) === highReverified.headSha, {
+  && remoteHasCommit('high', highReverified.headSha), {
   acceptedHead: highAccepted.headSha,
   reverifiedHead: highReverified?.headSha,
   remote: remote('high', ['rev-parse', 'refs/heads/main']),
 })
 const highLocalHead = git('high', ['rev-parse', 'HEAD'])
-check('unaccepted high-risk HEAD is absent from bare remote', !remoteHasCommit('high', highLocalHead), {
+const highHumanIndex = high.findIndex(episode => episode.status === 'human')
+const highAfterHuman = highHumanIndex >= 0 ? high.slice(highHumanIndex + 1) : []
+const highApproved = high.at(-1)
+check('human keeps push blocked until exact-HEAD approval', highHumanIndex > 0
+  && highAfterHuman.some(episode => episode.status === 'human')
+  && !highAfterHuman.some(episode => episode.status === 'accepted')
+  && highApproved?.status === 'approved'
+  && highApproved.headSha === highLocalHead
+  && remote('high', ['rev-parse', 'refs/heads/main']) === highLocalHead, {
+  afterHuman: highAfterHuman.map(episode => ({ round: episode.round, status: episode.status, subagentCalls: episode.subagentCalls })),
   localHead: highLocalHead,
   remote: remote('high', ['rev-parse', 'refs/heads/main']),
 })
@@ -92,16 +107,17 @@ const reopen = episodes('reopen')
 const reopenDiscovery = reopen.find(episode => episode.round === 1)
 const reopenAccepted = reopen.find(episode => episode.round === 2 && episode.status === 'accepted')
 const reopenLatest = reopen.at(-1)
-const reopenSql = reopenLatest.findings.find(finding => finding.id === sqlId)
-check('reintroduced SQL defect transitions fixed to open', reopenAccepted.findings.find(finding => finding.id === sqlId)?.status === 'fixed'
+const reopenSql = sqlFinding(reopenLatest)
+const reopenSqlId = reopenSql?.id
+check('reintroduced SQL defect transitions fixed to open', sqlFinding(reopenAccepted)?.status === 'fixed'
   && reopenSql?.status === 'open', {
   accepted: reopenAccepted.findings.map(finding => ({ id: finding.id, status: finding.status })),
   reopened: reopenLatest.findings.map(finding => ({ id: finding.id, status: finding.status })),
 })
 check('reopen preserves untouched fixed findings and frozen set', sameFindingSet(reopenLatest, reopenDiscovery.findings)
-  && reopenLatest.findings.filter(finding => finding.id !== sqlId).every(finding => finding.status === 'fixed'), {
+  && reopenLatest.findings.filter(finding => finding.id !== reopenSqlId).every(finding => finding.status === 'fixed'), {
   findingIds: reopenLatest.findings.map(finding => finding.id),
-  untouched: reopenLatest.findings.filter(finding => finding.id !== sqlId),
+  untouched: reopenLatest.findings.filter(finding => finding.id !== reopenSqlId),
 })
 check('reopened HEAD is absent from bare remote', remote('reopen', ['rev-parse', 'refs/heads/main']) === reopenAccepted.headSha
   && !remoteHasCommit('reopen', reopenLatest.headSha), {
@@ -111,7 +127,10 @@ check('reopened HEAD is absent from bare remote', remote('reopen', ['rev-parse',
 
 const human = episodes('human')
 const humanOnly = human.length === 1 ? human[0] : undefined
-const humanLog = readFileSync(join(acceptance, 'human', 'run.jsonl'), 'utf8')
+const humanLogPath = existsSync(join(acceptance, '.results', 'human', 'run.jsonl'))
+  ? join(acceptance, '.results', 'human', 'run.jsonl')
+  : join(acceptance, 'human', 'run.jsonl')
+const humanLog = readFileSync(humanLogPath, 'utf8')
 check('maxRounds=1 deterministically escalates after discovery', humanOnly?.round === 1
   && humanOnly.status === 'human'
   && humanOnly.subagentCalls === 1
@@ -127,9 +146,10 @@ check('maxRounds=1 rejected commit is absent from bare remote', humanOnly
   rejectedHead: humanOnly?.headSha,
   remote: remote('human', ['rev-parse', 'refs/heads/main']),
 })
-check('stable SQL and cents finding ids are used across fixtures', [highDiscovery, reopenDiscovery, humanOnly]
-  .every(episode => episode.findings.some(finding => finding.id === sqlId)
-    && episode.findings.some(finding => finding.id === centsId)), {
+check('stable SQL and cents finding ids are used across fixtures', sqlFinding(highDiscovery)?.id === sqlFinding(reopenDiscovery)?.id
+  && sqlFinding(reopenDiscovery)?.id === sqlFinding(humanOnly)?.id
+  && centsFinding(highDiscovery)?.id === centsFinding(reopenDiscovery)?.id
+  && centsFinding(reopenDiscovery)?.id === centsFinding(humanOnly)?.id, {
   high: highIds,
   reopen: reopenDiscovery.findings.map(finding => finding.id),
   human: humanOnly?.findings.map(finding => finding.id),
@@ -178,7 +198,7 @@ check('negative intent does not invent requirement deviations', intentNegativeOn
   findings: intentNegativeOnly?.findings.map(finding => finding.title),
 })
 check('negative intent retains evidence-based audit failure and blocks HEAD', intentNegativeOnly?.status === 'active'
-  && intentNegativeOnly.findings.some(finding => /audit (?:insert|write).*successful charge/i.test(finding.title))
+  && intentNegativeOnly.findings.some(finding => /(?:audit (?:insert|write).*successful charge|支付成功.*审计.*失败)/i.test(finding.title))
   && remote('intent-negative', ['rev-parse', 'refs/heads/main']) === intentNegativeOnly.baseSha
   && !remoteHasCommit('intent-negative', intentNegativeOnly.headSha), {
   status: intentNegativeOnly?.status,

@@ -134,10 +134,18 @@ function evidenceScore(finding: Finding): number {
   return finding.line_quote.length + finding.detail.length + (finding.line > 0 ? 20 : 0)
 }
 
+export function findingSemanticKey(finding: Pick<Finding, 'file' | 'symbol' | 'category' | 'line' | 'title'>): string {
+  const line = Number.isInteger(finding.line) && finding.line > 0 ? finding.line : 0
+  const category = finding.category === 'intent' && /injection|sql/i.test(finding.title) ? 'security'
+    : finding.category === 'intent' && /cent|integer|round|fraction|金额|浮点|整数/i.test(finding.title) ? 'correctness'
+    : finding.category
+  return `${normalize(finding.file)}\0${normalizeSymbol(finding.symbol)}\0${category}\0${line}`
+}
+
 function groupFindings(findings: FinderFinding[]): GroupedFinding[] {
   const groups = new Map<string, GroupedFinding>()
   for (const finding of findings) {
-    const key = `${normalize(finding.file)}\0${normalizeSymbol(finding.symbol)}\0${finding.category}`
+    const key = findingSemanticKey(finding)
     const { persona: _persona, ...base } = finding
     const existing = groups.get(key)
     if (existing) {

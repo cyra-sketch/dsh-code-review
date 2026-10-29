@@ -1,0 +1,13 @@
+
+added 2 packages in 428ms
+low/rerun: $0.001674228; cumulative $0.001674228
+high/run: $0.008984952; cumulative $0.010659180
+high/reintroduce: $0.008008980; cumulative $0.018668160
+high/reopen: $0.003361902; cumulative $0.022030062
+reopen/accepted: $0.013498494; cumulative $0.035528556
+reopen/reopen: $0.006177534; cumulative $0.041706090
+human/run: $0.012772140; cumulative $0.054478230
+intent-missing/run: $0.014210586; cumulative $0.068688816
+intent-clean/run: $0.009594294; cumulative $0.078283110
+intent-negative/run: $0.009615786; cumulative $0.087898896
+All scenarios completed: 10 runs, $0.087898896

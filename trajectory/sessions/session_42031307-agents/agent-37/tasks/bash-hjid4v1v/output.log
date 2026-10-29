@@ -1,0 +1,18 @@
+
+> dsh-code-review@0.1.0 build
+> tsc -p tsconfig.json
+
+To /tmp/dsh-code-review-r6-vu8F2Q/eval/acceptance/high/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-r6-vu8F2Q/eval/acceptance/reopen/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-r6-vu8F2Q/eval/acceptance/human/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-r6-vu8F2Q/eval/acceptance/intent-missing/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-r6-vu8F2Q/eval/acceptance/intent-clean/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-r6-vu8F2Q/eval/acceptance/intent-negative/work/origin.git
+ * [new branch]      main -> main
+To /tmp/dsh-code-review-r6-vu8F2Q/eval/acceptance/low/work/origin.git
+ * [new branch]      main -> main

@@ -19,6 +19,7 @@ export interface JuryConfig {
   maxRounds: number
   severityThreshold: Severity
   gateMode: 'off' | 'report' | 'block'
+  postAcceptReview: boolean
   agentMaxTokens: number
   standardMaxTokens: number
   maxSubagentsPerEpisode: number

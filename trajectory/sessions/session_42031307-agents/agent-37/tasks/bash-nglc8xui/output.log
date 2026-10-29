@@ -1,0 +1,5 @@
+d4550da docs: data-first README with with/without benefits and reproducible demo
+94a2c17 fix: close dogfood gate and packaging defects
+2681a14 dsh-code-review: single-first agent workflow quality gate
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+0.2.1-rc.2

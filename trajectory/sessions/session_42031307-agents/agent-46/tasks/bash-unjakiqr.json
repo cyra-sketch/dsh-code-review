@@ -1,0 +1,1 @@
+{"taskId":"bash-unjakiqr","description":"使用临时 pnpm 执行完整 acceptance 模型场景","status":"failed","detached":true,"startedAt":1793245717019,"endedAt":1793245733200,"timeoutMs":2400000,"kind":"process","command":"npm exec --yes --package=pnpm -- node eval/acceptance/run.mjs","pid":64218,"exitCode":1,"parentToolCallId":"tool_6agaFxLeT9RPkYjwUFlWXcrZ"}

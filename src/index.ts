@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import type { Context } from '@deepseek-ai/cordis'
 import Schema from '@deepseek-ai/schemastery'
 import type { Agent } from '@deepseek-ai/dsh-agent'
@@ -6,6 +7,7 @@ import type {} from '@deepseek-ai/dsh-subagent'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import { JuryRunner } from './jury.js'
 import { registerGate } from './gate.js'
+import { GateEpisodeStore } from './gate-episode.js'
 import type { JuryConfig, JuryResult, ModelRoute, RequestedTier, RunOptions } from './types.js'
 
 export const name = 'jury'
@@ -24,6 +26,7 @@ export const Config: Schema<Config> = Schema.object({
   maxRounds: Schema.number().step(1).min(1).max(3).default(3),
   severityThreshold: Schema.union(['nit', 'minor', 'major', 'critical']).default('minor'),
   gateMode: Schema.union(['off', 'report', 'block']).default('off'),
+  postAcceptReview: Schema.boolean().default(false),
   agentMaxTokens: Schema.number().step(1).min(4000).max(64000).default(24000),
   standardMaxTokens: Schema.number().step(1).min(4000).max(64000).default(32768),
   maxSubagentsPerEpisode: Schema.number().step(1).min(1).max(20).default(10),
@@ -115,6 +118,33 @@ export function apply(ctx: Context, config: Config): void {
         rejectedCount: result.rejectedCount,
         ledgerPath: result.ledgerPath,
       }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'jury_human_approve',
+    description: 'Approve a human-required gate episode only for its exact HEAD. Does not run a model or approve changed code.',
+    parameters: {
+      episodeId: { type: 'string', description: 'Episode ID returned by jury_gate_human_required.' },
+      headSha: { type: 'string', description: 'Exact full HEAD SHA awaiting human review.' },
+    },
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          episodeId: { type: 'string', required: true },
+          headSha: { type: 'string', required: true },
+          status: { type: 'string', required: true },
+        },
+      },
+      render: (_args, value) => [{ type: 'text', text: JSON.stringify(value) }],
+    },
+    async execute(args) {
+      if (!args.episodeId || !args.headSha) throw new Error('episodeId and exact headSha are required')
+      const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim()
+      const episode = await new GateEpisodeStore(root).approve(args.episodeId, args.headSha)
+      return { episodeId: episode.episodeId, headSha: episode.headSha ?? '', status: episode.status }
     },
   }))
 
