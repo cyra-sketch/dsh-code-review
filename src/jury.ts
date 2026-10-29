@@ -12,6 +12,7 @@ import { finderPrompt, personas, singlePrompt, voterPrompt } from './prompts.js'
 import { preprocessDiff } from './diff.js'
 import { extractIntentClauses, mergeIntentClauseAssessments } from './intent-clauses.js'
 import { assessRisk } from './risk.js'
+import { EMPTY_TREE_SHA } from './types.js'
 import type {
   DiffPreprocess,
   EffectiveTier,
@@ -380,7 +381,7 @@ export class JuryRunner {
       }
     } else {
       root = (await git(cwd, ['rev-parse', '--show-toplevel'], signal)).trim()
-      diff = await git(root, ['diff', options.base ? `${options.base}...HEAD` : 'HEAD'], signal)
+      diff = await git(root, ['diff', options.fromEmptyTree ? `${EMPTY_TREE_SHA}..HEAD` : options.base ? `${options.base}...HEAD` : 'HEAD'], signal)
     }
     signal.throwIfAborted()
     const runId = randomUUID()

@@ -9,7 +9,7 @@ import type { ObjectJsonSchema, PreToolDecision, ToolExecution } from '@deepseek
 import { GateEpisodeStore } from './gate-episode.js'
 import type { GateEpisode, GateFinding } from './gate-episode.js'
 import { JuryRunner } from './jury.js'
-import type { JuryConfig } from './types.js'
+import { EMPTY_TREE_SHA, type JuryConfig } from './types.js'
 
 const execFileAsync = promisify(execFile)
 
@@ -69,15 +69,14 @@ async function git(args: string[], signal: AbortSignal, cwd = process.cwd()): Pr
   return stdout.trim()
 }
 
-async function gateBase(signal: AbortSignal, cwd = process.cwd()): Promise<{ base?: string; baseSha: string; root: string }> {
+async function gateBase(signal: AbortSignal, cwd = process.cwd()): Promise<{ base?: string; baseSha: string; root: string; fromEmptyTree?: boolean }> {
   const root = await git(['rev-parse', '--show-toplevel'], signal, cwd)
   try {
     const base = await git(['rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{upstream}'], signal, cwd)
     const baseSha = await git(['rev-parse', base], signal, cwd)
     return { base, baseSha, root }
   } catch {
-    const baseSha = await git(['rev-parse', 'HEAD'], signal, cwd)
-    return { baseSha, root }
+    return { baseSha: EMPTY_TREE_SHA, root, fromEmptyTree: true }
   }
 }
 
@@ -158,10 +157,15 @@ export function gitPushChainHasHeadMutation(arguments_: unknown): boolean {
 export function gitPushWorkingDirectory(arguments_: unknown): string {
   const command = commandText(arguments_)
   if (command === undefined) return process.cwd()
-  const first = commandSegments(command)[0]
+  const segments = commandSegments(command)
+  const first = segments[0]
   const cd = first ? /^\s*cd\s+(?:"([^"]+)"|'([^']+)'|(\S+?))\s*$/.exec(first) : undefined
-  const target = cd?.[1] ?? cd?.[2] ?? cd?.[3]
-  return target ? resolve(process.cwd(), target) : process.cwd()
+  const cdTarget = cd?.[1] ?? cd?.[2] ?? cd?.[3]
+  const base = cdTarget ? resolve(process.cwd(), cdTarget) : process.cwd()
+  const push = segments.find(segment => gitSubcommand(segment) === 'push')
+  const gitC = push ? /(?:^|\s)-C\s+(?:"([^"]+)"|'([^']+)'|(\S+))/.exec(push) : undefined
+  const gitTarget = gitC?.[1] ?? gitC?.[2] ?? gitC?.[3]
+  return gitTarget ? resolve(base, gitTarget) : base
 }
 
 function openFindings(episode: GateEpisode): GateFinding[] {
@@ -218,6 +222,12 @@ function isAcceptanceOutput(value: unknown): value is AcceptanceOutput {
       && typeof requirement.reason === 'string')
 }
 
+export function acceptancePrompt(episode: GateEpisode, diff: string): string {
+  const frozen = episode.findings.map(({ id, file, line, title, fix, status }) => ({ id, file, line, title, fix, status }))
+  const clauses = (episode.intentClauses ?? []).map(({ id, text }) => ({ id, text }))
+  return `You are a lightweight acceptance agent, not a general reviewer. Perform two independent checks. First compare the new diff with frozen finding set F. For every finding id, decide fixed when the new diff resolves that exact issue and open otherwise. Untouched findings preserve their previous status: open stays open and fixed stays fixed. A finding stays fixed when the diff does not touch it or fixes it with semantically equivalent code. Only mark open when the exact defect remains or is explicitly reintroduced. Second, assess every intent clause independently against the current diff, even when it is not represented in F. Return exactly one met|unmet|unknown assessment and short reason for every clause: met only for demonstrated compliance, unmet for a demonstrated violation or omission, and unknown when evidence is insufficient. Do not assume a clause is met merely because all findings are fixed. Return checks and requirements arrays, do not add findings, do not use tools, and do not return prose outside the structured result.\nFrozen F:\n${JSON.stringify(frozen, null, 2)}\nIntent clauses:\n${JSON.stringify(clauses, null, 2)}\nNew diff:\n${diff}`
+}
+
 async function acceptDiff(
   ctx: Context,
   config: JuryConfig,
@@ -226,9 +236,7 @@ async function acceptDiff(
   diff: string,
   signal: AbortSignal,
 ): Promise<AcceptanceOutput> {
-  const frozen = episode.findings.map(({ id, file, line, title, fix }) => ({ id, file, line, title, fix }))
-  const clauses = (episode.intentClauses ?? []).map(({ id, text }) => ({ id, text }))
-  const prompt = `You are a lightweight acceptance agent, not a general reviewer. Perform two independent checks. First compare the new diff with frozen finding set F. For every finding id, decide fixed when the new diff resolves that exact issue and open otherwise. A finding stays fixed when the diff does not touch it or fixes it with semantically equivalent code. Only mark open when the exact defect remains or is explicitly reintroduced. Second, assess every intent clause independently against the current diff, even when it is not represented in F. Return exactly one met|unmet|unknown assessment and short reason for every clause: met only for demonstrated compliance, unmet for a demonstrated violation or omission, and unknown when evidence is insufficient. Do not assume a clause is met merely because all findings are fixed. Return checks and requirements arrays, do not add findings, do not use tools, and do not return prose outside the structured result.\nFrozen F:\n${JSON.stringify(frozen, null, 2)}\nIntent clauses:\n${JSON.stringify(clauses, null, 2)}\nNew diff:\n${diff}`
+  const prompt = acceptancePrompt(episode, diff)
   const activation = await ctx.subagents.startActivation({
     provider: 'spawn',
     label: `jury-acceptance-${episode.round + 1}`,
@@ -270,7 +278,7 @@ export function registerGate(ctx: Context, config: JuryConfig, runner: JuryRunne
       return settle('请分步执行：先提交，再单独 push；同一命令中的 HEAD 变更无法被 pre-push gate 验收', 'HEAD_MUTATION_CHAIN')
     }
     const cwd = gitPushWorkingDirectory(exec.arguments)
-    const { base, baseSha, root } = await gateBase(exec.signal, cwd)
+    const { base, baseSha, root, fromEmptyTree } = await gateBase(exec.signal, cwd)
     const store = new GateEpisodeStore(root)
     const headSha = await git(['rev-parse', 'HEAD'], exec.signal, cwd)
     let episode = await store.load(baseSha)
@@ -288,7 +296,7 @@ export function registerGate(ctx: Context, config: JuryConfig, runner: JuryRunne
     if (!episode) {
       episode = { episodeId: randomUUID(), baseSha, headSha, round: 1, subagentCalls: 0, status: 'active', findings: [], intentClauses: [] }
       try {
-        const result = await runner.run({ tier: config.gateTier ?? 'auto', gate: true, ...base ? { base } : {} }, { parent, signal: exec.signal, cwd })
+        const result = await runner.run({ tier: config.gateTier ?? 'auto', gate: true, ...base ? { base } : {}, ...fromEmptyTree ? { fromEmptyTree: true } : {} }, { parent, signal: exec.signal, cwd })
         episode.subagentCalls = result.subagentCalls
         episode.intentClauses = result.intentClauses
         episode.findings = result.findings
@@ -329,7 +337,7 @@ export function registerGate(ctx: Context, config: JuryConfig, runner: JuryRunne
     }
 
     try {
-      const diff = await git(['diff', base ? `${base}...HEAD` : 'HEAD'], exec.signal, cwd)
+      const diff = await git(['diff', fromEmptyTree ? `${EMPTY_TREE_SHA}..HEAD` : base ? `${base}...HEAD` : 'HEAD'], exec.signal, cwd)
       const acceptance = await acceptDiff(ctx, config, parent, episode, diff, exec.signal)
       episode.round += 1
       episode.subagentCalls += 1

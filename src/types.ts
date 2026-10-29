@@ -1,5 +1,7 @@
 import type { Agent } from '@deepseek-ai/dsh-agent'
 
+export const EMPTY_TREE_SHA = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+
 export type Tier = 'single' | 'quick' | 'standard' | 'deep'
 export type RequestedTier = Tier | 'auto'
 export type EffectiveTier = Tier | 'none'
@@ -29,6 +31,7 @@ export interface JuryConfig {
 export interface RunOptions {
   diffPath?: string
   base?: string
+  fromEmptyTree?: boolean
   tier: RequestedTier
   intent?: string
   gate?: boolean

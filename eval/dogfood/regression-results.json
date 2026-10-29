@@ -1,0 +1,58 @@
+{
+  "passed": 5,
+  "failed": 0,
+  "results": [
+    {
+      "name": "first push without upstream reviews committed root tree",
+      "pass": true,
+      "evidence": {
+        "options": {
+          "tier": "auto",
+          "gate": true,
+          "fromEmptyTree": true
+        },
+        "cwd": "/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/dogfood/work-no-upstream-2S7YvG",
+        "fullDiffIncludesRoot": true
+      }
+    },
+    {
+      "name": "git -C push gates the target repository",
+      "pass": true,
+      "evidence": {
+        "runnerCwd": "/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/dogfood/work-git-c-6V5lf8",
+        "parsedCwd": "/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/dogfood/work-git-c-6V5lf8",
+        "expected": "/Users/cyra/Documents/Codex/Projects/dsh-jury/eval/dogfood/work-git-c-6V5lf8"
+      }
+    },
+    {
+      "name": "acceptance preserves untouched open status in prompt and frozen input",
+      "pass": true,
+      "evidence": {
+        "includesOpenStatus": true,
+        "includesStatusRule": true
+      }
+    },
+    {
+      "name": "long diff keeps hunk lines beginning with triple dash",
+      "pass": true,
+      "evidence": {
+        "originalFiles": 2,
+        "originalLines": 806,
+        "processedLines": 806,
+        "omittedHunks": 0
+      }
+    },
+    {
+      "name": "runtime schemastery is declared in dependencies and lockfile",
+      "pass": true,
+      "evidence": {
+        "dependencies": {
+          "@deepseek-ai/schemastery": "3.18.5"
+        },
+        "lockDependencies": {
+          "@deepseek-ai/schemastery": "3.18.5"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[WARN] The package dsh-code-review, which you have just pnpm linked, has the following peerDependencies specified in its package.json:
+
+  - @deepseek-ai/cordis@>=4.0.5 <5.0.0,   - @deepseek-ai/dsh-agent@>=0.2.1-rc.2 <0.3.0,   - @deepseek-ai/dsh-commands@>=0.2.1-rc.2 <0.3.0,   - @deepseek-ai/dsh-llm@>=0.2.1-rc.2 <0.3.0,   - @deepseek-ai/dsh-subagent@>=0.2.1-rc.2 <0.3.0,   - @deepseek-ai/dsh-tools@>=0.2.1-rc.2 <0.3.0
+
+The linked in dependency will not resolve the peer dependencies from the target node_modules.
+This might cause issues in your project. To resolve this, you may use the "file:" protocol to reference the local dependency.
+Already up to date
+
+dependencies:
++ dsh-code-review <- ../../../Documents/Codex/Projects/dsh-jury
+
+Done in 90ms using pnpm v12.16.1

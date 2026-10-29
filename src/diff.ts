@@ -14,7 +14,7 @@ function splitSections(lines: string[]): Section[] {
   let current: Section | undefined
   let hunk: Hunk | undefined
   for (const line of lines) {
-    const startsFile = line.startsWith('diff --git ') || line.startsWith('--- ')
+    const startsFile = line.startsWith('diff --git ') || (!hunk && line.startsWith('--- '))
     if (startsFile) {
       current = { header: [line], hunks: [] }
       sections.push(current)
